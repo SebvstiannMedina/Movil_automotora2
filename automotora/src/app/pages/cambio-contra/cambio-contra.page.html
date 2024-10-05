@@ -1,0 +1,40 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      <img src="assets/icon/Logo.png" alt="logo">
+      <ion-icon name="logo-ionitron" slot="start"></ion-icon>
+      MotorSphere
+    </ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+  <ion-card-content> 
+    <h4>Cambio de contraseña</h4>
+    <ion-item>
+      <ion-label > Contraseña:  </ion-label>
+      <ion-input  placeholder="Contraseña actual:" type="password" [(ngModel)]="contrasenaActual">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+      <ion-item>
+        <ion-label >Nueva contraseña:  </ion-label>
+        <ion-input placeholder="Nueva contraseña:"  type="password"  [(ngModel)]="nuevacontrasena" (ionInput)="validarNuevacontrasena()">
+          <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label >Nueva contraseña: </ion-label>
+        <ion-input placeholder="Repita contraseña:"  type="password" [(ngModel)]="repetircontrasena" (ionInput)="validarRepetircontrasena()">
+          <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+        </ion-input>
+      </ion-item>
+      <div *ngIf="errorMensaje" style="color: red;">{{ errorMensaje }}</div>
+    
+      <ion-button color="dark" (click)="guardarCambios()" >Guardar cambios </ion-button>
+      <ion-button color="dark" [routerLink]="['/ver-perfil']" >volver </ion-button>
+    </ion-card-content> 
+  </ion-card>
+</ion-content>

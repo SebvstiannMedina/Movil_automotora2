@@ -1,0 +1,36 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      <img src="assets/icon/Logo.png" alt="logo">
+      <ion-icon name="logo-ionitron" slot="start"></ion-icon>
+      MotorSphere
+    </ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Introducción -->
+  <section class="intro-section">
+    <h4>Bienvenido a MotorSphere</h4>
+    <p>Descubre nuestra amplia gama de autos nuevos y usados, y encuentra el modelo perfecto para ti.</p>
+  </section>
+
+  <!-- Tarjeta de Auto Destacado -->
+  <ion-card class="highlight-card">
+    <img alt="Fast" src="https://i.pinimg.com/736x/7d/4b/e3/7d4be3480669472c1409d29beb9c68c7.jpg" />
+    <ion-card-header>
+      <ion-card-title style="color: white;">Próximamente en nuestra tienda</ion-card-title>
+      <ion-card-subtitle>Nuestro principal objetivo es generar amplia gratitud del cliente junto a nuestros servicios</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+
+  <!-- Botón de Registro -->
+  <ion-button expand="full" color="primary" [routerLink]="['/registro']">Regístrate</ion-button>
+</ion-content>
+
+<ion-footer collapse="fade">
+  <ion-toolbar>
+    <ion-title></ion-title>
+  </ion-toolbar>
+</ion-footer>

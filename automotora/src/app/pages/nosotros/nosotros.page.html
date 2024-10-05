@@ -1,0 +1,56 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <img src="assets/icon/Logo.png" alt="logo">
+      <ion-icon name="logo-ionitron" slot="start"></ion-icon>
+      MotorSphere
+    </ion-title>
+    <ion-icon
+      name="help-circle-outline"
+      slot="end"
+      class="icon"
+      [routerDirection]="'root'"
+      [routerLink]="'/que-frecuente'"
+    ></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <h1>Sobre Nosotros</h1>
+
+  <h4>Nuestra Compañía</h4>
+  <p>
+    Nacimos en el año 2024 como un emprendimiento de un grupo de 2 amigos ingenieros informáticos cuando Internet 
+    aún era desconocido para muchas personas y cuando aún existían los fax como forma de comunicarse con las automotoras. 
+    Tampoco existían las cámaras digitales y muy pocos de nuestros clientes actuales tenían una casilla de correo, por lo que nuestra 
+    propuesta era bastante disruptiva. Desde el inicio nuestro objetivo se centró en facilitar el viaje de compra de quienes buscaban 
+    comprar o vender un automóvil.
+  </p>
+
+  <h4>Nuestro Equipo de Trabajo</h4>
+
+  <ion-card class="team-card">
+    <img alt="Sebastian Medina" src="https://avatars.githubusercontent.com/u/127134229?v=4" />
+    <ion-card-header>
+      <ion-card-title>Sebastian Medina</ion-card-title>
+      <ion-card-subtitle>Sección: 004D</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      Frase para el semestre: Que diosito se apiade de mí
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="team-card">
+    <img alt="Angel Rengifo" src="https://i.pinimg.com/736x/f5/04/24/f504246d7f9ffe6aa412a15d7bc33fb2.jpg" />
+    <ion-card-header>
+      <ion-card-title>Angel Rengifo</ion-card-title>
+      <ion-card-subtitle>Sección: 006D</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      Frase para el semestre: Dormir no está en los planes :D
+    </ion-card-content>
+  </ion-card>
+</ion-content>

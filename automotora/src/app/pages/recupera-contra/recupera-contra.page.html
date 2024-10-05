@@ -1,0 +1,35 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      <img src="assets/icon/Logo.png" alt="logo">
+      <ion-icon name="logo-ionitron" slot="start"></ion-icon>
+      MotorSphere
+    </ion-title>
+
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Recuperar Contraseña</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="recovery-container">
+    <h1>Recuperación de Contraseña</h1>
+    <p>Ingresa tu correo electrónico para recibir instrucciones para restablecer tu contraseña.</p>
+    
+    <ion-item>
+      <ion-label position="floating">Correo Electrónico</ion-label>
+      <ion-input [(ngModel)]="email" type="email"></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" (click)="sendResetLink()">Enviar Enlace de Recuperación</ion-button>
+
+    <div class="back-to-login">
+      <p>¿Recuperaste tu contraseña? <a [routerLink]="['/login']">Inicia sesión</a></p>
+    </div>
+  </div>
+</ion-content>

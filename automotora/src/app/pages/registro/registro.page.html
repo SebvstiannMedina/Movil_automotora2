@@ -1,0 +1,68 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      <img src="assets/icon/Logo.png" alt="logo">
+      <ion-icon name="logo-ionitron" slot="start"></ion-icon>
+      MotorSphere
+    </ion-title>
+
+
+  </ion-toolbar>
+</ion-header>
+
+  
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-content>
+      <h1>Registro</h1>
+      <!--Nombre-->
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input  [(ngModel)]="objetoRegistro.nombre"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="!validarNombre(objetoRegistro.nombre) && objetoRegistro.nombre">
+        <ion-label color="danger">
+                                  - Debe tener minimo 3 letras 
+                              <br>- Solo debe tener letras.
+                              <br>- Ejemplo: User (✓) / User1 (x) </ion-label>
+      </ion-item>
+      <!--Correo-->
+      <ion-item>
+        <ion-label position="floating">Correo Electronico</ion-label>
+        <ion-input [(ngModel)]="objetoRegistro.email" type="email"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="!validarEmail(objetoRegistro.email) && objetoRegistro.email">
+        <ion-label color="danger">Correo inválido</ion-label>
+      </ion-item>
+      <!--Contraseña-->
+      <ion-item>
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input [(ngModel)]="objetoRegistro.contrasena" type="password"> <ion-input-password-toggle slot="end"></ion-input-password-toggle></ion-input>
+      </ion-item>
+      
+      <ion-item *ngIf="!validarContrasena(objetoRegistro.contrasena) && objetoRegistro.contrasena">
+        <ion-label color="danger">
+                                  - Debe contener datos alfanuméricos(A-Z/0-9). 
+                              <br>- Minimo una Mayúscula. 
+                              <br>- Debe tener por lo menos un carácter especial(*,#,$,etc).                             
+                              <br>- Debe tener entre 8 y 16 caracteres.
+                              <br>- Ejemplo: User123456# </ion-label>
+      </ion-item>
+      <!--Confirmar contraseña-->
+      <ion-item>
+        <ion-label position="floating">Confirmar Contraseña</ion-label>
+        <ion-input type="password" [(ngModel)]="objetoRegistro.confirmaContrasena"><ion-input-password-toggle slot="end"></ion-input-password-toggle></ion-input>
+      </ion-item>
+      <ion-item *ngIf="!compararContrasenas(objetoRegistro.confirmaContrasena) && objetoRegistro.confirmaContrasena">
+        <ion-label color="danger"> Las contraseñas no son iguales </ion-label>
+      </ion-item>
+      
+      <ion-button expand="full" (click)="regienvia()">Registrar</ion-button>
+      <h5>¿Tienes cuenta?, <a  [routerLink]="['/login']">Inicia Sesion</a></h5>
+      
+      
+    </ion-card-content>
+  
+  </ion-card>
+ 
+</ion-content>

@@ -1,0 +1,43 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <img src="assets/icon/Logo.png" alt="logo">
+      <ion-icon name="logo-ionitron" slot="start"></ion-icon>
+      MotorSphere
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Título de la Página -->
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">productos</ion-title>
+      <ion-title size="large">Productos</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Lista de Productos -->
+  <section class="products-section">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="6" size-lg="4" *ngFor="let aeromatiza of aeromatizantes">
+          <ion-card class="product-card">
+            <img [src]="aeromatiza.image" alt="{{aeromatiza.name}}" />
+            <ion-card-header>
+              <ion-card-title>{{ aeromatiza.name }}</ion-card-title>
+              <ion-card-subtitle>${{ aeromatiza.price }}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <p>{{ aeromatiza.description }}</p>
+              <ion-button expand="full" color="primary">Ver más</ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </section>
+</ion-content>

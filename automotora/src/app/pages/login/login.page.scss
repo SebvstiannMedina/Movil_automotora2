@@ -1,0 +1,85 @@
+/* Estilos para el encabezado */
+ion-header {
+    --background: rgba(255, 255, 255, 0.9); /* Fondo blanco translúcido */
+  }
+  
+  ion-toolbar {
+    --background: #003366; /* Azul oscuro */
+    color: #ffffff; /* Texto blanco */
+  }
+  
+  ion-title {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+  
+    img {
+      height: 24px; /* Ajusta la altura de la imagen */
+      margin-right: 8px; /* Añade un pequeño margen a la derecha de la imagen */
+    }
+  
+    ion-icon {
+      margin-left: 8px; /* Añade un margen a la izquierda del ícono */
+    }
+  }
+
+  
+  ion-title ion-icon {
+    font-size: 24px;
+    margin-right: 8px;
+  }
+  
+  /* Estilos para el contenido */
+  ion-content {
+    --background: #f5f5f5; /* Fondo gris claro */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #003366; /* Azul oscuro */
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  ion-item {
+    margin-bottom: 16px;
+  }
+  
+  ion-label {
+    font-size: 16px;
+    color: #003366; /* Azul oscuro */
+  }
+  
+  ion-input {
+    --placeholder-color: #cccccc; /* Color de placeholder gris */
+  }
+  
+  ion-button {
+    --background: #003366; /* Azul oscuro */
+    --color: #ffffff; /* Texto blanco */
+    --border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  h6, h5 {
+    font-size: 14px;
+    color: #666666; /* Gris oscuro */
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  h6 a, h5 a {
+    color: #003366; /* Azul oscuro */
+    text-decoration: underline;
+  }
+  
+  h6 a:hover, h5 a:hover {
+    text-decoration: none;
+  }
+  

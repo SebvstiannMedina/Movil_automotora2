@@ -1,0 +1,108 @@
+ion-content {
+    --background: #00000016;
+  
+    ion-list {
+      --ion-background-color: transparent;
+    }
+  
+    ion-item {
+      --background: #f5686863;
+      --border-color: #553c3c32;
+      --border-width: 1px;
+      --min-height: 60px;
+      margin: 10px 0;
+      border-radius: 8px;
+  
+      ion-avatar {
+        --border-radius: 50%;
+        img {
+          border-radius: 50%;
+          border: 2px solid #e0e0e0;
+        }
+      }
+
+    }
+  }
+  
+  h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #003366; /* Azul oscuro */
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  // Estilo para el encabezado
+ion-header {
+  --background: #f8f9fa; // Color de fondo del encabezado
+  --color: #333; // Color del texto del encabezado
+
+  ion-toolbar {
+    --background: #ffffff; // Color de fondo del toolbar
+    --color: #333; // Color del texto del toolbar
+
+    ion-title {
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+    }
+
+    ion-icon[name="logo-ionitron"] {
+      font-size: 1.5rem;
+      color: #007bff; // Color del ícono
+      margin-right: 8px;
+    }
+  }
+}
+
+// Estilo para el contenido
+ion-content {
+  --background: #f4f4f4; // Color de fondo del contenido
+
+  ion-list {
+    margin: 16px;
+    padding: 0;
+
+    ion-item {
+      --background: #ffffff; // Color de fondo del ítem de la lista
+      --border-color: #e0e0e0; // Color del borde del ítem
+      --border-width: 1px; // Ancho del borde del ítem
+
+      ion-avatar {
+        margin-right: 12px;
+      }
+
+      ion-label {
+        font-size: 1rem;
+        color: #333; // Color del texto del ítem
+      }
+    }
+  }
+
+  ion-infinite-scroll {
+    padding: 0 16px;
+    text-align: center;
+
+    ion-infinite-scroll-content {
+      --background: #ffffff; // Color de fondo del contenido de scroll infinito
+      --color: #007bff; // Color del texto de scroll infinito
+      padding: 16px;
+    }
+  }
+}
+ion-title {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+
+  img {
+    height: 24px; /* Ajusta la altura de la imagen */
+    margin-right: 8px; /* Añade un pequeño margen a la derecha de la imagen */
+  }
+
+  ion-icon {
+    margin-left: 8px; /* Añade un margen a la izquierda del ícono */
+  }
+}
+

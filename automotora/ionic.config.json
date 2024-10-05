@@ -1,0 +1,7 @@
+{
+  "name": "automotora",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

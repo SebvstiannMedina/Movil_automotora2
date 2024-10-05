@@ -1,0 +1,31 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      <img src="assets/icon/Logo.png" alt="logo">
+      <ion-icon name="logo-ionitron" slot="start"></ion-icon>
+      MotorSphere
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <h1>Editar Productos</h1>
+    <ion-list>
+      
+      <ion-item *ngFor="let producto of productos; let i = index">
+        <ion-label>
+          <img [src]="producto.imagen" alt="Imagen del producto" class="producto-imagen">
+          <h2>{{ producto.nombre }}</h2>
+          <p>Descripción:<br>{{ producto.descripcion }}</p>
+          <p>Precio: ${{ producto.precio }}</p>
+        </ion-label>
+        <ion-button slot="end" (click)="editarProducto(i)">
+          Editar
+        </ion-button>
+      </ion-item>
+
+      <ion-button expand="full" [routerLink]="['/agregar']">Volver</ion-button>
+    </ion-list>
+  </ion-card>
+</ion-content>
