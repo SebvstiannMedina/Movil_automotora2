@@ -48,7 +48,8 @@ export class AgregarPage {
         buttons: ['OK'],
       });
       await alert.present();
+      this.bd.insertarCrud(this.nombre, this.descripcion,this.imagen,typeof this.precio === 'string' ? parseFloat(this.precio) : this.precio, this.categoria);
     }
-    this.bd.insertarCrud(this.nombre, this.descripcion,this.imagen,typeof this.precio === 'string' ? parseFloat(this.precio) : this.precio, this.categoria);
+    
   }
 }
