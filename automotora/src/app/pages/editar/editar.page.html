@@ -27,13 +27,13 @@
         </ion-button>
       </ion-item>
 
-      <ion-button expand="full" [routerLink]="['/agregar']">Volver</ion-button>
+      
     </ion-list>
   </ion-card>
   -->
   <ion-item>
     <ion-label position="floating">Modelo</ion-label>
-    <ion-input [(ngModel)]="crud.nombre" type="text"></ion-input>
+    <ion-input [(ngModel)]="crud.nombre" ></ion-input>
   </ion-item>
 
   <ion-item>
@@ -44,11 +44,10 @@
   <ion-item>
     <ion-label position="floating">Precio</ion-label>
     <ion-textarea [(ngModel)]="crud.precio" inputmode="decimal"></ion-textarea>
-    <ion-text *ngIf="mensajeError" color="danger">{{ mensajeError }}</ion-text>
   </ion-item>
   <ion-item>
     <ion-label position="floating">URL de Imagen</ion-label>
-    <ion-input [(ngModel)]="crud.imagen" type="text"></ion-input>
+    <ion-input [(ngModel)]="crud.imagen"></ion-input>
   </ion-item>
 
   <ion-item>
@@ -63,5 +62,6 @@
   </ion-item>
 
   <ion-button expand="full"  (click)="modificar()">modificar</ion-button>
+  <ion-button expand="full" [routerLink]="['/agregar']">Volver</ion-button>
 </div>
 </ion-content>
