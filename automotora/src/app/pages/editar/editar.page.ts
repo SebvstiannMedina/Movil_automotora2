@@ -1,23 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { ServiceBDService } from 'src/app/service/service-bd.service';
 
 @Component({
   selector: 'app-editar',
   templateUrl: './editar.page.html',
   styleUrls: ['./editar.page.scss'],
 })
-export class EditarPage {
+export class EditarPage implements OnInit {
 
+ 
+  crud:any;
   // Lista de productos a editar
+  ngOnInit(){
+  
+  }
+
+/*
   productos = [
     { imagen: 'https://via.placeholder.com/150', nombre: 'Llave 10', descripcion: 'Llave para tornillo 10"', precio: 6000 },
     { imagen: 'https://via.placeholder.com/150', nombre: 'Destornillador', descripcion: 'Destornillador estrella', precio: 4500 },
   ];
-
+*/
   mensajeError: string = '';
 
-  constructor(private alertController: AlertController) {}
+  constructor(private router: Router, private activedrouter: ActivatedRoute,private alertController: AlertController, private bd: ServiceBDService) {
+    this.activedrouter.queryParams.subscribe(res=>{
+      if(this.router.getCurrentNavigation()?.extras.state){
+        this.crud = this.router.getCurrentNavigation()?.extras?.state?.['crud'];
+      }
+    })
 
+  }
+
+  modificar(){
+    this.bd.modificarCrud(this.crud.idcrud,this.crud.nombre, this.crud.descripcion,this.crud.imagen,typeof this.crud.precio === 'string' ? parseFloat(this.crud.precio) : this.crud.precio, this.crud.categoria);
+  }
+
+
+/*
   // Validación del precio
   validarPrecio(valor: any): string {
     if (!/^\d*\.?\d+$/.test(valor)) {
@@ -89,7 +111,8 @@ export class EditarPage {
         }
       ]
     });
-
+    
     await alert.present();
-  }
+  }*/
+
 }

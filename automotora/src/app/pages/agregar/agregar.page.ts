@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { ServiceBDService } from 'src/app/service/service-bd.service';
 
 @Component({
   selector: 'app-agregar',
@@ -7,14 +8,14 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./agregar.page.scss'],
 })
 export class AgregarPage {
-  modelo: string = '';
+  nombre: string = '';
   descripcion: string = '';
   precio: string | number = '';
-  urlImagen: string = '';
-  paginaProducto: string = '';
+  imagen: string = '';
+  categoria: string = '';
   mensajeError: string = '';
 
-  constructor(private alertController: AlertController) {}
+  constructor(private alertController: AlertController, private bd:ServiceBDService) {}
 
   validarPrecio(event: any) {
     const valor = event.target.value;
@@ -33,7 +34,7 @@ export class AgregarPage {
 
     // Validacion de que los campos esten llenos para poder agregar
   async presentAlert() {
-    if (!this.modelo || !this.descripcion || !this.precio || !this.urlImagen || !this.paginaProducto || this.mensajeError) {
+    if (!this.nombre || !this.descripcion || !this.precio || !this.imagen || !this.categoria || this.mensajeError) {
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'Todos los campos son obligatorios ',
@@ -48,5 +49,6 @@ export class AgregarPage {
       });
       await alert.present();
     }
+    this.bd.insertarCrud(this.nombre, this.descripcion,this.imagen,typeof this.precio === 'string' ? parseFloat(this.precio) : this.precio, this.categoria);
   }
 }

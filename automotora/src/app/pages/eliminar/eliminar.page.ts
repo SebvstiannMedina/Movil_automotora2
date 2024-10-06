@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { ServiceBDService } from 'src/app/service/service-bd.service';
 
 @Component({
   selector: 'app-eliminar',
@@ -7,6 +9,18 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./eliminar.page.scss'],
 })
 export class EliminarPage implements OnInit {
+  
+  arreglocrud: any = [
+    {
+      id: '',
+      nombre: '',
+      descripcion: '',
+      imagen:'',
+      precio:'',
+      categoria:''
+    }
+  ]
+/*
   async presentAlert() {
     const alert = await this.alertController.create({
       header: 'AGREGAR ',
@@ -17,9 +31,36 @@ export class EliminarPage implements OnInit {
     await alert.present();
     
   }
-  constructor(private alertController: AlertController) { }
+*/
+
+  constructor(private alertController: AlertController, private bd: ServiceBDService, private router:Router) { }
 
   ngOnInit() {
+    this.bd.dbState().subscribe(data=>{
+      //validar si la bd esta lista
+      if(data){
+        //subscribir al observable de la listaNoticias
+        this.bd.fetchcrud().subscribe(res=>{
+          this.arreglocrud = res;
+        })
+      }
+    })
+  }
+  modificar(x:any){
+    let navigationsExtras: NavigationExtras = {
+      state: {
+        crud: x
+      }
+    }
+    this.router.navigate(['/editar'], navigationsExtras);
+
+  }
+  eliminar(x:any){
+    this.bd.eliminarCrud(x.idcrud);
+  }
+
+  agregar(){
+    this.router.navigate(['/agregar']);
   }
 
 }

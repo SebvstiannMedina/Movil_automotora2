@@ -9,11 +9,13 @@
 </ion-header>
 
 <ion-content>
+<div>
+  <!--
   <ion-card>
     <h1>Editar Productos</h1>
     <ion-list>
       
-      <ion-item *ngFor="let producto of productos; let i = index">
+      <ion-item *ngFor="let producto of crud; let i = index">
         <ion-label>
           <img [src]="producto.imagen" alt="Imagen del producto" class="producto-imagen">
           <h2>{{ producto.nombre }}</h2>
@@ -28,4 +30,38 @@
       <ion-button expand="full" [routerLink]="['/agregar']">Volver</ion-button>
     </ion-list>
   </ion-card>
+  -->
+  <ion-item>
+    <ion-label position="floating">Modelo</ion-label>
+    <ion-input [(ngModel)]="crud.nombre" type="text"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Descripción</ion-label>
+    <ion-textarea [(ngModel)]="crud.descripcion"></ion-textarea>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Precio</ion-label>
+    <ion-textarea [(ngModel)]="crud.precio" inputmode="decimal"></ion-textarea>
+    <ion-text *ngIf="mensajeError" color="danger">{{ mensajeError }}</ion-text>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">URL de Imagen</ion-label>
+    <ion-input [(ngModel)]="crud.imagen" type="text"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Página del producto</ion-label>
+    <ion-select [(ngModel)]="crud.categoria" placeholder="Seleccionar página de destino">
+      <ion-select-option value="aeromatizantes">Aeromatizantes</ion-select-option>
+      <ion-select-option value="cars-depor">Cars Deportivos</ion-select-option>
+      <ion-select-option value="cars-muscle">Cars Muscle</ion-select-option>
+      <ion-select-option value="llantas">Llantas</ion-select-option>
+      <ion-select-option value="otros">Otros</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-button expand="full"  (click)="modificar()">modificar</ion-button>
+</div>
 </ion-content>
