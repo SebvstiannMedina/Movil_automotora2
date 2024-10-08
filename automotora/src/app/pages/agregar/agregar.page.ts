@@ -17,7 +17,19 @@ export class AgregarPage {
   mensajeError: string = '';
 
   constructor(private alertController: AlertController, private bd:ServiceBDService) {}
+  
+  takePicture = async () => {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri
+    });
 
+    this.imagen = image.webPath;
+  
+   
+  };
+  /////////////////////
   validarPrecio(event: any) {
     const valor = event.target.value;
 
@@ -35,7 +47,7 @@ export class AgregarPage {
 
     // Validacion de que los campos esten llenos para poder agregar
   async presentAlert() {
-    if (!this.nombre || !this.descripcion || !this.precio || !this.imagen || !this.categoria || this.mensajeError) {
+    if (!this.nombre || !this.descripcion || !this.precio || !this.categoria || this.mensajeError) {
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'Todos los campos son obligatorios ',
@@ -53,19 +65,5 @@ export class AgregarPage {
     }
     
   }
-  takePicture = async () => {
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
-      resultType: CameraResultType.Uri
-    });
-  
-    // image.webPath will contain a path that can be set as an image src.
-    // You can access the original file using image.path, which can be
-    // passed to the Filesystem API to read the raw data of the image,
-    // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
-    var imageUrl = image.webPath;
-  
-    // Can be set to the src of an image now
-  };
+
 }

@@ -10,27 +10,6 @@
 
 <ion-content>
 <div>
-  <!--
-  <ion-card>
-    <h1>Editar Productos</h1>
-    <ion-list>
-      
-      <ion-item *ngFor="let producto of crud; let i = index">
-        <ion-label>
-          <img [src]="producto.imagen" alt="Imagen del producto" class="producto-imagen">
-          <h2>{{ producto.nombre }}</h2>
-          <p>Descripción:<br>{{ producto.descripcion }}</p>
-          <p>Precio: ${{ producto.precio }}</p>
-        </ion-label>
-        <ion-button slot="end" (click)="editarProducto(i)">
-          Editar
-        </ion-button>
-      </ion-item>
-
-      
-    </ion-list>
-  </ion-card>
-  -->
   <ion-item>
     <ion-label position="floating">Modelo</ion-label>
     <ion-input [(ngModel)]="crud.nombre" ></ion-input>
@@ -46,9 +25,10 @@
     <ion-textarea [(ngModel)]="crud.precio" inputmode="decimal"></ion-textarea>
   </ion-item>
   <ion-item>
-    <ion-label position="floating">URL de Imagen</ion-label>
-    <ion-input [(ngModel)]="crud.imagen"></ion-input>
+    <ion-button (click)="takePicture()">Subir imagen</ion-button>
+    <img [src]="crud.imagen" alt="Imagen del producto" class="producto-imagen" *ngIf="crud.imagen">
   </ion-item>
+  
 
   <ion-item>
     <ion-label position="floating">Página del producto</ion-label>

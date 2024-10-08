@@ -16,7 +16,8 @@ import { Estados } from './estados';
 export class ServiceBDService {
   public database!: SQLiteObject;
 
-  // Creación de tablas
+ 
+  /*-------------------------------------------------------------  // Creación de tablas */
   tablaCategoria: string = "CREATE TABLE IF NOT EXISTS categoria(idCategoria INTEGER PRIMARY KEY AUTOINCREMENT, nomCateg VARCHAR(100) NOT NULL);";
   
   tablaCrud: string = "CREATE TABLE IF NOT EXISTS crud(idcrud INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL, descripcion VARCHAR(250) NOT NULL, imagen BLOB, precio INTEGER NOT NULL, idCategoria INTEGER NOT NULL, FOREIGN KEY(idCategoria) REFERENCES categoria(idCategoria));";
@@ -29,8 +30,10 @@ export class ServiceBDService {
   
   tablaRol: string = "CREATE TABLE IF NOT EXISTS rol(idRol INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL);";
   
-  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
-
+  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), foto BLOB, contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
+  
+  /*-------------------------------------------------------------  // Listado de Observables */
+  
   // Listado de Observables
   listadoCrud = new BehaviorSubject<Crud[]>([]);
   listadoUsuario = new BehaviorSubject<Usuario[]>([]);
@@ -39,11 +42,15 @@ export class ServiceBDService {
   listadoCategoria = new BehaviorSubject<Categoria[]>([]);
   listadoDetalles = new BehaviorSubject<Detalles[]>([]);
   listadoEstados = new BehaviorSubject<Estados[]>([]);
-
+  /*lo de arriba reemplaza a lo de abajo
+   registroCrud: string = "INSERT or IGNORE INTO crud(idcrud, nombre, descripcion, imagen, precio, categoria) VALUES ('1','nombre','descripcion', 'imagen', '10','1' )";
+   listadoCrud = new BehaviorSubject([]);
+  */
   private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(private sqlite: SQLite, private platform: Platform, private alertController: AlertController) {
-    this.createBD();
+    this.createBD(); // Crea BD Crud
+
   }
 
   async presentAlert(titulo: string, msj: string) {
@@ -76,7 +83,7 @@ export class ServiceBDService {
       });
     });
   }
-
+/*-------------------------------------------------------------  // Crear tablas */
   async crearTablas() {
     try {
       await this.database.executeSql(this.tablaCategoria, []);
@@ -91,7 +98,7 @@ export class ServiceBDService {
       this.presentAlert('Creación de Tablas', 'Error en crear las tablas: ' + JSON.stringify(e));
     }
   }
-
+  /*-------------------------------------------------------------  // Queries crud */
   seleccionarCrud() {
     return this.database.executeSql('SELECT * FROM crud', []).then(res => {
       let items: Crud[] = [];
@@ -137,4 +144,42 @@ export class ServiceBDService {
       this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
     });
   }
+  /*-------------------------------------------------------------  // Queries usuario */
+  seleccionarUsuario() {
+    return this.database.executeSql('SELECT * FROM usuario', []).then(res => {
+      let items: Usuario[] = [];
+      if (res.rows.length > 0) {
+        for (var i = 0; i < res.rows.length; i++) {
+          items.push({
+            idusuario: res.rows.item(i).idusuario,
+            nombre: res.rows.item(i).nombre,
+            correo: res.rows.item(i).correo,
+            foto: res.rows.item(i).foto,
+            contrasena: res.rows.item(i).contrasena,
+            idRol: res.rows.item(i).id_Rol
+          });
+        }
+      }
+      this.listadoUsuario.next(items);
+    });
+  }
+  
+  modificarUsuario(id: string, nombre: string, correo: string, foto: any, contrasena: string, idRol: number) {
+    return this.database.executeSql('UPDATE usuario SET nombre = ?, correo = ?, foto = ?, contrasena = ?, id_Rol = ? WHERE idusuario = ?', [nombre, correo, foto, contrasena, idRol, id]).then(res => {
+      this.presentAlert("Modificar", "Usuario Modificado");
+      this.seleccionarUsuario();
+    }).catch(e => {
+      this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
+    });
+  }
+  
+  insertarUsuario(nombre: string, correo: string, foto: any, contrasena: string, idRol: number) {
+    return this.database.executeSql('INSERT INTO usuario(nombre, correo, foto, contrasena, id_Rol) VALUES (?, ?, ?, ?, ?)', [nombre, correo, foto, contrasena, idRol]).then(res => {
+      this.presentAlert("Insertar", "Usuario Registrado");
+      this.seleccionarUsuario();
+    }).catch(e => {
+      this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
+    });
+  }
+  /*-------------------------------------------------------------  // Queries venta */  
 }

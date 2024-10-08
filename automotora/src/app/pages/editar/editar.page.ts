@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { ServiceBDService } from 'src/app/service/service-bd.service';
-
+import { Camera, CameraResultType } from '@capacitor/camera';
 @Component({
   selector: 'app-editar',
   templateUrl: './editar.page.html',
@@ -16,6 +16,18 @@ export class EditarPage implements OnInit {
   ngOnInit(){
   
   }
+
+  takePicture = async () => {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri
+    });
+
+    this.crud.imagen = image.webPath;
+  
+   
+  };
 
 /*
   productos = [
@@ -35,7 +47,7 @@ export class EditarPage implements OnInit {
   }
 
   modificar(){
-    this.bd.modificarCrud(this.crud.idcrud,this.crud.nombre, this.crud.descripcion,this.crud.imagen,typeof this.crud.precio === 'string' ? parseFloat(this.crud.precio) : this.crud.precio, this.crud.categoria);
+    this.bd.modificarCrud(this.crud.idcrud,this.crud.nombre, this.crud.descripcion,this.crud.imagen, this.crud.precio, this.crud.categoria);
   }
 
 

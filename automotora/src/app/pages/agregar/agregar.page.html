@@ -24,7 +24,7 @@
         <h1>Agregar Producto</h1>
 
         <ion-item>
-          <ion-label position="floating">Modelo</ion-label>
+          <ion-label position="floating">Nombre del producto</ion-label>
           <ion-input [(ngModel)]="nombre" type="text"></ion-input>
         </ion-item>
 
@@ -39,10 +39,11 @@
           <ion-text *ngIf="mensajeError" color="danger">{{ mensajeError }}</ion-text>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">URL de Imagen</ion-label>
-          <ion-input [(ngModel)]="imagen" type="text"></ion-input>
+          <ion-button (click)="takePicture()">Subir imagen</ion-button>
+          <img [src]="imagen" alt="Imagen del producto" class="producto-imagen" *ngIf="imagen">
         </ion-item>
-
+        
+        <!--*ngIf="imagen" expand="full" alt="Sin imagen" -->
         <ion-item>
           <ion-label position="floating">Página del producto</ion-label>
           <ion-select [(ngModel)]="categoria" placeholder="Seleccionar página de destino">
