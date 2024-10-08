@@ -13,7 +13,7 @@ export class ServiceBDService {
 
   //////////// Creacion de tablas /////////////////////
   
-  tablaCrud: string ="CREATE TABLE IF NOT EXISTS crud(idcrud INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(100) NOT NULL, descripcion TEXT NOT NULL, imagen VARCHAR(250) NOT NULL, precio VARCHAR(15) NOT NULL, categoria VARCHAR(1) NOT NULL);"
+  tablaCrud: string ="CREATE TABLE IF NOT EXISTS crud(idcrud INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(100) NOT NULL, descripcion TEXT NOT NULL, imagen blob, precio VARCHAR(15) NOT NULL, categoria integer);"
   tablaCategoria: string ="CREATE TABLE IF NOT EXISTS categoria(idCategoria INTEGER PRIMARY KEY autoincrement, nomCateg VARCHAR(100) NOT NULL);"
   tablaVenta: string ="CREATE TABLE IF NOT EXISTS venta(idVenta INTEGER PRIMARY KEY autoincrement, total VARCHAR(100) NOT NULL, idusuario number NOT NULL, fecha DATE NOT NULL);"
   tablaUsuario: string ="CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(100) NOT NULL, correo VARCHAR(100) NOT NULL, contrasena VARCHAR(100) NOT NULL, rol number NOT NULL);"

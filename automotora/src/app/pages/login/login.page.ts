@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 import { AlertController } from '@ionic/angular';
 
 @Component({
@@ -48,7 +49,7 @@ export class LoginPage implements OnInit {
     contrasena: ''
   };
   
-  constructor(private router: Router,private alertController: AlertController) {
+  constructor(private router: Router,private alertController: AlertController, private storage: NativeStorage) {
     ///este  recoge los datos interpolados,¿porque? -pues porque asi lo pide la rubrica :v jajjaja
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state && navigation.extras.state['objetoRegistro']) {
@@ -74,6 +75,7 @@ export class LoginPage implements OnInit {
 
     if (administrador) {
       this.router.navigate(['/agregar']);
+      this.storage.setItem("rol","admin");
       this.presentAlert();
     } else if (usuarioPolado) {
       this.router.navigate(['/home']);
