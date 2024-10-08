@@ -4,6 +4,11 @@ import { AlertController, Platform } from '@ionic/angular';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Crud } from './crud';
 import { Usuario } from './usuario';
+import { Venta } from './venta';
+import { Rol } from './rol';
+import { Categoria } from './categoria';
+import { Detalles } from './detalles';
+import { Estados } from './estados';
 
 @Injectable({
   providedIn: 'root'
@@ -13,16 +18,27 @@ export class ServiceBDService {
 
   // Creación de tablas
   tablaCategoria: string = "CREATE TABLE IF NOT EXISTS categoria(idCategoria INTEGER PRIMARY KEY AUTOINCREMENT, nomCateg VARCHAR(100) NOT NULL);";
+  
   tablaCrud: string = "CREATE TABLE IF NOT EXISTS crud(idcrud INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL, descripcion VARCHAR(250) NOT NULL, imagen BLOB, precio INTEGER NOT NULL, idCategoria INTEGER NOT NULL, FOREIGN KEY(idCategoria) REFERENCES categoria(idCategoria));";
+  
   tablaDetalles: string = "CREATE TABLE IF NOT EXISTS detalles(idDetalle INTEGER PRIMARY KEY AUTOINCREMENT, idVenta INTEGER NOT NULL, idProducto INTEGER NOT NULL, cantidad INTEGER NOT NULL, subtotal INTEGER NOT NULL, FOREIGN KEY(idVenta) REFERENCES venta(idVenta), FOREIGN KEY(idProducto) REFERENCES crud(idcrud));";
+  
   tablaEstados: string = "CREATE TABLE IF NOT EXISTS estados(idEstado INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL);";
+  
   tablaVenta: string = "CREATE TABLE IF NOT EXISTS venta(idVenta INTEGER PRIMARY KEY AUTOINCREMENT, total INTEGER NOT NULL, idusuario INTEGER NOT NULL, subtotal INTEGER NOT NULL, idCrud INTEGER NOT NULL, FOREIGN KEY(idusuario) REFERENCES usuario(idusuario), FOREIGN KEY(idCrud) REFERENCES crud(idcrud));";
+  
   tablaRol: string = "CREATE TABLE IF NOT EXISTS rol(idRol INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL);";
+  
   tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
 
   // Listado de Observables
   listadoCrud = new BehaviorSubject<Crud[]>([]);
   listadoUsuario = new BehaviorSubject<Usuario[]>([]);
+  listadoVenta = new BehaviorSubject<Venta[]>([]);
+  listadoRol = new BehaviorSubject<Rol[]>([]);
+  listadoCategoria = new BehaviorSubject<Categoria[]>([]);
+  listadoDetalles = new BehaviorSubject<Detalles[]>([]);
+  listadoEstados = new BehaviorSubject<Estados[]>([]);
 
   private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
