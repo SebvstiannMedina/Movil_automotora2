@@ -1,8 +1,9 @@
 export class Crud {
     idcrud!:number;
+    imagen!:any;
     nombre!:string;
     descripcion!:string;
-    imagen!:string;
-    precio!:string;
-    categoria!:string;
+    idcategoria!:number;  
+    precio!:number;
+    
 }

@@ -2,6 +2,7 @@ export class Venta {
     idVenta!:number;
     total!:number;
     idusuario!:number;
-    fecha!:Date;
+    subtotal!:number;
+    id!:number;
 
 }

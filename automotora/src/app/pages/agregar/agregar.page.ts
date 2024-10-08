@@ -11,9 +11,9 @@ import { Camera, CameraResultType } from '@capacitor/camera';
 export class AgregarPage {
   nombre: string = '';
   descripcion: string = '';
-  precio: string | number = '';
-  imagen: string = '';
-  categoria: string = '';
+  precio!: number ;
+  imagen: any;
+  categoria!: number;
   mensajeError: string = '';
 
   constructor(private alertController: AlertController, private bd:ServiceBDService) {}
@@ -49,7 +49,7 @@ export class AgregarPage {
         buttons: ['OK'],
       });
       await alert.present();
-      this.bd.insertarCrud(this.nombre, this.descripcion,this.imagen,typeof this.precio === 'string' ? parseFloat(this.precio) : this.precio, this.categoria);
+      this.bd.insertarCrud(this.nombre, this.descripcion,this.imagen,this.precio, this.categoria);
     }
     
   }

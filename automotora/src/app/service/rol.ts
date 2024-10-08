@@ -1,4 +1,4 @@
 export class Rol {
-    idRol!: number;
+    id_Rol!: number;
     nomRol!:string;
 }
