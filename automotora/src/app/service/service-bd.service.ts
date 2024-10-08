@@ -13,14 +13,19 @@ export class ServiceBDService {
 
   //////////// Creacion de tablas /////////////////////
   
-  tablaCrud: string ="CREATE TABLE IF NOT EXISTS crud(idcrud INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(100) NOT NULL, descripcion TEXT NOT NULL, imagen TEXT NOT NULL, precio VARCHAR(15) NOT NULL, categoria VARCHAR(1) NOT NULL);"
-  tablaUsuario: string ="CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(100) NOT NULL, correo VARCHAR(100) NOT NULL, contrasena VARCHAR(100) NOT NULL, rol VARCHAR(100) NOT NULL);"
-  
+  tablaCrud: string ="CREATE TABLE IF NOT EXISTS crud(idcrud INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(100) NOT NULL, descripcion TEXT NOT NULL, imagen VARCHAR(250) NOT NULL, precio VARCHAR(15) NOT NULL, categoria VARCHAR(1) NOT NULL);"
+  tablaCategoria: string ="CREATE TABLE IF NOT EXISTS categoria(idCategoria INTEGER PRIMARY KEY autoincrement, nomCateg VARCHAR(100) NOT NULL);"
+  tablaVenta: string ="CREATE TABLE IF NOT EXISTS venta(idVenta INTEGER PRIMARY KEY autoincrement, total VARCHAR(100) NOT NULL, idusuario number NOT NULL, fecha DATE NOT NULL);"
+  tablaUsuario: string ="CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY autoincrement, nombre VARCHAR(100) NOT NULL, correo VARCHAR(100) NOT NULL, contrasena VARCHAR(100) NOT NULL, rol number NOT NULL);"
+  tablaRol: string ="CREATE TABLE IF NOT EXISTS rol(idRol INTEGER PRIMARY KEY autoincrement, nomRol VARCHAR(100) NOT NULL);"
   //////////// Insertar tablas /////////////////////// 
  
   registroCrud: string = "INSERT or IGNORE INTO crud(idcrud, nombre, descripcion, imagen, precio, categoria) VALUES ('1','nombre','descripcion', 'imagen', '10','1' )";
-  registroUsuario: string = "INSERT or IGNORE INTO usuario(idusuario, nombre, correo, contrasena, rol) VALUES ('1','nombre','correo@gmail.com', '123456', 'admin' )"; 
-  
+  registroCategoria: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES ('1','nombre');";
+  registroVenta: string = "INSERT or IGNORE INTO venta(idVenta, total, idusuario, fecha) VALUES ('1','10','1','2022-01-01');";
+  registroUsuario: string = "INSERT or IGNORE INTO usuario(idusuario, nombre, correo, contrasena, rol) VALUES ('1','nombre','correo@gmail.com', '123456', '1' );"; 
+  registroRol: string = "INSERT or IGNORE INTO rol(idRol, nomRol) VALUES ('1','Rol');";
+
   /*-----------------------------------------------------------------------------------  fin crear e instertar  tablas */
   
   //////////////////////  Listado de Observables
@@ -158,7 +163,7 @@ export class ServiceBDService {
             nombre: res.rows.item(i).nombre,
             correo: res.rows.item(i).correo,
             contrasena: res.rows.item(i).contrasena,            
-            rol: res.rows.item(i).rol
+            idRol: res.rows.item(i).idRol
           })
         }
         
@@ -193,9 +198,9 @@ export class ServiceBDService {
 
   }
   /////// Usuario
-  modificarUsuario(id:string, nombre:string, correo:string, contrasena:string, rol:string){
+  modificarUsuario(id:string, nombre:string, correo:string, contrasena:string){
     this.presentAlert("service","ID: " + id);
-    return this.database.executeSql('UPDATE usuario SET nombre = ?, correo =?, contrasena =?, rol =? WHERE idusuario = ?',[rol,contrasena,correo,nombre,id])
+    return this.database.executeSql('UPDATE usuario SET nombre = ?, correo =?, contrasena =? WHERE idusuario = ?',[contrasena,correo,nombre,id])
     .then(res=>{
       this.presentAlert("Modificar","Usuario Modificado");
       this.seleccionarUsuario();
@@ -215,6 +220,7 @@ export class ServiceBDService {
       this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
     })
   }
+
   /////// Usuario
   insertarUsuario(nombre:string, correo:string, contrasena:string, rol:string){
     return this.database.executeSql('INSERT INTO usuario(nombre, correo, contrasena, rol) VALUES (?,?,?,?)',[rol,contrasena,correo,nombre]).then(res=>{
@@ -225,6 +231,5 @@ export class ServiceBDService {
     })
   }
   /*----------------------------------------------------------------------------------- fin insertar */
-
 
 }

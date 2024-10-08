@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@capacitor/camera": "^6.0.2",
     "@ionic/angular": "^8.2.7",
     "@ionic/angular-server": "^8.2.7",
     "@ionic/angular-toolkit": "^11.0.1"

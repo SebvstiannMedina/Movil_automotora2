@@ -3,6 +3,6 @@ export class Usuario {
     nombre!:string;
     correo!:string;
     contrasena!:string;
-    rol!:string;    
+    idRol!:number;    
 
 }
