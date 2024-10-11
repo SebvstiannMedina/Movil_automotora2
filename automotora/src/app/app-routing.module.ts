@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'registro-venta',
+    redirectTo: 'home', //lo cambie solo para que lo veas
     pathMatch: 'full'
   },
   {
