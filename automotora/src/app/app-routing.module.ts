@@ -80,6 +80,10 @@ const routes: Routes = [
     path: 'ubicacion',
     loadChildren: () => import('./pages/ubicacion/ubicacion.module').then( m => m.UbicacionPageModule)
   },
+  {
+    path: 'apivalores',
+    loadChildren: () => import('./pages/apivalores/apivalores.module').then( m => m.ApivaloresPageModule)
+  },
 
 
 
@@ -96,6 +100,8 @@ const routes: Routes = [
     path: '**',
     loadChildren: () => import('./pages/notfound/notfound.module').then( m => m.NotfoundPageModule)
   },
+  
+
   
 
 

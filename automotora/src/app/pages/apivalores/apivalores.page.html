@@ -1,0 +1,40 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>apivalores</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>
+        Valores del Euro y Dólar
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content class="ion-padding">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="cash-outline"></ion-icon> Valor del Dólar
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <h2>{{ dolar | currency:'USD':'symbol' }}</h2>
+      </ion-card-content>
+    </ion-card>
+  
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="cash-outline"></ion-icon> Valor del Euro
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <h2>{{ euro | currency:'EUR':'symbol' }}</h2>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+  
+</ion-content>
