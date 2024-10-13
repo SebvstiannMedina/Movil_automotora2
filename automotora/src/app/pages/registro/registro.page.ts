@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { ServiceBDService } from 'src/app/service/service-bd.service';
 
 @Component({
   selector: 'app-registro',
@@ -37,7 +38,7 @@ export class RegistroPage implements OnInit {
     confirmaContrasena: ''
   };
 
-  constructor(private router: Router, private alertController: AlertController) { }
+  constructor(private router: Router, private alertController: AlertController, private bd:ServiceBDService) { }
 
   // Validación del registro
   registrar() {
@@ -48,6 +49,9 @@ export class RegistroPage implements OnInit {
       
       console.log('Registro exitoso:', this.objetoRegistro);
       this.presentAlert();
+      this.bd.insertarUsuario(this.objetoRegistro.nombre, this.objetoRegistro.email, null, this.objetoRegistro.contrasena, 1);
+      
+      
       
     } else {
       this.router.navigate(['/registro']);
