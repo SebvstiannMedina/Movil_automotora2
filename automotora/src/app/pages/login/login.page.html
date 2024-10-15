@@ -26,6 +26,15 @@
         </ion-input>
       </ion-item>
 
+       <!-- Selección de rol -->
+    <ion-item>
+      <ion-label>Rol</ion-label>
+      <ion-select [(ngModel)]="objetoLogin.rol">
+        <ion-select-option value="cliente">Cliente</ion-select-option>
+        <ion-select-option value="vendedor">Vendedor</ion-select-option>
+      </ion-select>
+    </ion-item>
+    
       <ion-button expand="full" (click)="login()">Ingresar</ion-button>
 
       <h6>¿Olvidaste tu contraseña? <a [routerLink]="['/recupera-contra']">Recuperar contraseña</a></h6>

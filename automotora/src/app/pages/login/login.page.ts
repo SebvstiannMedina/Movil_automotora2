@@ -12,7 +12,8 @@ export class LoginPage implements OnInit {
 
   objetoLogin = {
     correo: '',
-    contrasena: ''
+    contrasena: '',
+    rol: ''  // Nuevo campo para almacenar el rol
   };
 
   constructor(private router: Router, private alertController: AlertController, private bd: ServiceBDService) { }
@@ -27,19 +28,31 @@ export class LoginPage implements OnInit {
   }
 
   login() {
-    const { correo, contrasena } = this.objetoLogin;
+    const { correo, contrasena, rol } = this.objetoLogin;
 
+    // Verificar credenciales con la base de datos
     this.bd.validarCredenciales(correo, contrasena).then(isValid => {
       if (isValid) {
         console.log('Login exitoso:', this.objetoLogin);
         this.presentAlert('Login exitoso');
-        // Redirigir a la página de inicio u otra
-        this.router.navigate(['/home']);
+        // Redirigir según el rol seleccionado
+        this.redirigirSegunRol(rol);
       } else {
         console.log('Login fallido');
         this.presentAlert('Email o contraseña incorrectos');
       }
     });
+  }
+
+  // Método para redirigir según el rol
+  redirigirSegunRol(rol: string) {
+    if (rol === 'cliente') {
+      this.router.navigate(['/eliminar']);  // Página para clientes
+    } else if (rol === 'vendedor') {
+      this.router.navigate(['/home']);  // Página para vendedores
+    } else {
+      this.presentAlert('Seleccione un rol válido');
+    }
   }
 
   ngOnInit() {}
