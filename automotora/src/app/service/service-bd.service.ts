@@ -31,6 +31,8 @@ export class ServiceBDService {
   tablaRol: string = "CREATE TABLE IF NOT EXISTS rol(idRol INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL);";
   
   tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), foto BLOB, contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
+
+  useradmin: string = "INSERT INTO tablausuario (nombre, correo, foto, contrasena, id_Rol) VALUES ('admen', 'admin@gmail.com', '123456', 1);";  
   
   /*-------------------------------------------------------------  // Listado de Observables */
   
@@ -64,6 +66,9 @@ export class ServiceBDService {
 
   fetchcrud(): Observable<Crud[]> {
     return this.listadoCrud.asObservable();
+  }
+  fetchUsuario(): Observable<Usuario[]> {
+    return this.listadoUsuario.asObservable();
   }
 
   dbState() {
@@ -110,7 +115,7 @@ export class ServiceBDService {
             descripcion: res.rows.item(i).descripcion,
             imagen: res.rows.item(i).imagen,
             precio: res.rows.item(i).precio,
-            idcategoria: res.rows.item(i).idCategoria // Corregido
+            idcategoria: res.rows.item(i).idCategoria 
           });
         }
       }
@@ -173,13 +178,29 @@ export class ServiceBDService {
     });
   }
   
-  insertarUsuario(nombre: string, correo: string, foto: any, contrasena: string, idRol: number) {
-    return this.database.executeSql('INSERT INTO usuario(nombre, correo, foto, contrasena, id_Rol) VALUES (?, ?, ?, ?, ?)', [nombre, correo, foto, contrasena, idRol]).then(res => {
+  insertarUsuario(nombre: string, correo: string,  contrasena: string, idRol: number) {
+    return this.database.executeSql('INSERT INTO usuario(nombre, correo,  contrasena, id_Rol) VALUES (?, ?, ?, ?)', [nombre, correo,  contrasena, idRol]).then(res => {
       this.presentAlert("Insertar", "Usuario Registrado");
       this.seleccionarUsuario();
     }).catch(e => {
       this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
     });
   }
-  /*-------------------------------------------------------------  // Queries venta */  
+
+  //compara la base de datos 
+  obtenerUsuarios() {
+    return this.listadoUsuario;
+  }
+
+  validarCredenciales(correo: string, contrasena: string): Promise<boolean> {
+    return this.database.executeSql('SELECT * FROM usuario WHERE correo = ? AND contrasena = ?', [correo, contrasena])
+      .then(res => {
+        return res.rows.length > 0; // Si hay resultados, las credenciales son válidas
+      }).catch(e => {
+        console.error('Error al validar credenciales:', e);
+        return false; // En caso de error, asumimos que las credenciales no son válidas
+      });
+  }
 }
+  /*-------------------------------------------------------------  // Queries venta */  
+

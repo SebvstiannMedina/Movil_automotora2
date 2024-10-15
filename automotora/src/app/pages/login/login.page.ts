@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 import { AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { ServiceBDService } from 'src/app/service/service-bd.service';
 
 @Component({
   selector: 'app-login',
@@ -9,95 +9,38 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  async presentAlert() {
-    const alert = await this.alertController.create({
-      header: 'login',
-      message: 'Bienvenido',
-      buttons: ['ok'],
-    });
 
-    await alert.present();
-    
-  }
-  async presentAlert2() {
-    const alert = await this.alertController.create({
-      header: 'login ',
-      message: 'algun dato esta incorrecto',
-      buttons: ['ok'],
-    });
-
-    await alert.present();
-    
-  }
-   // Definir el objeto para almacenar los datos del formulario
-   formData = {
-    email: '',
+  objetoLogin = {
+    correo: '',
     contrasena: ''
   };
 
-  // Objetos de ejemplo con los cuales comparar
+  constructor(private router: Router, private alertController: AlertController, private bd: ServiceBDService) { }
 
-  objetoComparacion2 = {
-    nombre: 'admin',
-    email: 'admin@gmail.com',
-    contrasena: 'admin1234'
-  };  
-
-///Recoqe los datos interpolados
-  objetoRegistro = {
-    email: '',
-    contrasena: ''
-  };
-  
-  constructor(private router: Router,private alertController: AlertController, private storage: NativeStorage) {
-    ///este  recoge los datos interpolados,¿porque? -pues porque asi lo pide la rubrica :v jajjaja
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state && navigation.extras.state['objetoRegistro']) {
-      this.objetoRegistro = navigation.extras.state['objetoRegistro'];
-      console.log("si llego el registro");
-    }else{
-      console.log("wajapen? no llego");
-      return;
-    }
+  async presentAlert(mensaje: string) {
+    const alert = await this.alertController.create({
+      header: 'LOGIN',
+      message: mensaje,
+      buttons: ['OK'],
+    });
+    await alert.present();
   }
 
-  registrar() {
-      // Verificar los datos que esten en los objetos, pero ya funcionando todo no necesary
-  
-    console.log('formData:', this.formData);
-    console.log('objetoComparacion2:', this.objetoComparacion2);
-    console.log('objetoRegistro:', this.objetoRegistro);
- 
-    // Comparar con el admin
-    const administrador = this.compararObjetos(this.formData, this.objetoComparacion2);
-    // Para el usuario registrado interpolado
-    const usuarioPolado = this.objetoRegistro.email && this.compararObjetos(this.formData, this.objetoRegistro);
+  login() {
+    const { correo, contrasena } = this.objetoLogin;
 
-    if (administrador) {
-      this.router.navigate(['/agregar']);
-      this.storage.setItem("rol","admin");
-      this.presentAlert();
-    } else if (usuarioPolado) {
-      this.router.navigate(['/home']);
-      this.presentAlert();
-    } else {
-      //por si no esta registrao
-      this.router.navigate(['/login']);
-      this.presentAlert2();
-      console.log('Los datos no coinciden con ninguno de los objetos');
-    }
+    this.bd.validarCredenciales(correo, contrasena).then(isValid => {
+      if (isValid) {
+        console.log('Login exitoso:', this.objetoLogin);
+        this.presentAlert('Login exitoso');
+        // Redirigir a la página de inicio u otra
+        this.router.navigate(['/home']);
+      } else {
+        console.log('Login fallido');
+        this.presentAlert('Email o contraseña incorrectos');
+      }
+    });
   }
 
-  compararObjetos(obj1: any, obj2: any): boolean {
-    return obj1.email === obj2.email &&
-           obj1.contrasena === obj2.contrasena;
-  }
-
-  ngOnInit():void {
-  }
-
-  irPagina() {
-    this.router.navigate(['/recupera-contra']);
-    this.router.navigate(['/registro']);
-  }
+  ngOnInit() {}
 }

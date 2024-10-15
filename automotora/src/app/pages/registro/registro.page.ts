@@ -49,7 +49,7 @@ export class RegistroPage implements OnInit {
       
       console.log('Registro exitoso:', this.objetoRegistro);
       this.presentAlert();
-      this.bd.insertarUsuario(this.objetoRegistro.nombre, this.objetoRegistro.email, null, this.objetoRegistro.contrasena, 1);
+      this.bd.insertarUsuario(this.objetoRegistro.nombre, this.objetoRegistro.email, this.objetoRegistro.contrasena, 1);
       
       
       
