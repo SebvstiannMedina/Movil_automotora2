@@ -44,17 +44,13 @@
         </ion-item>
         
         <!--*ngIf="imagen" expand="full" alt="Sin imagen" -->
-        <ion-item>
-          <ion-label position="floating">Página del producto</ion-label>
-          <ion-select [(ngModel)]="categoria" placeholder="Seleccionar página de destino">
-            <ion-select-option value="aeromatizantes">Aeromatizantes</ion-select-option>
-            <ion-select-option value="cars-depor">Cars Deportivos</ion-select-option>
-            <ion-select-option value="cars-muscle">Cars Muscle</ion-select-option>
-            <ion-select-option value="llantas">Llantas</ion-select-option>
-            <ion-select-option value="otros">Otros</ion-select-option>
-          </ion-select>
-        </ion-item>
-
+        <ion-select [(ngModel)]="categoria" placeholder="Seleccionar página de destino">
+          <ion-select-option value="1">Aeromatizantes</ion-select-option>
+          <ion-select-option value="2">Cars Deportivos</ion-select-option>
+          <ion-select-option value="3">Cars Muscle</ion-select-option>
+          <ion-select-option value="4">Llantas</ion-select-option>
+          <ion-select-option value="5">Otros</ion-select-option>
+        </ion-select>
         <ion-button expand="full"  (click)="presentAlert()">Agregar</ion-button>
       </div>
       <ion-card-content >

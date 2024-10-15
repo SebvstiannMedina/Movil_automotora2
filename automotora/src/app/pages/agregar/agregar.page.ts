@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ServiceBDService } from 'src/app/service/service-bd.service';
 import { Camera, CameraResultType } from '@capacitor/camera';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-agregar',
@@ -16,7 +17,7 @@ export class AgregarPage {
   categoria!: number;
   mensajeError: string = '';
 
-  constructor(private alertController: AlertController, private bd:ServiceBDService) {}
+  constructor(private alertController: AlertController, private bd:ServiceBDService,  private router: Router) {}
   
   takePicture = async () => {
     const image = await Camera.getPhoto({
@@ -46,24 +47,54 @@ export class AgregarPage {
   }
 
     // Validacion de que los campos esten llenos para poder agregar
-  async presentAlert() {
-    if (!this.nombre || !this.descripcion || !this.precio || !this.categoria || this.mensajeError) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'Todos los campos son obligatorios ',
-        buttons: ['Volver'],
-      });
-      await alert.present();
-    } else {
-      const alert = await this.alertController.create({
-        header: 'Éxito',
-        message: 'El producto fue agregado exitosamente.',
-        buttons: ['OK'],
-      });
-      await alert.present();
-      this.bd.insertarCrud(this.nombre, this.descripcion,this.imagen,this.precio, this.categoria);
+    async presentAlert() {
+      if (!this.nombre || !this.descripcion || !this.precio || !this.categoria || this.mensajeError) {
+        const alert = await this.alertController.create({
+          header: 'Error',
+          message: 'Todos los campos son obligatorios ',
+          buttons: ['Volver'],
+        });
+        await alert.present();
+      } else {
+        const alert = await this.alertController.create({
+          header: 'Éxito',
+          message: 'El producto fue agregado exitosamente.',
+          buttons: [{
+            text: 'OK',
+            handler: () => {
+              this.bd.insertarCrud(this.nombre, this.descripcion, this.imagen, this.precio, this.categoria);
+              this.navigateToCategory(this.categoria); // Navigate to the category page
+            }
+          }],
+        });
+        await alert.present();
+      }
+    }
+    private navigateToCategory(categoria: number) {
+      let route = '';
+    
+      switch (categoria) {
+        case 1: // Aeromatizantes
+          route = '/aeromatizantes';
+          break;
+        case 2: // Cars Deportivos
+          route = '/cars-depor';
+          break;
+        case 3: // Cars Muscle
+          route = '/cars-muscle';
+          break;
+        case 4: // Llantas
+          route = '/llantas';
+          break;
+        case 5: // Otros
+          route = '/otros';
+          break;
+        default:
+          return; // No valid category selected
+      }
+    
+      this.router.navigate([route]);
     }
     
-  }
-
+    
 }
