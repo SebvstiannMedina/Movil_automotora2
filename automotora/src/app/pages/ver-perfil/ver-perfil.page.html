@@ -10,13 +10,15 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
+  <ion-card *ngFor="let x of arregloUsuario ">
     <h1>Perfil de cliente</h1>
     <ion-card-header>
     <h1>         
       <ion-avatar >
-        <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+        <img [src]="x.foto" alt="https://ionicframework.com/docs/img/demos/avatar.svg" class="usuario-imagen" *ngIf="x.foto">
       </ion-avatar>
+      
+      
     </h1> 
     <h3>foto perfil</h3>
       </ion-card-header>
@@ -26,18 +28,18 @@
     <ion-card-content >
       <ion-item>
         <ion-label>Nombre: </ion-label>
-        <ion-text>{{ nombre }}</ion-text>
+        <ion-text>{{ x.nombre }}</ion-text>
       </ion-item>
       <ion-item>
         <ion-label>Email: </ion-label>
-        <ion-text>{{ email }}</ion-text>
+        <ion-text>{{ x.correo }}</ion-text>
       </ion-item>
       <ion-item >
         <ion-label>Contraseña: </ion-label>
-        <ion-input type="password" value="{{contrasena}}" disabled></ion-input>
+        <ion-input type="password" value="{{x.contrasena}}" disabled></ion-input>
       </ion-item>
     </ion-card-content>
-      <ion-button color="dark" (click)="irPagina()">Editar perfil </ion-button>
+      <ion-button color="dark" (click)="irPagina(x)">Editar perfil </ion-button>
       <ion-button color="dark" [routerLink]="['/home']" >volver </ion-button>
   </ion-card>
 </ion-content>
