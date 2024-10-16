@@ -12,7 +12,17 @@ export class VerPerfilPage implements OnInit {
   arregloUsuario: any;
  
 
-  constructor(private router:Router, private bd: ServiceBDService) { }
+  constructor(private router:Router, private bd: ServiceBDService) {
+    this.bd.dbState().subscribe(data=>{
+      //validar si la bd esta lista
+      if(data){
+        //subscribir al observable de la listaNoticias
+        this.bd.fetchUsuario().subscribe(res=>{
+          this.arregloUsuario = res;
+        })
+      }
+    })
+   }
 
   ngOnInit() {
     this.bd.dbState().subscribe(data=>{

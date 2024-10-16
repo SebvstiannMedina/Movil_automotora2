@@ -169,7 +169,8 @@ export class ServiceBDService {
   }
   
   modificarUsuario(id: string, nombre: string, correo: string, imagen: any) {
-    return this.database.executeSql('UPDATE usuario SET nombre = ?, correo = ?, imagen = ?WHERE idusuario = ?', [nombre, correo, imagen, id]).then(res => {
+    return this.database.executeSql('UPDATE usuario SET nombre = ?, correo = ?, imagen = ? WHERE idusuario = ?', [nombre, correo, imagen, id]).then(res => {
+      this.presentAlert("insert","Entra");
       this.presentAlert("Modificar", "Usuario Modificado");
       this.seleccionarUsuario();
     }).catch(e => {
