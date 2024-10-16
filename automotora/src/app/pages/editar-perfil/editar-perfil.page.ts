@@ -63,7 +63,7 @@ export class EditarPerfilPage implements OnInit {
   constructor(private router: Router, private activedrouter: ActivatedRoute,private alertController: AlertController, private bd: ServiceBDService) {
     this.activedrouter.queryParams.subscribe(res=>{
       if(this.router.getCurrentNavigation()?.extras.state){
-        this.usuario = this.router.getCurrentNavigation()?.extras?.state?.['usuario'];
+        this.usuario = this.router.getCurrentNavigation()?.extras?.state?.['Usuario'];
       }
     })
 
@@ -74,7 +74,7 @@ export class EditarPerfilPage implements OnInit {
   volver() {
 
     this.router.navigate(['/home']);
-    this.presentAlert();
+    //this.presentAlert();
    
   }
 

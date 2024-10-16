@@ -9,16 +9,7 @@ import { Usuario } from 'src/app/service/usuario';
   styleUrls: ['./ver-perfil.page.scss'],
 })
 export class VerPerfilPage implements OnInit {
-  arregloUsuario: any = [
-    {
-      idusuario:'',
-      nombre:'',
-      correo:'',
-      imagen:'',
-      contrasena:'',
-      idRol:''
-    }
-  ]
+  arregloUsuario: any;
  
 
   constructor(private router:Router, private bd: ServiceBDService) { }
@@ -41,8 +32,8 @@ export class VerPerfilPage implements OnInit {
         Usuario: x
       }
     }
-    this.router.navigate(['/editar-perfil'],navigationsExtras);
-  
+    this.router.navigate(['/editar-perfil'], navigationsExtras);
+
   }
 
 
