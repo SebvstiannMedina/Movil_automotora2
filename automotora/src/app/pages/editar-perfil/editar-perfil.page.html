@@ -14,13 +14,13 @@
     <ion-card-header>
     <h1>         
       <ion-avatar >
-        <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+        <img [src]="usuario.imagen" alt="imagen " class="usuario-imagen" *ngIf="usuario.imagen"/>
       </ion-avatar>
     </h1> 
     <h3>
       foto perfil 
       <br>
-       <ion-button color="dark" >cambiar foto de perfil </ion-button> 
+       <ion-button color="dark" (click)="takePicture()">cambiar foto de perfil </ion-button> 
     </h3>
     
       </ion-card-header>
@@ -29,19 +29,13 @@
     </ion-card-header>
     <ion-card-content >
       <ion-item>
-        <ion-label >Nombre: </ion-label>
-        <ion-text>{{nombre}}</ion-text>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input [(ngModel)]="usuario.nombre" ></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label >Nuevo nombre: </ion-label>
-        <ion-input  labelPlacement="floating" [(ngModel)]=" nombre"></ion-input>
+        <ion-label position="floating">correo</ion-label>
+        <ion-input [(ngModel)]="usuario.correo" ></ion-input>
       </ion-item>
-      <ion-item>
-        <ion-label>Email: </ion-label>
-        <ion-text>{{email}}</ion-text>
-        <ion-icon slot="end" name="lock-closed" aria-hidden="true"></ion-icon>
-      </ion-item>
-      
       <ion-item>
         <p><a [routerLink]="['/cambio-contra']">cambiar tu contraseña <ion-icon name="create"></ion-icon></a></p>
       </ion-item>

@@ -30,9 +30,8 @@ export class ServiceBDService {
   
   tablaRol: string = "CREATE TABLE IF NOT EXISTS rol(idRol INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL);";
   
-  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), foto BLOB, contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
+  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), imagen BLOB, contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
 
-  useradmin: string = "INSERT INTO tablausuario (nombre, correo, foto, contrasena, id_Rol) VALUES ('admen', 'admin@gmail.com', '123456', 1);";  
   
   /*-------------------------------------------------------------  // Listado de Observables */
   
@@ -159,7 +158,7 @@ export class ServiceBDService {
             idusuario: res.rows.item(i).idusuario,
             nombre: res.rows.item(i).nombre,
             correo: res.rows.item(i).correo,
-            foto: res.rows.item(i).foto,
+            imagen: res.rows.item(i).imagen,
             contrasena: res.rows.item(i).contrasena,
             idRol: res.rows.item(i).id_Rol
           });
@@ -169,17 +168,25 @@ export class ServiceBDService {
     });
   }
   
-  modificarUsuario(id: string, nombre: string, correo: string, foto: any, contrasena: string, idRol: number) {
-    return this.database.executeSql('UPDATE usuario SET nombre = ?, correo = ?, foto = ?, contrasena = ?, id_Rol = ? WHERE idusuario = ?', [nombre, correo, foto, contrasena, idRol, id]).then(res => {
+  modificarUsuario(id: string, nombre: string, correo: string, imagen: any) {
+    return this.database.executeSql('UPDATE usuario SET nombre = ?, correo = ?, imagen = ?WHERE idusuario = ?', [nombre, correo, imagen, id]).then(res => {
       this.presentAlert("Modificar", "Usuario Modificado");
       this.seleccionarUsuario();
     }).catch(e => {
       this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
     });
   }
+  modificarContrasena(id: string, contrasena: string,) {
+    return this.database.executeSql('UPDATE usuario SET  contrasena = ? WHERE idusuario = ?', [contrasena, id]).then(res => {
+      this.presentAlert("Modificar Contraseña", "Usuario Modificado");
+      this.seleccionarUsuario();
+    }).catch(e => {
+      this.presentAlert('Modificar Contraseña', 'Error: ' + JSON.stringify(e));
+    });
+  }
   
-  insertarUsuario(nombre: string, correo: string,  contrasena: string, idRol: number) {
-    return this.database.executeSql('INSERT INTO usuario(nombre, correo,  contrasena, id_Rol) VALUES (?, ?, ?, ?)', [nombre, correo,  contrasena, idRol]).then(res => {
+  insertarUsuario(nombre: string, correo: string,  contrasena: string, idRol: number, imagen: any) {
+    return this.database.executeSql('INSERT INTO usuario(nombre, correo,  contrasena, id_Rol , imagen) VALUES (?, ?, ?, ?, ? )', [nombre, correo,  contrasena, idRol, imagen]).then(res => {
       this.presentAlert("Insertar", "Usuario Registrado");
       this.seleccionarUsuario();
     }).catch(e => {
@@ -195,10 +202,10 @@ export class ServiceBDService {
   validarCredenciales(correo: string, contrasena: string): Promise<boolean> {
     return this.database.executeSql('SELECT * FROM usuario WHERE correo = ? AND contrasena = ?', [correo, contrasena])
       .then(res => {
-        return res.rows.length > 0; // Si hay resultados, las credenciales son válidas
+        return res.rows.length > 0; 
       }).catch(e => {
         console.error('Error al validar credenciales:', e);
-        return false; // En caso de error, asumimos que las credenciales no son válidas
+        return false;
       });
   }
 }

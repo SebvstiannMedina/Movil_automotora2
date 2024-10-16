@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { ServiceBDService } from 'src/app/service/service-bd.service';
+import { Camera, CameraResultType } from '@capacitor/camera';
 
 @Component({
   selector: 'app-editar-perfil',
@@ -8,20 +10,32 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./editar-perfil.page.scss'],
 })
 export class EditarPerfilPage implements OnInit {
+  usuario:any;
+  /*
   nombre: string= ""; 
   email: string= "";
   contrasena: string= "";
-
+*/
     // Validacion nombre
   validarNombre(): boolean {
     const nameRegex = /^[a-zA-ZÀ-ÿÑñáéíóúÁÉÍÓÚüÜ ]+$/; 
     const longitudMinima = 3;
-    return this.nombre.length >= longitudMinima && nameRegex.test(this.nombre);
+    return this.usuario.nombre.length >= longitudMinima && nameRegex.test(this.usuario.nombre);
   }
+  takePicture = async () => {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri
+    });
 
+    this.usuario.imagen = image.webPath;
+  
+   
+  };
   // Alertas
   async presentAlert() {
-    if (!this.nombre) {
+    if (!this.usuario.nombre) {
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'No hay nada que editar',
@@ -42,24 +56,18 @@ export class EditarPerfilPage implements OnInit {
         buttons: ['OK'],
       });
       await alert.present();
+      this.bd.modificarUsuario(this.usuario.id,this.usuario.nombre,this.usuario.correo,this.usuario.imagen)
     }
   }
 
-  constructor(private router:Router, private activateroute:ActivatedRoute,  private alertController: AlertController) {
-      //subscirbirnos a la lectura de los parametros
-      this.activateroute.queryParams.subscribe(param =>{
-        //valido si viene o no información en la ruta
-        
-        if(this.router.getCurrentNavigation()?.extras.state){
-          this.nombre =this.router.getCurrentNavigation()?.extras?.state?.['nom'];
-          this.email =this.router.getCurrentNavigation()?.extras?.state?.['em'];
-          this.contrasena =this.router.getCurrentNavigation()?.extras?.state?.['con'];
-          console.log("si pasa")
-        }else{
-          console.log("no pasa ")
-        }
-      })
-   }
+  constructor(private router: Router, private activedrouter: ActivatedRoute,private alertController: AlertController, private bd: ServiceBDService) {
+    this.activedrouter.queryParams.subscribe(res=>{
+      if(this.router.getCurrentNavigation()?.extras.state){
+        this.usuario = this.router.getCurrentNavigation()?.extras?.state?.['usuario'];
+      }
+    })
+
+  }
 
   ngOnInit() {
   }

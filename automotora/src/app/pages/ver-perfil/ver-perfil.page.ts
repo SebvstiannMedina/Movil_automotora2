@@ -14,7 +14,7 @@ export class VerPerfilPage implements OnInit {
       idusuario:'',
       nombre:'',
       correo:'',
-      foto:'',
+      imagen:'',
       contrasena:'',
       idRol:''
     }

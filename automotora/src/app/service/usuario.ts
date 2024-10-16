@@ -2,7 +2,7 @@ export class Usuario {
     idusuario!:number;
     nombre!:string;
     correo!:string;
-    foto!:any;
+    imagen!:any;
     contrasena!:string;
     idRol!:number;    
 

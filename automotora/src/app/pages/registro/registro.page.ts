@@ -35,7 +35,8 @@ export class RegistroPage implements OnInit {
     nombre: '',
     email: '',
     contrasena: '',
-    confirmaContrasena: ''
+    confirmaContrasena: '',
+    imagen: null
   };
 
   constructor(private router: Router, private alertController: AlertController, private bd:ServiceBDService) { }
@@ -49,7 +50,7 @@ export class RegistroPage implements OnInit {
       
       console.log('Registro exitoso:', this.objetoRegistro);
       this.presentAlert();
-      this.bd.insertarUsuario(this.objetoRegistro.nombre, this.objetoRegistro.email, this.objetoRegistro.contrasena, 1);
+      this.bd.insertarUsuario(this.objetoRegistro.nombre, this.objetoRegistro.email, this.objetoRegistro.contrasena, 1, this.objetoRegistro.imagen);
       
       
       
