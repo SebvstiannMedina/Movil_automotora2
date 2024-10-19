@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx'; // Importa SQLite y SQLiteObject
+import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
+import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx'; // Importar NativeStorage
 
 @Component({
   selector: 'app-llanta',
@@ -13,11 +14,12 @@ export class LlantaPage implements OnInit {
   cart: any[] = [];
 
   // Base de datos SQLite
-  database: SQLiteObject | null = null;  // Inicializar como null
+  database: SQLiteObject | null = null; // Inicializar como null
 
   constructor(
     private navCtrl: NavController, 
-    private sqlite: SQLite // Inyecta el servicio SQLite
+    private sqlite: SQLite, // Inyectar el servicio SQLite
+    private nativeStorage: NativeStorage // Inyectar el servicio NativeStorage
   ) {}
 
   ngOnInit() {
@@ -31,6 +33,7 @@ export class LlantaPage implements OnInit {
       this.createTable(); // Crear tabla si no existe
       this.insertllantas(); // Insertar productos si la tabla está vacía
       this.seleccionarCrud(); // Cargar productos
+      this.loadCart(); // Cargar carrito desde NativeStorage
     }).catch(e => {
       console.log('Error al crear la base de datos', e);
     });
@@ -91,6 +94,19 @@ export class LlantaPage implements OnInit {
     }
   }
 
+  // Cargar carrito desde NativeStorage
+  loadCart() {
+    this.nativeStorage.getItem('cart')
+      .then(data => {
+        this.cart = data ? data : []; // Cargar el carrito o inicializar vacío
+        console.log('Carrito cargado desde NativeStorage:', this.cart);
+      })
+      .catch(error => {
+        console.error('Error al cargar carrito desde NativeStorage:', error);
+        this.cart = []; // Inicializar carrito vacío si hay error
+      });
+  }
+
   // Añadir producto al carrito
   addToCart(product: any) {
     const existingProduct = this.cart.find(item => item.nombre === product.nombre);
@@ -99,16 +115,30 @@ export class LlantaPage implements OnInit {
     } else {
       this.cart.push({ ...product, quantity: 1 });
     }
+    this.updateCartStorage(); // Guardar carrito en NativeStorage
   }
 
   // Eliminar producto del carrito
   removeFromCart(product: any) {
     this.cart = this.cart.filter(item => item.nombre !== product.nombre);
+    this.updateCartStorage(); // Actualizar el carrito en NativeStorage
   }
 
   // Vaciar el carrito
   clearCart() {
     this.cart = [];
+    this.updateCartStorage(); // Actualizar el carrito en NativeStorage
+  }
+
+  // Guardar carrito en NativeStorage
+  updateCartStorage() {
+    this.nativeStorage.setItem('cart', this.cart)
+      .then(() => {
+        console.log('Carrito guardado en NativeStorage correctamente');
+      })
+      .catch(error => {
+        console.error('Error al guardar el carrito en NativeStorage:', error);
+      });
   }
 
   // Navegar al carrito de compras
