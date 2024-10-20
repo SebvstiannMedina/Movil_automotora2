@@ -13,52 +13,51 @@
 
 <ion-content [fullscreen]="true" class="ion-padding">
   <ion-card>
-    
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Agregar</ion-title>
-        </ion-toolbar>
-      </ion-header>
 
-      <div class="form-container">
-        <h1>Agregar Producto</h1>
+    <ion-header collapse="condense">
+      <ion-toolbar>
+        <ion-title size="large">Agregar</ion-title>
+      </ion-toolbar>
+    </ion-header>
 
-        <ion-item>
-          <ion-label position="floating">Nombre del producto</ion-label>
-          <ion-input [(ngModel)]="nombre" type="text"></ion-input>
-        </ion-item>
+    <div class="form-container">
+      <h1>Agregar Producto</h1>
 
-        <ion-item>
-          <ion-label position="floating">Descripción</ion-label>
-          <ion-textarea [(ngModel)]="descripcion"></ion-textarea>
-        </ion-item>
+      <ion-item>
+        <ion-label position="floating">Nombre del producto</ion-label>
+        <ion-input [(ngModel)]="nombre" type="text"></ion-input>
+      </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Precio</ion-label>
-          <ion-textarea [(ngModel)]="precio" (ionInput)="validarPrecio($event)" inputmode="decimal"></ion-textarea>
-          <ion-text *ngIf="mensajeError" color="danger">{{ mensajeError }}</ion-text>
-        </ion-item>
-        <ion-item>
-          <ion-button (click)="takePicture()">Subir imagen</ion-button>
-          <img [src]="imagen" alt="Imagen del producto" class="producto-imagen" *ngIf="imagen">
-        </ion-item>
-        
-        <!--*ngIf="imagen" expand="full" alt="Sin imagen" -->
-        <ion-select [(ngModel)]="categoria" placeholder="Seleccionar página de destino">
-          <ion-select-option value="1">Aeromatizantes</ion-select-option>
-          <ion-select-option value="2">Llantas</ion-select-option>
-          <ion-select-option value="3">Otros</ion-select-option>
-        </ion-select>
-        <ion-button expand="full"  (click)="presentAlert()">Agregar</ion-button>
-      </div>
-      <ion-card-content >
+      <ion-item>
+        <ion-label position="floating">Descripción</ion-label>
+        <ion-textarea [(ngModel)]="descripcion"></ion-textarea>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Precio</ion-label>
+        <ion-textarea [(ngModel)]="precio" (ionInput)="validarPrecio($event)" inputmode="decimal"></ion-textarea>
+        <ion-text *ngIf="mensajeError" color="danger">{{ mensajeError }}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-button (click)="takePicture()">Subir imagen</ion-button>
+        <img [src]="imagen" alt="Imagen del producto" class="producto-imagen" *ngIf="imagen">
+      </ion-item>
+
+      <!--*ngIf="imagen" expand="full" alt="Sin imagen" -->
+      <ion-select [(ngModel)]="categoria" placeholder="Seleccionar página de destino">
+        <ion-select-option value="1">Aeromatizantes</ion-select-option>
+        <ion-select-option value="2">Llantas</ion-select-option>
+        <ion-select-option value="3">Otros</ion-select-option>
+      </ion-select>
+      <ion-button expand="full" (click)="presentAlert()">Agregar</ion-button>
+    </div>
+    <ion-card-content>
       <div>
 
         <br>
-        <h6 >Mas opciones</h6>
-        <ion-button expand="full" [routerLink]="['/editar']" >Editar</ion-button>
-        <ion-button expand="full" [routerLink]="['/eliminar']" >Eliminar </ion-button>
-        <ion-button expand="full" [routerLink]="['/login']" >Salir</ion-button>
+        <h6>Mas opciones</h6>
+        <ion-button expand="full" [routerLink]="['/eliminar']">listado de productos </ion-button>
+        <ion-button expand="full" [routerLink]="['/login']">Salir</ion-button>
       </div>
     </ion-card-content>
   </ion-card>

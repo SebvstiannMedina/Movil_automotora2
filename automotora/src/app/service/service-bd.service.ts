@@ -9,7 +9,9 @@ import { Rol } from './rol';
 import { Categoria } from './categoria';
 import { Detalles } from './detalles';
 import { Estados } from './estados';
-
+import { LlantaPageModule } from '../pages/llanta/llanta.module';
+import { LlantaPage } from '../pages/llanta/llanta.page';
+import { LlantaPageRoutingModule } from '../pages/llanta/llanta-routing.module';
 @Injectable({
   providedIn: 'root'
 })
@@ -31,29 +33,33 @@ export class ServiceBDService {
   tablaRol: string = "CREATE TABLE IF NOT EXISTS rol(idRol INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL);";
   
   tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), imagen BLOB, contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
+ 
+  /* insert predeterminados */
+  registroCrud: string = "INSERT or IGNORE INTO crud(idcrud, nombre, descripcion, imagen, precio, idCategoria) VALUES ('1','nombre','descripcion', 'imagen', '10','1' )";
+
 
   
   /*-------------------------------------------------------------  // Listado de Observables */
   
   // Listado de Observables
-  listadoCrud = new BehaviorSubject<Crud[]>([]);
+  
   listadoUsuario = new BehaviorSubject<Usuario[]>([]);
   listadoVenta = new BehaviorSubject<Venta[]>([]);
   listadoRol = new BehaviorSubject<Rol[]>([]);
   listadoCategoria = new BehaviorSubject<Categoria[]>([]);
   listadoDetalles = new BehaviorSubject<Detalles[]>([]);
   listadoEstados = new BehaviorSubject<Estados[]>([]);
-  /*lo de arriba reemplaza a lo de abajo
-   registroCrud: string = "INSERT or IGNORE INTO crud(idcrud, nombre, descripcion, imagen, precio, categoria) VALUES ('1','nombre','descripcion', 'imagen', '10','1' )";
+
+   
    listadoCrud = new BehaviorSubject([]);
-  */
+  
   private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(private sqlite: SQLite, private platform: Platform, private alertController: AlertController) {
     this.createBD(); // Crea BD Crud
 
   }
-
+  
   async presentAlert(titulo: string, msj: string) {
     const alert = await this.alertController.create({
       header: titulo,
@@ -82,6 +88,8 @@ export class ServiceBDService {
       }).then((db: SQLiteObject) => {
         this.database = db;
         this.crearTablas();
+        this.seleccionarCrud();
+        this.isDBReady.next(true);
       }).catch(e => {
         this.presentAlert('Base de Datos', 'Error en crear la BD: ' + JSON.stringify(e));
       });
@@ -90,18 +98,24 @@ export class ServiceBDService {
 /*-------------------------------------------------------------  // Crear tablas */
   async crearTablas() {
     try {
-      await this.database.executeSql(this.tablaCategoria, []);
+  
       await this.database.executeSql(this.tablaCrud, []);
-      await this.database.executeSql(this.tablaDetalles, []);
-      await this.database.executeSql(this.tablaEstados, []);
-      await this.database.executeSql(this.tablaVenta, []);
-      await this.database.executeSql(this.tablaRol, []);
-      await this.database.executeSql(this.tablaUsuario, []);
-      this.isDBReady.next(true);
+
+      
+      await this.database.executeSql(this.registroCrud,[]);
+
     } catch (e) {
       this.presentAlert('Creación de Tablas', 'Error en crear las tablas: ' + JSON.stringify(e));
     }
   }
+    /*
+        await this.database.executeSql(this.tablaCategoria, []);
+        await this.database.executeSql(this.tablaDetalles, []);
+        await this.database.executeSql(this.tablaEstados, []);
+        await this.database.executeSql(this.tablaVenta, []);
+        await this.database.executeSql(this.tablaRol, []);
+        await this.database.executeSql(this.tablaUsuario, []);
+    */
   /*-------------------------------------------------------------  // Queries crud */
   seleccionarCrud() {
     return this.database.executeSql('SELECT * FROM crud', []).then(res => {
@@ -118,7 +132,7 @@ export class ServiceBDService {
           });
         }
       }
-      this.listadoCrud.next(items);
+      this.listadoCrud.next(items as any);
     });
   }
 
@@ -168,6 +182,11 @@ export class ServiceBDService {
     });
   }
   
+
+
+
+  
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
   modificarUsuario(id: string, nombre: string, correo: string, imagen: any) {
     return this.database.executeSql('UPDATE usuario SET nombre = ?, correo = ?, imagen = ? WHERE idusuario = ?', [nombre, correo, imagen, id]).then(res => {
       this.presentAlert("insert","Entra");

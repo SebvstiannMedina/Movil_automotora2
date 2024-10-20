@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx'; // Importa SQLite y SQLiteObject
+import { ServiceBDService } from 'src/app/service/service-bd.service';
 
 @Component({
   selector: 'app-llanta',
@@ -17,7 +18,8 @@ export class LlantaPage implements OnInit {
 
   constructor(
     private navCtrl: NavController, 
-    private sqlite: SQLite // Inyecta el servicio SQLite
+    private sqlite: SQLite, // Inyecta el servicio SQLite
+    private bd: ServiceBDService
   ) {}
 
   ngOnInit() {
@@ -40,13 +42,8 @@ export class LlantaPage implements OnInit {
   createTable() {
     if (this.database) {
       this.database.executeSql(`
-        CREATE TABLE IF NOT EXISTS crud (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          nombre TEXT,
-          descripcion TEXT,
-          imagen TEXT,
-          precio INTEGER,
-          idCategoria INTEGER
+        SELECT * FROM crud 
+          
         );`, [])
         .then(() => {
           console.log('Tabla "crud" creada o ya existe');

@@ -35,10 +35,6 @@
   <ion-item-sliding *ngFor="let x of arreglocrud">
     <ion-item>
       <h2>{{ x.nombre }}</h2>
-      <ion-label style="word-wrap: break-word;white-space: normal;">{{ x.descripcion }}</ion-label>
-      <img [src]="x.imagen" alt="Imagen del producto" class="producto-imagen" *ngIf="x.imagen">
-      <ion-label style="word-wrap: break-word;white-space: normal;"></ion-label>
-      <ion-label style="word-wrap: break-word;white-space: normal;">{{ x.precio }}</ion-label>
       <ion-label style="word-wrap: break-word;white-space: normal;">{{ x.categoria }}</ion-label>
     </ion-item>
 
