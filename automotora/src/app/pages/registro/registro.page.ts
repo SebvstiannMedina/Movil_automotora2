@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
+import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 import { AlertController } from '@ionic/angular';
 import { ServiceBDService } from 'src/app/service/service-bd.service';
 
@@ -36,10 +37,9 @@ export class RegistroPage implements OnInit {
     email: '',
     contrasena: '',
     confirmaContrasena: '',
-    imagen: null
   };
 
-  constructor(private router: Router, private alertController: AlertController, private bd:ServiceBDService) { }
+  constructor(private router: Router, private alertController: AlertController, private bd:ServiceBDService,  private storage: NativeStorage) { }
 
   // Validación del registro
   registrar() {
@@ -50,7 +50,7 @@ export class RegistroPage implements OnInit {
       
       console.log('Registro exitoso:', this.objetoRegistro);
       this.presentAlert();
-      this.bd.insertarUsuario(this.objetoRegistro.nombre, this.objetoRegistro.email, this.objetoRegistro.contrasena, 1, this.objetoRegistro.imagen);
+      this.bd.insertarUsuario(this.objetoRegistro.nombre, this.objetoRegistro.email, this.objetoRegistro.contrasena, 1);
       
       
       
@@ -88,7 +88,9 @@ export class RegistroPage implements OnInit {
       return this.objetoRegistro.contrasena === confirmaContrasena;
     }
     
-  ngOnInit() {}
+  ngOnInit() {
+    this.storage.clear();
+  }
 
   // Interpolación y redirección
   regienvia() {

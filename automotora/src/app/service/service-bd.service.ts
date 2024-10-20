@@ -32,12 +32,11 @@ export class ServiceBDService {
   
   tablaRol: string = "CREATE TABLE IF NOT EXISTS rol(idRol INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL);";
   
-  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), imagen BLOB, contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
- 
+  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), imagen VARCHAR(250), contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
   /* insert predeterminados */
   registroCrud: string = "INSERT or IGNORE INTO crud(idcrud, nombre, descripcion, imagen, precio, idCategoria) VALUES ('1','nombre','descripcion', 'imagen', '10','1' )";
 
-
+  //registroNoticia: string = "INSERT or IGNORE INTO noticia(idnoticia, titulo, texto, activo) VALUES (1,'Soy un titulo', 'Soy el texto de esta noticia que se esta insertando de manera autmática',1)";
   
   /*-------------------------------------------------------------  // Listado de Observables */
   
@@ -53,7 +52,7 @@ export class ServiceBDService {
    
    listadoCrud = new BehaviorSubject([]);
   
-  private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(private sqlite: SQLite, private platform: Platform, private alertController: AlertController) {
     this.createBD(); // Crea BD Crud
@@ -95,6 +94,7 @@ export class ServiceBDService {
       });
     });
   }
+
 /*-------------------------------------------------------------  // Crear tablas */
   async crearTablas() {
     try {
@@ -103,6 +103,9 @@ export class ServiceBDService {
 
       
       await this.database.executeSql(this.registroCrud,[]);
+
+      await this.insertarUsuario('Sebastian', 'seba.medina@duocuc.cl', 'Admin123.', 0,);
+      await this.insertarUsuario('Angel', 'an@gmail.com', 'Angel1235*' ,0, );
 
     } catch (e) {
       this.presentAlert('Creación de Tablas', 'Error en crear las tablas: ' + JSON.stringify(e));
@@ -155,7 +158,7 @@ export class ServiceBDService {
   }
 
   insertarCrud(nombre: string, descripcion: string, imagen: any, precio: number, idcategoria: number) {
-    return this.database.executeSql('INSERT INTO crud(nombre, descripcion, imagen, precio, idCategoria) VALUES (?, ?, ?, ?, ?)', [nombre, descripcion, imagen, precio, idcategoria]).then(res => {
+    return this.database.executeSql('INSERT INTO crud(nombre, descripcion, imagen, precio, idCategoria) VALUES (?, ?, ?, ?, ?)', [nombre, descripcion, precio, idcategoria]).then(res => {
       this.presentAlert("Insertar", "Producto Registrado");
       this.seleccionarCrud();
     }).catch(e => {
@@ -187,7 +190,7 @@ export class ServiceBDService {
 
   
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-  modificarUsuario(id: string, nombre: string, correo: string, imagen: any) {
+  modificarUsuario(id: string, nombre: string, correo: string, imagen: string) {
     return this.database.executeSql('UPDATE usuario SET nombre = ?, correo = ?, imagen = ? WHERE idusuario = ?', [nombre, correo, imagen, id]).then(res => {
       this.presentAlert("insert","Entra");
       this.presentAlert("Modificar", "Usuario Modificado");
@@ -205,8 +208,8 @@ export class ServiceBDService {
     });
   }
   
-  insertarUsuario(nombre: string, correo: string,  contrasena: string, idRol: number, imagen: any) {
-    return this.database.executeSql('INSERT INTO usuario(nombre, correo,  contrasena, id_Rol , imagen) VALUES (?, ?, ?, ?, ? )', [nombre, correo,  contrasena, idRol, imagen]).then(res => {
+  insertarUsuario(nombre: string, correo: string,  contrasena: string, idRol: number ) {
+    return this.database.executeSql('INSERT INTO usuario(nombre, correo,  contrasena, id_Rol  ) VALUES (?, ?, ?, ? )', [nombre, correo,  contrasena, idRol ]).then(res => {
       this.presentAlert("Insertar", "Usuario Registrado");
       this.seleccionarUsuario();
     }).catch(e => {
@@ -228,6 +231,59 @@ export class ServiceBDService {
         return false;
       });
   }
+
+  
+
+  /*
+  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(
+  idusuario INTEGER PRIMARY KEY AUTOINCREMENT, 
+  nombre VARCHAR(250), 
+  correo VARCHAR(250), 
+  imagen BLOB, 
+  contrasena VARCHAR(250), 
+  id_Rol INTEGER, 
+  
+  FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
+ 
+  */
+
+
+  //-----------------------------------------------------------------------------------------------------------------------------
+
+
+  //TRAE CORREO, NOMBRE Y ID USUARIO
+  guardarTipoStorage(correo: string, contrasena: string) {
+    return this.database.executeSql(
+      'SELECT idusuario, id_Rol, nombre FROM usuario WHERE correo = ? AND contrasena = ?',
+      [correo, contrasena]  // Asegúrate de pasar los parámetros correctos
+    ).then(res => {
+      // variable para almacenar el resultado de la consulta
+      let items: any[] = [];
+
+      // valido si trae al menos un registro
+      if (res.rows.length > 0) {
+        // recorro mi resultado
+        for (var i = 0; i < res.rows.length; i++) {
+          // agrego los registros a mi lista
+          items.push({
+            idusuario: res.rows.item(i).idusuario,
+            id_Rol: res.rows.item(i).id_Rol,
+            nombre: res.rows.item(i).nombre,
+
+          });
+        }
+      }
+
+      // Retornar los datos del usuario autenticado
+      return items; // Retorna los datos
+    }).catch(error => {
+      // Manejo de errores
+      //this.presentAlert("Error al ejecutar la consulta SQL: ", error);
+      return []; // Retornar arreglo vacío en caso de error
+    });
+  }
+
+  
 }
   /*-------------------------------------------------------------  // Queries venta */  
 
