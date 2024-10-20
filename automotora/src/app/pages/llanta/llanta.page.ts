@@ -42,7 +42,13 @@ export class LlantaPage implements OnInit {
   createTable() {
     if (this.database) {
       this.database.executeSql(`
-        SELECT * FROM crud 
+         CREATE TABLE IF NOT EXISTS crud (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          nombre TEXT,
+          descripcion TEXT,
+          imagen TEXT,
+          precio INTEGER,
+          idCategoria INTEGER
           
         );`, [])
         .then(() => {
