@@ -56,7 +56,7 @@ export class EditarPerfilPage implements OnInit {
         buttons: ['OK'],
       });
       await alert.present();
-      this.bd.modificarUsuario(this.usuario.id,this.usuario.nombre,this.usuario.correo,this.usuario.imagen)
+      this.bd.modificarUsuario(this.usuario.id,this.usuario.nombre,this.usuario.correo)
     }
   }
 

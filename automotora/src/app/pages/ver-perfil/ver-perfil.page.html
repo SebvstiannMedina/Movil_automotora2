@@ -5,41 +5,38 @@
       <ion-icon name="logo-ionitron" slot="start"></ion-icon>
       MotorSphere
     </ion-title>
-
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-card *ngFor="let x of arregloUsuario ">
+<ion-content *ngIf="arregloUsuario && arregloUsuario.length > 0">
+  <ion-card>
     <h1>Perfil de cliente</h1>
     <ion-card-header>
-    <h1>         
-      <ion-avatar >
-        <img [src]="x.imagen" alt="sin foto de perfil" class="usuario-imagen" *ngIf="x.imagen">
-      </ion-avatar>
-      1
-      
-    </h1> 
-    <h3>foto perfil</h3>
-      </ion-card-header>
+      <h1>
+        <ion-avatar>
+          <img [src]="arregloUsuario[0].imagen" alt="sin foto de perfil" class="usuario-imagen" *ngIf="arregloUsuario[0].imagen">
+        </ion-avatar>
+      </h1> 
+      <h3>Foto perfil</h3>
+    </ion-card-header>
     <ion-card-header>
       <ion-card-title>Datos del perfil</ion-card-title>
     </ion-card-header>
-    <ion-card-content >
+    <ion-card-content>
       <ion-item>
         <ion-label>Nombre: </ion-label>
-        <ion-text>{{ x.nombre }}</ion-text>
+        <ion-text>{{ arregloUsuario[0].nombre }}</ion-text>
       </ion-item>
       <ion-item>
         <ion-label>Email: </ion-label>
-        <ion-text>{{ x.correo }}</ion-text>
+        <ion-text>{{ arregloUsuario[0].correo }}</ion-text>
       </ion-item>
-      <ion-item >
+      <ion-item>
         <ion-label>Contraseña: </ion-label>
-        <ion-input type="password" value="{{x.contrasena}}" disabled></ion-input>
+        <ion-input type="password" value="{{arregloUsuario[0].contrasena}}" disabled></ion-input>
       </ion-item>
     </ion-card-content>
-      <ion-button color="dark" (click)="irPagina(x)">Editar perfil </ion-button>
-      <ion-button color="dark" [routerLink]="['/home']" >volver </ion-button>
+    <ion-button color="dark" (click)="irPagina(arregloUsuario[0])">Editar perfil</ion-button>
+    <ion-button color="dark" [routerLink]="['/home']">Volver</ion-button>
   </ion-card>
 </ion-content>

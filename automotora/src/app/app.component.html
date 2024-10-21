@@ -22,7 +22,7 @@
               <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" [routerLink]="'/ver-perfil'" />
             </ion-avatar>
             <br>
-            <p><b>Hola: <br></b><a href="/login">Inicia Sesión</a></p>
+          
             <ion-icon name="arrow-forward-circle" [routerLink]="'/login'" slot="end"></ion-icon>
           </ion-item>
 
@@ -62,10 +62,6 @@
             <ion-icon name="cash-outline" slot="start"></ion-icon>
           </ion-item>
         
-          <ion-item [routerDirection]="'root'" [routerLink]="'/login'">
-            <ion-label> Iniciar Sesion </ion-label>
-            <ion-icon name="person-outline" slot="start"></ion-icon>
-          </ion-item>
 
           <ion-item [routerDirection]="'root'" [routerLink]="'/eliminar'"> <!--rol === 0  -->
             <ion-label>Listado de productos</ion-label>
