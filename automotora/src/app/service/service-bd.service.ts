@@ -158,7 +158,7 @@ export class ServiceBDService {
   }
 
   insertarCrud(nombre: string, descripcion: string, imagen: any, precio: number, idcategoria: number) {
-    return this.database.executeSql('INSERT INTO crud(nombre, descripcion, imagen, precio, idCategoria) VALUES (?, ?, ?, ?, ?)', [nombre, descripcion, precio, idcategoria]).then(res => {
+    return this.database.executeSql('INSERT INTO crud(nombre, descripcion, imagen, precio, idCategoria) VALUES (?, ?, ?, ?, ?)', [nombre, descripcion, imagen, precio, idcategoria]).then(res => {
       this.presentAlert("Insertar", "Producto Registrado");
       this.seleccionarCrud();
     }).catch(e => {
