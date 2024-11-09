@@ -1,7 +1,7 @@
 export class Detalles {
-    id_detalle!:number;
-    id_venta!:number;
-    id_producto!:number;
+    idDetalle!:number;
+    idVenta!:number;
+    idProducto!:number;
     cantidad!:number;
     subtotal!:number;
 }

@@ -14,7 +14,7 @@ export class AgregarPage {
   descripcion: string = '';
   precio!: number ;
   imagen: any;
-  categoria!: number;
+  idCategoria!: number;
   mensajeError: string = '';
 
   constructor(private alertController: AlertController, private bd:ServiceBDService,  private router: Router) {}
@@ -48,7 +48,7 @@ export class AgregarPage {
 
     // Validacion de que los campos esten llenos para poder agregar
     async presentAlert() {
-      if (!this.nombre || !this.descripcion || !this.precio || !this.categoria || this.mensajeError) {
+      if (!this.nombre || !this.descripcion || !this.precio || !this.idCategoria || this.mensajeError) {
         const alert = await this.alertController.create({
           header: 'Error',
           message: 'Todos los campos son obligatorios ',
@@ -62,18 +62,18 @@ export class AgregarPage {
           buttons: [{
             text: 'OK',
             handler: () => {
-              this.bd.insertarCrud(this.nombre, this.descripcion, this.imagen, this.precio, this.categoria);
-              this.navigateToCategory(this.categoria); // Navigate to the category page
+              this.bd.insertarCrud(this.nombre, this.descripcion, this.imagen, this.precio, this.idCategoria);
+              this.navigateToCategory(this.idCategoria); // Navigate to the category page
             }
           }],
         });
         await alert.present();
       }
     }
-    private navigateToCategory(categoria: number) {
+    private navigateToCategory(idCategoria: number) {
       let route = '';
     
-      switch (categoria) {
+      switch (idCategoria) {
         case 1: // Aeromatizantes
           route = '/aeromatizantes';
           break;

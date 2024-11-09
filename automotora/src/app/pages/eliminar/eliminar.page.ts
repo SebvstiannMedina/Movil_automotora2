@@ -17,7 +17,7 @@ export class EliminarPage implements OnInit {
       descripcion: '',
       imagen:'',
       precio:'',
-      categoria:''
+      idCategoria:''
     }
   ]
 /*
@@ -40,7 +40,7 @@ export class EliminarPage implements OnInit {
       //validar si la bd esta lista
       if(data){
         //subscribir al observable de la listaNoticias
-        this.bd.fetchcrud().subscribe(res=>{
+        this.bd.fetchCrud().subscribe(res=>{
           this.arreglocrud = res;
         })
       }
@@ -56,7 +56,7 @@ export class EliminarPage implements OnInit {
 
   }
   eliminar(x:any){
-    this.bd.eliminarCrud(x.idcrud);
+    this.bd.eliminarCrud(x.idrud);
   }
 
   agregar(){

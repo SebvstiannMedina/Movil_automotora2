@@ -29,12 +29,6 @@ export class EditarPage implements OnInit {
    
   };
 
-/*
-  productos = [
-    { imagen: 'https://via.placeholder.com/150', nombre: 'Llave 10', descripcion: 'Llave para tornillo 10"', precio: 6000 },
-    { imagen: 'https://via.placeholder.com/150', nombre: 'Destornillador', descripcion: 'Destornillador estrella', precio: 4500 },
-  ];
-*/
   mensajeError: string = '';
 
   constructor(private router: Router, private activedrouter: ActivatedRoute,private alertController: AlertController, private bd: ServiceBDService) {

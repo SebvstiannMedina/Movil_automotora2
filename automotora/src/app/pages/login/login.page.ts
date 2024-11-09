@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ServiceBDService } from 'src/app/service/service-bd.service';
-import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';  //Typescript:
+import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 
 @Component({
   selector: 'app-login',
@@ -16,9 +16,24 @@ export class LoginPage implements OnInit {
     contrasena: ''
   };
 
-  rol! : number;
+  rol!: number;
 
-  constructor(private router: Router, private alertController: AlertController, private bd: ServiceBDService, private storage: NativeStorage) { this.storage.clear(); }
+  constructor(private router: Router, private alertController: AlertController, private bd: ServiceBDService, private storage: NativeStorage) { 
+    // Eliminamos la llamada a this.storage.clear() del constructor
+  }
+
+  // Verificar si ya hay sesión activa cuando el componente se inicializa
+  ngOnInit() { 
+    this.storage.getItem('Id').then((id) => {
+      if (id) {
+        // El usuario ya está logueado, redirige al home
+        this.router.navigate(['/home']);
+      }
+    }).catch(error => {
+      // Si no se encuentra el item o ocurre un error, continúa con el login
+      console.log('Usuario no logueado o error al obtener los datos');
+    });
+  }
 
   async presentAlert(mensaje: string) {
     const alert = await this.alertController.create({
@@ -30,13 +45,13 @@ export class LoginPage implements OnInit {
   }
 
   login() {
-    const { correo, contrasena} = this.objetoLogin;
+    const { correo, contrasena } = this.objetoLogin;
 
     // Verificar credenciales con la base de datos
     this.bd.isDBReady.subscribe(async (val) => {
       if (val) {
 
-        this.storage.clear();
+        this.storage.clear(); // Limpiamos el almacenamiento antes de iniciar sesión
 
         const validar = await this.bd.validarCredenciales(correo, contrasena);
         if (validar) {
@@ -46,12 +61,9 @@ export class LoginPage implements OnInit {
           this.storage.setItem('Rol', id_Rol); // Asegúrate de que sean strings si es necesario
           this.storage.setItem('Nombre', nombre); // Asegúrate de que sean strings si es necesario
           this.router.navigate(['/home']);
-          this.presentAlert("ver datos" + idusuario + id_Rol + nombre); // id = 1 || rol = 1 + nombre = user
+          this.presentAlert("ver datos " + idusuario + id_Rol + nombre); // id = 1 || rol = 1 + nombre = user
           console.log('Login exitoso:', this.objetoLogin);
           this.presentAlert('Login exitoso');
-          // Redirigir según el rol seleccionado
-
-          this.router.navigate(['/home']);
         }
       } else {
         console.log('Login fallido');
@@ -60,21 +72,14 @@ export class LoginPage implements OnInit {
     });
   }
 
-
   // Método para redirigir según el rol
   redirigirSegunRol(rol: string) {
     if (rol === 'cliente') {
       this.router.navigate(['/eliminar']);  // Página para clientes
-
     } else if (rol === 'vendedor') {
       this.router.navigate(['/home']);  // Página para vendedores
-
     } else {
       this.presentAlert('Seleccione un rol válido');
     }
-  }
-
-  ngOnInit() { 
-    this.storage.clear();
   }
 }

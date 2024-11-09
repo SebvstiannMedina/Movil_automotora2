@@ -9,21 +9,18 @@ import { Rol } from './rol';
 import { Categoria } from './categoria';
 import { Detalles } from './detalles';
 import { Estados } from './estados';
-import { LlantaPageModule } from '../pages/llanta/llanta.module';
-import { LlantaPage } from '../pages/llanta/llanta.page';
-import { LlantaPageRoutingModule } from '../pages/llanta/llanta-routing.module';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ServiceBDService {
   public database!: SQLiteObject;
 
- 
-  /*-------------------------------------------------------------  // Creación de tablas */
+  // Creación de tablas
   tablaCategoria: string = "CREATE TABLE IF NOT EXISTS categoria(idCategoria INTEGER PRIMARY KEY AUTOINCREMENT, nomCateg VARCHAR(100) NOT NULL);";
-  
+
   tablaCrud: string = "CREATE TABLE IF NOT EXISTS crud(idcrud INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL, descripcion VARCHAR(250) NOT NULL, imagen BLOB, precio INTEGER NOT NULL, idCategoria INTEGER NOT NULL, FOREIGN KEY(idCategoria) REFERENCES categoria(idCategoria));";
-  
+
   tablaDetalles: string = "CREATE TABLE IF NOT EXISTS detalles(idDetalle INTEGER PRIMARY KEY AUTOINCREMENT, idVenta INTEGER NOT NULL, idProducto INTEGER NOT NULL, cantidad INTEGER NOT NULL, subtotal INTEGER NOT NULL, FOREIGN KEY(idVenta) REFERENCES venta(idVenta), FOREIGN KEY(idProducto) REFERENCES crud(idcrud));";
   
   tablaEstados: string = "CREATE TABLE IF NOT EXISTS estados(idEstado INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL);";
@@ -33,30 +30,30 @@ export class ServiceBDService {
   tablaRol: string = "CREATE TABLE IF NOT EXISTS rol(idRol INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL);";
   
   tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), imagen VARCHAR(250), contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
-  /* insert predeterminados */
-  registroCrud: string = "INSERT or IGNORE INTO crud(idcrud, nombre, descripcion, imagen, precio, idCategoria) VALUES ('1','nombre','descripcion', 'imagen', '10','1' )";
 
-  //registroNoticia: string = "INSERT or IGNORE INTO noticia(idnoticia, titulo, texto, activo) VALUES (1,'Soy un titulo', 'Soy el texto de esta noticia que se esta insertando de manera autmática',1)";
-  
-  /*-------------------------------------------------------------  // Listado de Observables */
-  
+  // Inserts predeterminados
+  registroCategoria: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (1, 'Categoría Default')";
+  registroCrud: string = "INSERT or IGNORE INTO crud(idcrud, nombre, descripcion, imagen, precio, idCategoria) VALUES (1, 'nombre', 'descripcion', 'imagen', 10, 1)";
+  registroRol: string = "INSERT or IGNORE INTO rol(idRol, nombre) VALUES (1, 'admin'), (2, 'usuario')";
+  registroEstados: string = "INSERT or IGNORE INTO estados(idEstado, nombre) VALUES (1, 'Pendiente'), (2, 'En Proceso'), (3, 'Completado')";
+
   // Listado de Observables
-  
   listadoUsuario = new BehaviorSubject<Usuario[]>([]);
   listadoVenta = new BehaviorSubject<Venta[]>([]);
   listadoRol = new BehaviorSubject<Rol[]>([]);
   listadoCategoria = new BehaviorSubject<Categoria[]>([]);
   listadoDetalles = new BehaviorSubject<Detalles[]>([]);
   listadoEstados = new BehaviorSubject<Estados[]>([]);
-
-   
-   listadoCrud = new BehaviorSubject([]);
+  listadoCrud = new BehaviorSubject<Crud[]>([]);
   
   public isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  constructor(private sqlite: SQLite, private platform: Platform, private alertController: AlertController) {
-    this.createBD(); // Crea BD Crud
-
+  constructor(
+    private sqlite: SQLite, 
+    private platform: Platform, 
+    private alertController: AlertController
+  ) {
+    this.createBD();
   }
   
   async presentAlert(titulo: string, msj: string) {
@@ -68,17 +65,40 @@ export class ServiceBDService {
     await alert.present();
   }
 
-  fetchcrud(): Observable<Crud[]> {
+  // Observables getters
+  fetchCrud(): Observable<Crud[]> {
     return this.listadoCrud.asObservable();
   }
+
   fetchUsuario(): Observable<Usuario[]> {
     return this.listadoUsuario.asObservable();
+  }
+
+  fetchVenta(): Observable<Venta[]> {
+    return this.listadoVenta.asObservable();
+  }
+
+  fetchRol(): Observable<Rol[]> {
+    return this.listadoRol.asObservable();
+  }
+
+  fetchCategoria(): Observable<Categoria[]> {
+    return this.listadoCategoria.asObservable();
+  }
+
+  fetchDetalles(): Observable<Detalles[]> {
+    return this.listadoDetalles.asObservable();
+  }
+
+  fetchEstados(): Observable<Estados[]> {
+    return this.listadoEstados.asObservable();
   }
 
   dbState() {
     return this.isDBReady.asObservable();
   }
 
+  // Creación de la base de datos
   createBD() {
     this.platform.ready().then(() => {
       this.sqlite.create({
@@ -87,187 +107,393 @@ export class ServiceBDService {
       }).then((db: SQLiteObject) => {
         this.database = db;
         this.crearTablas();
-        this.seleccionarCrud();
-        this.isDBReady.next(true);
       }).catch(e => {
         this.presentAlert('Base de Datos', 'Error en crear la BD: ' + JSON.stringify(e));
       });
     });
   }
 
-/*-------------------------------------------------------------  // Crear tablas */
+  // Crear tablas
   async crearTablas() {
     try {
-  
-      await this.database.executeSql(this.tablaCrud, []);
-
+      // Crear tablas base
+      await this.database.executeSql(this.tablaRol, []);
+      await this.database.executeSql(this.tablaCategoria, []);
+      await this.database.executeSql(this.tablaEstados, []);
       
-      await this.database.executeSql(this.registroCrud,[]);
+      // Crear tablas con dependencias
+      await this.database.executeSql(this.tablaCrud, []);
+      await this.database.executeSql(this.tablaUsuario, []);
+      await this.database.executeSql(this.tablaVenta, []);
+      await this.database.executeSql(this.tablaDetalles, []);
 
-      await this.insertarUsuario('Sebastian', 'seba.medina@duocuc.cl', 'Admin123.', 0,);
-      await this.insertarUsuario('Angel', 'an@gmail.com', 'Angel1235*' ,0, );
+      // Insertar datos predeterminados
+      await this.database.executeSql(this.registroRol, []);
+      await this.database.executeSql(this.registroCategoria, []);
+      await this.database.executeSql(this.registroEstados, []);
+      await this.database.executeSql(this.registroCrud, []);
 
+      // Insertar usuarios por defecto
+      await this.insertarUsuario('Sebastian', 'seba.medina@duocuc.cl', 'Admin123.', 1);
+      await this.insertarUsuario('Angel', 'an@gmail.com', 'Angel1235*', 2);
+
+      // Cargar datos iniciales
+      await this.cargarDatosIniciales();
+      
+      this.isDBReady.next(true);
     } catch (e) {
       this.presentAlert('Creación de Tablas', 'Error en crear las tablas: ' + JSON.stringify(e));
     }
   }
-    /*
-        await this.database.executeSql(this.tablaCategoria, []);
-        await this.database.executeSql(this.tablaDetalles, []);
-        await this.database.executeSql(this.tablaEstados, []);
-        await this.database.executeSql(this.tablaVenta, []);
-        await this.database.executeSql(this.tablaRol, []);
-        await this.database.executeSql(this.tablaUsuario, []);
-    */
-  /*-------------------------------------------------------------  // Queries crud */
-  seleccionarCrud() {
-    return this.database.executeSql('SELECT * FROM crud', []).then(res => {
-      let items: Crud[] = [];
-      if (res.rows.length > 0) {
-        for (var i = 0; i < res.rows.length; i++) {
-          items.push({
-            idcrud: res.rows.item(i).idcrud,
-            nombre: res.rows.item(i).nombre,
-            descripcion: res.rows.item(i).descripcion,
-            imagen: res.rows.item(i).imagen,
-            precio: res.rows.item(i).precio,
-            idcategoria: res.rows.item(i).idCategoria 
-          });
-        }
+
+  // Cargar todos los datos iniciales
+  async cargarDatosIniciales() {
+    await this.seleccionarCrud();
+    await this.seleccionarUsuario();
+    await this.seleccionarRol();
+    await this.seleccionarCategoria();
+    await this.seleccionarDetalles();
+    await this.seleccionarEstados();
+    await this.seleccionarVenta();
+  }
+
+  // CRUD Operations
+
+  // Crud
+  async seleccionarCrud() {
+    const res = await this.database.executeSql('SELECT * FROM crud', []);
+    let items: Crud[] = [];
+    if (res.rows.length > 0) {
+      for (var i = 0; i < res.rows.length; i++) {
+        items.push({
+          idCrud: res.rows.item(i).idcrud,
+          nombre: res.rows.item(i).nombre,
+          descripcion: res.rows.item(i).descripcion,
+          imagen: res.rows.item(i).imagen,
+          precio: res.rows.item(i).precio,
+          idCategoria: res.rows.item(i).idCategoria
+        });
       }
-      this.listadoCrud.next(items as any);
-    });
+    }
+    this.listadoCrud.next(items);
   }
 
-  eliminarCrud(id: string) {
-    return this.database.executeSql('DELETE FROM crud WHERE idcrud = ?', [id]).then(res => {
-      this.presentAlert("Eliminar", "Producto Eliminado");
-      this.seleccionarCrud();
-    }).catch(e => {
-      this.presentAlert('Eliminar', 'Error: ' + JSON.stringify(e));
-    });
-  }
-
-  modificarCrud(id: string, nombre: string, descripcion: string, imagen: any, precio: number, idcategoria: number) {
-    return this.database.executeSql('UPDATE crud SET nombre = ?, descripcion = ?, imagen = ?, precio = ?, idCategoria = ? WHERE idcrud = ?', [nombre, descripcion, imagen, precio, idcategoria, id]).then(res => {
-      this.presentAlert("Modificar", "Producto Modificado");
-      this.seleccionarCrud();
-    }).catch(e => {
-      this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
-    });
-  }
-
-  insertarCrud(nombre: string, descripcion: string, imagen: any, precio: number, idcategoria: number) {
-    return this.database.executeSql('INSERT INTO crud(nombre, descripcion, imagen, precio, idCategoria) VALUES (?, ?, ?, ?, ?)', [nombre, descripcion, imagen, precio, idcategoria]).then(res => {
+  async insertarCrud(nombre: string, descripcion: string, imagen: any, precio: number, idCategoria: number) {
+    try {
+      await this.database.executeSql(
+        'INSERT INTO crud(nombre, descripcion, imagen, precio, idCategoria) VALUES (?, ?, ?, ?, ?)',
+        [nombre, descripcion, imagen, precio, idCategoria]
+      );
+      await this.seleccionarCrud();
       this.presentAlert("Insertar", "Producto Registrado");
-      this.seleccionarCrud();
-    }).catch(e => {
+    } catch (e) {
       this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
-    });
+    }
   }
-  /*-------------------------------------------------------------  // Queries usuario */
-  seleccionarUsuario() {
-    return this.database.executeSql('SELECT * FROM usuario', []).then(res => {
-      let items: Usuario[] = [];
-      if (res.rows.length > 0) {
-        for (var i = 0; i < res.rows.length; i++) {
-          items.push({
-            idusuario: res.rows.item(i).idusuario,
-            nombre: res.rows.item(i).nombre,
-            correo: res.rows.item(i).correo,
-            imagen: res.rows.item(i).imagen,
-            contrasena: res.rows.item(i).contrasena,
-            idRol: res.rows.item(i).id_Rol
-          });
-        }
-      }
-      this.listadoUsuario.next(items);
-    });
-  }
-  
 
-
-
-  
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-  modificarUsuario(id: string, nombre: string, correo: string) {
-    return this.database.executeSql('UPDATE usuario SET nombre = ?, correo = ?WHERE idusuario = ?', [nombre, correo,  id]).then(res => {
-      this.presentAlert("insert","Entra");
-      this.presentAlert("Modificar", "Usuario Modificado");
-      this.seleccionarUsuario();
-    }).catch(e => {
+  async modificarCrud(id: string, nombre: string, descripcion: string, imagen: any, precio: number, idCategoria: number) {
+    try {
+      await this.database.executeSql(
+        'UPDATE crud SET nombre = ?, descripcion = ?, imagen = ?, precio = ?, idCategoria = ? WHERE idcrud = ?',
+        [nombre, descripcion, imagen, precio, idCategoria, id]
+      );
+      await this.seleccionarCrud();
+      this.presentAlert("Modificar", "Producto Modificado");
+    } catch (e) {
       this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
-    });
+    }
   }
-  modificarContrasena(id: string, contrasena: string,) {
-    return this.database.executeSql('UPDATE usuario SET  contrasena = ? WHERE idusuario = ?', [contrasena, id]).then(res => {
-      this.presentAlert("Modificar Contraseña", "Usuario Modificado");
-      this.seleccionarUsuario();
-    }).catch(e => {
-      this.presentAlert('Modificar Contraseña', 'Error: ' + JSON.stringify(e));
-    });
+
+  async eliminarCrud(id: string) {
+    try {
+      await this.database.executeSql('DELETE FROM crud WHERE idcrud = ?', [id]);
+      await this.seleccionarCrud();
+      this.presentAlert("Eliminar", "Producto Eliminado");
+    } catch (e) {
+      this.presentAlert('Eliminar', 'Error: ' + JSON.stringify(e));
+    }
   }
-  
-  insertarUsuario(nombre: string, correo: string,  contrasena: string, idRol: number ) {
-    return this.database.executeSql('INSERT INTO usuario(nombre, correo,  contrasena, id_Rol  ) VALUES (?, ?, ?, ? )', [nombre, correo,  contrasena, idRol ]).then(res => {
+
+  // Usuario
+  async seleccionarUsuario() {
+    const res = await this.database.executeSql('SELECT * FROM usuario', []);
+    let items: Usuario[] = [];
+    if (res.rows.length > 0) {
+      for (var i = 0; i < res.rows.length; i++) {
+        items.push({
+          idusuario: res.rows.item(i).idusuario,
+          nombre: res.rows.item(i).nombre,
+          correo: res.rows.item(i).correo,
+          imagen: res.rows.item(i).imagen,
+          contrasena: res.rows.item(i).contrasena,
+          idRol: res.rows.item(i).id_Rol
+        });
+      }
+    }
+    this.listadoUsuario.next(items);
+  }
+
+  async insertarUsuario(nombre: string, correo: string, contrasena: string, idRol: number) {
+    try {
+      await this.database.executeSql(
+        'INSERT INTO usuario(nombre, correo, contrasena, id_Rol) VALUES (?, ?, ?, ?)',
+        [nombre, correo, contrasena, idRol]
+      );
+      await this.seleccionarUsuario();
       this.presentAlert("Insertar", "Usuario Registrado");
-      this.seleccionarUsuario();
-    }).catch(e => {
+    } catch (e) {
       this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
-    });
+    }
   }
 
-  //compara la base de datos 
-  obtenerUsuarios() {
-    return this.listadoUsuario;
+  async modificarUsuario(id: string, nombre: string, correo: string) {
+    try {
+      await this.database.executeSql(
+        'UPDATE usuario SET nombre = ?, correo = ? WHERE idusuario = ?',
+        [nombre, correo, id]
+      );
+      await this.seleccionarUsuario();
+      this.presentAlert("Modificar", "Usuario Modificado");
+    } catch (e) {
+      this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
+    }
   }
 
-  validarCredenciales(correo: string, contrasena: string): Promise<boolean> {
-    return this.database.executeSql('SELECT * FROM usuario WHERE correo = ? AND contrasena = ?', [correo, contrasena])
-      .then(res => {
-        return res.rows.length > 0; 
-      }).catch(e => {
-        console.error('Error al validar credenciales:', e);
-        return false;
-      });
+  async modificarContrasena(id: string, contrasena: string) {
+    try {
+      await this.database.executeSql(
+        'UPDATE usuario SET contrasena = ? WHERE idusuario = ?',
+        [contrasena, id]
+      );
+      await this.seleccionarUsuario();
+      this.presentAlert("Modificar Contraseña", "Contraseña Modificada");
+    } catch (e) {
+      this.presentAlert('Modificar Contraseña', 'Error: ' + JSON.stringify(e));
+    }
   }
 
-  //-----------------------------------------------------------------------------------------------------------------------------
+  // Autenticación
+  async validarCredenciales(correo: string, contrasena: string): Promise<boolean> {
+    try {
+      const res = await this.database.executeSql(
+        'SELECT * FROM usuario WHERE correo = ? AND contrasena = ?',
+        [correo, contrasena]
+      );
+      return res.rows.length > 0;
+    } catch (e) {
+      console.error('Error al validar credenciales:', e);
+      return false;
+    }
+  }
 
-
-  //TRAE CORREO, NOMBRE Y ID USUARIO
-  guardarTipoStorage(correo: string, contrasena: string) {
-    return this.database.executeSql(
-      'SELECT idusuario, id_Rol, nombre FROM usuario WHERE correo = ? AND contrasena = ?',
-      [correo, contrasena]  // Asegúrate de pasar los parámetros correctos
-    ).then(res => {
-      // variable para almacenar el resultado de la consulta
+  async guardarTipoStorage(correo: string, contrasena: string) {
+    try {
+      const res = await this.database.executeSql(
+        'SELECT idusuario, id_Rol, nombre FROM usuario WHERE correo = ? AND contrasena = ?',
+        [correo, contrasena]
+      );
       let items: any[] = [];
-
-      // valido si trae al menos un registro
       if (res.rows.length > 0) {
-        // recorro mi resultado
         for (var i = 0; i < res.rows.length; i++) {
-          // agrego los registros a mi lista
           items.push({
             idusuario: res.rows.item(i).idusuario,
             id_Rol: res.rows.item(i).id_Rol,
             nombre: res.rows.item(i).nombre,
-
           });
         }
       }
-
-      // Retornar los datos del usuario autenticado
-      return items; // Retorna los datos
-    }).catch(error => {
-      // Manejo de errores
-      //this.presentAlert("Error al ejecutar la consulta SQL: ", error);
-      return []; // Retornar arreglo vacío en caso de error
-    });
+      return items;
+    } catch (e) {
+      console.error('Error en guardarTipoStorage:', e);
+      return [];
+    }
   }
 
-  
-}
-  /*-------------------------------------------------------------  // Queries venta */  
+  // Métodos adicionales para las demás tablas
+  async seleccionarRol() {
+    const res = await this.database.executeSql('SELECT * FROM rol', []);
+    let items: Rol[] = [];
+    if (res.rows.length > 0) {
+      for (var i = 0; i < res.rows.length; i++) {
+        items.push({
+          idRol: res.rows.item(i).idRol,
+          nombre: res.rows.item(i).nombre
+        });
+      }
+    }
+    this.listadoRol.next(items);
+  }
 
+  async seleccionarCategoria() {
+    const res = await this.database.executeSql('SELECT * FROM categoria', []);
+    let items: Categoria[] = [];
+    if (res.rows.length > 0) {
+      for (var i = 0; i < res.rows.length; i++) {
+        items.push({
+          idCategoria: res.rows.item(i).idCategoria,
+          nomCateg: res.rows.item(i).nomCateg
+        });
+      }
+    }
+    this.listadoCategoria.next(items);
+  }
+
+  async seleccionarDetalles() {
+    const res = await this.database.executeSql('SELECT * FROM detalles', []);
+    let items: Detalles[] = [];
+    if (res.rows.length > 0) {
+      for (var i = 0; i < res.rows.length; i++) {
+        items.push({
+          idDetalle: res.rows.item(i).idDetalle,
+          idVenta: res.rows.item(i).idVenta,
+          idProducto: res.rows.item(i).idProducto,
+          cantidad: res.rows.item(i).cantidad,
+          subtotal: res.rows.item(i).subtotal
+        });
+      }
+    }
+    this.listadoDetalles.next(items);
+  }
+
+  async seleccionarEstados() {
+    const res = await this.database.executeSql('SELECT * FROM estados', []);
+    let items: Estados[] = [];
+    if (res.rows.length > 0) {
+      for (var i = 0; i < res.rows.length; i++) {
+        items.push({
+          idEstado: res.rows.item(i).idEstado,
+          nombre: res.rows.item(i).nombre
+        });
+      }
+    }
+    this.listadoEstados.next(items);
+  }
+
+  async seleccionarVenta() {
+    const res = await this.database.executeSql('SELECT * FROM venta', []);
+    let items: Venta[] = [];
+    if (res.rows.length > 0) {
+      for (var i = 0; i < res.rows.length; i++) {
+        items.push({
+          idVenta: res.rows.item(i).idVenta,
+          total: res.rows.item(i).total,
+          idusuario: res.rows.item(i).idusuario,
+          subtotal: res.rows.item(i).subtotal,
+          idCrud: res.rows.item(i).idCrud
+        });
+      }
+    }
+    this.listadoVenta.next(items);
+  }
+
+  // Métodos para insertar en las demás tablas
+  async insertarCategoria(nomCateg: string) {
+    try {
+      await this.database.executeSql(
+        'INSERT INTO categoria(nomCateg) VALUES (?)',
+        [nomCateg]
+      );
+      await this.seleccionarCategoria();
+      this.presentAlert("Insertar", "Categoría Registrada");
+    } catch (e) {
+      this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
+    }
+  }
+
+  async insertarVenta(total: number, idusuario: number, subtotal: number, idCrud: number) {
+    try {
+      await this.database.executeSql(
+        'INSERT INTO venta(total, idusuario, subtotal, idCrud) VALUES (?, ?, ?, ?)',
+        [total, idusuario, subtotal, idCrud]
+      );
+      await this.seleccionarVenta();
+      this.presentAlert("Insertar", "Venta Registrada");
+    } catch (e) {
+      this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
+    }
+  }
+
+  async insertarDetalle(idVenta: number, idProducto: number, cantidad: number, subtotal: number) {
+    try {
+      await this.database.executeSql(
+        'INSERT INTO detalles(idVenta, idProducto, cantidad, subtotal) VALUES (?, ?, ?, ?)',
+        [idVenta, idProducto, cantidad, subtotal]
+      );
+      await this.seleccionarDetalles();
+      this.presentAlert("Insertar", "Detalle Registrado");
+    } catch (e) {
+      this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
+    }
+  }
+
+  // Métodos para modificar registros en las demás tablas
+  async modificarCategoria(id: number, nomCateg: string) {
+    try {
+      await this.database.executeSql(
+        'UPDATE categoria SET nomCateg = ? WHERE idCategoria = ?',
+        [nomCateg, id]
+      );
+      await this.seleccionarCategoria();
+      this.presentAlert("Modificar", "Categoría Modificada");
+    } catch (e) {
+      this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
+    }
+  }
+
+  async modificarVenta(id: number, total: number, subtotal: number) {
+    try {
+      await this.database.executeSql(
+        'UPDATE venta SET total = ?, subtotal = ? WHERE idVenta = ?',
+        [total, subtotal, id]
+      );
+      await this.seleccionarVenta();
+      this.presentAlert("Modificar", "Venta Modificada");
+    } catch (e) {
+      this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
+    }
+  }
+
+  async modificarDetalle(id: number, cantidad: number, subtotal: number) {
+    try {
+      await this.database.executeSql(
+        'UPDATE detalles SET cantidad = ?, subtotal = ? WHERE idDetalle = ?',
+        [cantidad, subtotal, id]
+      );
+      await this.seleccionarDetalles();
+      this.presentAlert("Modificar", "Detalle Modificado");
+    } catch (e) {
+      this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
+    }
+  }
+
+  // Métodos para eliminar registros
+  async eliminarCategoria(id: number) {
+    try {
+      await this.database.executeSql('DELETE FROM categoria WHERE idCategoria = ?', [id]);
+      await this.seleccionarCategoria();
+      this.presentAlert("Eliminar", "Categoría Eliminada");
+    } catch (e) {
+      this.presentAlert('Eliminar', 'Error: ' + JSON.stringify(e));
+    }
+  }
+
+  async eliminarVenta(id: number) {
+    try {
+      await this.database.executeSql('DELETE FROM venta WHERE idVenta = ?', [id]);
+      await this.seleccionarVenta();
+      this.presentAlert("Eliminar", "Venta Eliminada");
+    } catch (e) {
+      this.presentAlert('Eliminar', 'Error: ' + JSON.stringify(e));
+    }
+  }
+
+  async eliminarDetalle(id: number) {
+    try {
+      await this.database.executeSql('DELETE FROM detalles WHERE idDetalle = ?', [id]);
+      await this.seleccionarDetalles();
+      this.presentAlert("Eliminar", "Detalle Eliminado");
+    } catch (e) {
+      this.presentAlert('Eliminar', 'Error: ' + JSON.stringify(e));
+    }
+  }
+} 

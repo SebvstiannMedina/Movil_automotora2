@@ -1,4 +1,4 @@
 export class Estados {
-    id_estado!:number;
+    idEstado!:number;
     nombre!:string;
 }

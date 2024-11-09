@@ -3,6 +3,6 @@ export class Venta {
     total!:number;
     idusuario!:number;
     subtotal!:number;
-    id!:number;
+    idCrud!:number;
 
 }
