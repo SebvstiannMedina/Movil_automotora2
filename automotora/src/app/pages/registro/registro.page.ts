@@ -92,6 +92,7 @@ export class RegistroPage implements OnInit {
     this.storage.clear();
   }
 
+  
   // Interpolación y redirección
   regienvia() {
     const navigationExtras: NavigationExtras = {
