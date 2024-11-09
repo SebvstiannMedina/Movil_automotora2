@@ -232,22 +232,6 @@ export class ServiceBDService {
       });
   }
 
-  
-
-  /*
-  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(
-  idusuario INTEGER PRIMARY KEY AUTOINCREMENT, 
-  nombre VARCHAR(250), 
-  correo VARCHAR(250), 
-  imagen BLOB, 
-  contrasena VARCHAR(250), 
-  id_Rol INTEGER, 
-  
-  FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
- 
-  */
-
-
   //-----------------------------------------------------------------------------------------------------------------------------
 
 
