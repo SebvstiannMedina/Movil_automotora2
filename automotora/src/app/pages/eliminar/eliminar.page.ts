@@ -56,7 +56,7 @@ export class EliminarPage implements OnInit {
 
   }
   eliminar(x:any){
-    this.bd.eliminarCrud(x.idrud);
+    this.bd.eliminarCrud(x.idCrud);
   }
 
   agregar(){
