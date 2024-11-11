@@ -272,6 +272,22 @@ export class ServiceBDService {
     }
   }
 
+  async searchUserById(idusuario: number) {
+    return this.database.executeSql('SELECT * FROM usuario WHERE idusuario = ?', [idusuario])
+      .then((res: any) => { // Declara explícitamente el tipo de res como any o el tipo correcto si lo conoces
+        if (res.rows.length > 0) {
+          return res.rows.item(0);
+        } else {
+          return null;
+        }
+      })
+      .catch((e: any) => { // Declara explícitamente el tipo de e como any
+        console.error("Error executing SQL", e);
+        return null;
+      });
+  }
+  
+
   // Autenticación
   async validarCredenciales(correo: string, contrasena: string): Promise<boolean> {
     try {
