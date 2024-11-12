@@ -10,7 +10,7 @@
 
 <ion-content >
   <ion-card>
-    <h1>Perfil de cliente</h1>
+    <h1>Perfil</h1>
     <ion-card-header>
       <h1>
         <ion-avatar>
@@ -37,6 +37,7 @@
       </ion-item>
     </ion-card-content>
     <ion-button color="dark" >Editar perfil</ion-button>
+    <ion-button color="dark"  [routerDirection]="'root'" [routerLink]="'/home'">Volver</ion-button>
   <!--  <ion-button color="dark" [routerLink]="['/home']">Volver</ion-button>-->
   </ion-card>
 </ion-content>
