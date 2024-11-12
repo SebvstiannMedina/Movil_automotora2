@@ -38,7 +38,7 @@ describe('EditarPerfilPage', () => {
     component = fixture.componentInstance;
     
     // Inicializa 'usuario' con un objeto predeterminado
-    component.usuario = {
+    component.user = {
       nombre: 'Angel',
       correo: 'angel@gmail.com',
       imagen: 'any',
@@ -55,9 +55,9 @@ describe('EditarPerfilPage', () => {
   });
 
   it('VAlidar que el nombre sea valido', () => {
-    component.usuario.nombre = 'Ana123';
+    component.user.nombre = 'Ana123';
     expect(component.validarNombre()).toBeFalse();
-    component.usuario.nombre = 'Ana';
+    component.user.nombre = 'Ana';
     expect(component.validarNombre()).toBeTrue();
   });
   
