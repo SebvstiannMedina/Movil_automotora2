@@ -49,7 +49,6 @@ export class RegistroPage implements OnInit {
         this.compararContrasenas(this.objetoRegistro.confirmaContrasena)) {
       
       console.log('Registro exitoso:', this.objetoRegistro);
-      this.presentAlert();
       this.bd.insertarUsuario(this.objetoRegistro.nombre, this.objetoRegistro.email, this.objetoRegistro.contrasena, 1);
       
       
@@ -57,7 +56,6 @@ export class RegistroPage implements OnInit {
     } else {
       this.router.navigate(['/registro']);
       console.log('Validaciones fallidas');
-      this.presentAlert2();
     }
   }
 
