@@ -10,18 +10,32 @@ import { Camera, CameraResultType } from '@capacitor/camera';
   styleUrls: ['./editar-perfil.page.scss'],
 })
 export class EditarPerfilPage implements OnInit {
-  usuario:any;
-  /*
-  nombre: string= ""; 
-  email: string= "";
-  contrasena: string= "";
-*/
-    // Validacion nombre
-  validarNombre(): boolean {
-    const nameRegex = /^[a-zA-ZÀ-ÿÑñáéíóúÁÉÍÓÚüÜ ]+$/; 
-    const longitudMinima = 3;
-    return this.usuario.nombre.length >= longitudMinima && nameRegex.test(this.usuario.nombre);
+  user: any;
+
+  constructor(
+    private router: Router,
+    private activedrouter: ActivatedRoute,
+    private alertController: AlertController,
+    private bd: ServiceBDService
+  ) {
+    // Obtener los datos del usuario enviados desde la página anterior
+    this.activedrouter.queryParams.subscribe(res => {
+      if (this.router.getCurrentNavigation()?.extras.state) {
+        this.user = this.router.getCurrentNavigation()?.extras?.state?.['user'];
+      }
+    });
   }
+
+  ngOnInit() {}
+
+  // Validación del nombre
+  validarNombre(): boolean {
+    const nameRegex = /^[a-zA-ZÀ-ÿÑñáéíóúÁÉÍÓÚüÜ ]+$/;
+    const longitudMinima = 3;
+    return this.user.nombre.length >= longitudMinima && nameRegex.test(this.user.nombre);
+  }
+
+  // Función para tomar una foto y actualizar la imagen del usuario
   takePicture = async () => {
     const image = await Camera.getPhoto({
       quality: 90,
@@ -29,13 +43,12 @@ export class EditarPerfilPage implements OnInit {
       resultType: CameraResultType.Uri
     });
 
-    this.usuario.imagen = image.webPath;
-  
-   
+    this.user.imagen = image.webPath;
   };
-  // Alertas
+
+  // Función para mostrar alertas dependiendo del estado
   async presentAlert() {
-    if (!this.usuario.nombre) {
+    if (!this.user.nombre) {
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'No hay nada que editar',
@@ -52,31 +65,25 @@ export class EditarPerfilPage implements OnInit {
     } else {
       const alert = await this.alertController.create({
         header: 'EDITADO',
-        message: 'Perfil fue editado',
+        message: 'Perfil fue editado correctamente.',
         buttons: ['OK'],
       });
       await alert.present();
-      this.bd.modificarUsuario(this.usuario.id,this.usuario.nombre,this.usuario.correo)
+
+      // Actualizar los datos del usuario en la base de datos
+      this.bd.modificarUsuario(this.user.idusuario, this.user.nombre, this.user.correo)
+        .then(() => {
+          // Regresar a la página principal después de la actualización
+          this.router.navigate(['/home']);
+        })
+        .catch(err => {
+          console.error('Error al actualizar usuario:', err);
+        });
     }
   }
 
-  constructor(private router: Router, private activedrouter: ActivatedRoute,private alertController: AlertController, private bd: ServiceBDService) {
-    this.activedrouter.queryParams.subscribe(res=>{
-      if(this.router.getCurrentNavigation()?.extras.state){
-        this.usuario = this.router.getCurrentNavigation()?.extras?.state?.['Usuario'];
-      }
-    })
-
-  }
-
-  ngOnInit() {
-  }
+  // Función para volver a la página principal
   volver() {
-
     this.router.navigate(['/home']);
-    //this.presentAlert();
-   
   }
-
-
 }
