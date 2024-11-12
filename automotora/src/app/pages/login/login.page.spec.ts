@@ -49,7 +49,7 @@ describe('LoginPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Validar el correo y la contrasena', () => {
+  it('Validar el correo y la contrasena verificados', () => {
     component.objetoLogin = { correo: 'test@test.com', contrasena: 'Test12345*' };
     serviceBDService.validarCredenciales.and.returnValue(Promise.resolve(true));
     component.login();
