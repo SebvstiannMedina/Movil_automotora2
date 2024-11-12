@@ -64,11 +64,13 @@ export class LoginPage implements OnInit {
           ///this.presentAlert("ver datos " + idusuario + id_Rol + nombre); // id = 1 || rol = 1 + nombre = user
           console.log('Login exitoso:', this.objetoLogin);
           this.presentAlert('Login exitoso');
+        }else {
+          console.log('Login fallido');
+          this.presentAlert('Email o contraseña incorrectos');
         }
-      } else {
-        console.log('Login fallido');
-        this.presentAlert('Email o contraseña incorrectos');
-      }
+        } else {
+          console.log('Login fallido');   
+        }
     });
   }
 

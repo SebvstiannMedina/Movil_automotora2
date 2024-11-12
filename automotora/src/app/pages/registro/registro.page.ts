@@ -56,6 +56,7 @@ export class RegistroPage implements OnInit {
     } else {
       this.router.navigate(['/registro']);
       console.log('Validaciones fallidas');
+      this.presentAlert2()
     }
   }
 
