@@ -3,14 +3,13 @@ import { NavigationExtras, Router } from '@angular/router';
 import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 import { AlertController } from '@ionic/angular';
 import { ServiceBDService } from 'src/app/service/service-bd.service';
-
+import { Camera, CameraResultType } from '@capacitor/camera';
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.page.html',
   styleUrls: ['./registro.page.scss'],
 })
 export class RegistroPage implements OnInit {
-
 ////ALertas
   async presentAlert() {
     const alert = await this.alertController.create({
@@ -35,7 +34,11 @@ export class RegistroPage implements OnInit {
   email: string='';
   contrasena: string='';
   confirmaContrasena: string='';
+  id_rol: string = '2';
+  imagen: any;
+
 ////declara lo que registrara
+
 
   constructor(private router: Router, private alertController: AlertController, private bd:ServiceBDService,  private storage: NativeStorage) { }
 
@@ -47,7 +50,7 @@ export class RegistroPage implements OnInit {
         this.compararContrasenas(this.confirmaContrasena)) {
     
       
-      this.bd.insertarUsuario(this.nombre, this.email, this.contrasena, 1);
+      this.bd.insertarUsuario(this.nombre, this.email, this.contrasena, Number(this.id_rol), this.imagen);
       this.router.navigate(['/login']);
       
       
@@ -84,7 +87,8 @@ export class RegistroPage implements OnInit {
     compararContrasenas(confirmaContrasena: string): boolean {
       return this.contrasena === confirmaContrasena;
     }
-    
+
+
   ngOnInit() {
     this.storage.clear();
   }

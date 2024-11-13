@@ -12,14 +12,10 @@
   <ion-card>
     <h1>Editar perfil</h1>
     <ion-card-header>
-    <h1>         
-
-    </h1> 
     <h3>
-      foto perfil 
-      <br>
-       <ion-button color="dark" (click)="takePicture()">cambiar foto de perfil </ion-button> 
-    </h3>
+        <img [src]="user.imagen || 'assets/defectoimagen.png'" alt="Imagen de perfil por defecto" class="usuario-imagen" *ngIf="user.imagen || !user.imagen">  
+      <ion-button  (click)="takePicture()">cambiar foto de perfil </ion-button> 
+      </h3>
     
       </ion-card-header>
     <ion-card-header>
@@ -39,7 +35,7 @@
       </ion-item>
     </ion-card-content>
     
-      <ion-button color="dark"(click)="presentAlert()" >Guardar cambios </ion-button>
-      <ion-button color="dark" [routerLink]="['/ver-perfil']" >volver </ion-button>
+      <ion-button (click)="presentAlert()" >Guardar cambios </ion-button>
+      <ion-button  [routerLink]="['/ver-perfil']" >volver </ion-button>
   </ion-card>
 </ion-content>

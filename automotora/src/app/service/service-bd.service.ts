@@ -32,13 +32,15 @@ export class ServiceBDService {
   tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), imagen BLOB, contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
 
   // Inserts predeterminados
-  categorias: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (1, 'Llantas'), (2, 'Aeromatizantes'), (3, 'Otros')";
-
+  llantas: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (1, 'Llantas')";
+  aeromatizantes: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (1, 'Aeromatizantes')";
+  otros: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (1, 'Otros')";
+ 
   registroCrud: string = "INSERT or IGNORE INTO crud(idcrud, nombre, descripcion, imagen, precio, idCategoria) VALUES (1, 'nombre', 'descripcion', 'imagen', 10, 1)";
   registroRol: string = "INSERT or IGNORE INTO rol(idRol, nombre) VALUES (1, 'admin'), (2, 'usuario')";
   registroEstados: string = "INSERT or IGNORE INTO estados(idEstado, nombre) VALUES (1, 'Pendiente'), (2, 'En Proceso'), (3, 'Completado')";
 
-  admin: string ="INSERT or IGNORE INTO usuario(nombre,correo, contrasena, id_Rol) VALUES('Sebastian', 'seba.medina@duocuc.cl', 'Admin123.', 1), ('Angel', 'an@gmail.com', 'Angel1235*', 1)"
+  admin: string ="INSERT or IGNORE INTO usuario(nombre,correo, contrasena, id_Rol, imagen) VALUES('MotorSphere', 'admin@gmail.com', 'Admin123.', 1,'imagen')"
   // Listado de Observables
   listadoUsuario = new BehaviorSubject<Usuario[]>([]);
   listadoVenta = new BehaviorSubject<Venta[]>([]);
@@ -135,7 +137,11 @@ export class ServiceBDService {
       await this.database.executeSql(this.registroCrud, []);
 
       // Insertar usuarios por defecto
-      await this.database.executeSql(this.admin, []);
+      await this.database.executeSql(this.admin, []); 
+
+      await this.database.executeSql(this.llantas, []);
+      await this.database.executeSql(this.aeromatizantes, []);
+      await this.database.executeSql(this.otros, []);
 
 
       // Cargar datos iniciales
@@ -234,11 +240,11 @@ export class ServiceBDService {
     this.listadoUsuario.next(items);
   }
 
-  async insertarUsuario(nombre: string, correo: string, contrasena: string, idRol: number) {
+  async insertarUsuario(nombre: string, correo: string, contrasena: string, idRol: number, imagen: any) {
     try {
       await this.database.executeSql(
-        'INSERT INTO usuario(nombre, correo, contrasena, id_Rol) VALUES (?, ?, ?, ?)',
-        [nombre, correo, contrasena, idRol]
+        'INSERT INTO usuario(nombre, correo, contrasena, id_Rol, imagen) VALUES (?, ?, ?, ?, ?)',
+        [nombre, correo, contrasena, idRol, imagen]
       );
       await this.seleccionarUsuario();
       this.presentAlert("Insertar", "Usuario Registrado");
@@ -247,11 +253,11 @@ export class ServiceBDService {
     }
   }
 
-  async modificarUsuario(id: string, nombre: string, correo: string) {
+  async modificarUsuario(id: string, nombre: string, correo: string, imagen: any) {
     try {
       await this.database.executeSql(
-        'UPDATE usuario SET nombre = ?, correo = ? WHERE idusuario = ?',
-        [nombre, correo, id]
+        'UPDATE usuario SET nombre = ?, correo = ?, imagen = ? WHERE idusuario = ?',
+        [nombre, correo, imagen, id]
       );
       await this.seleccionarUsuario();
       this.presentAlert("Modificar", "Usuario Modificado");

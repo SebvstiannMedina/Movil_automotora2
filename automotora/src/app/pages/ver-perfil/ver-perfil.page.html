@@ -13,11 +13,8 @@
     <h1>Perfil</h1>
     <ion-card-header>
       <h1>
-        <ion-avatar>
-
-        </ion-avatar>
+          <img [src]="imagen || 'assets/defectoimagen.png'" alt="Imagen de perfil por defecto" class="usuario-imagen" *ngIf="imagen || !imagen">
       </h1>
-      <h3>Foto perfil</h3>
     </ion-card-header>
     <ion-card-header>
       <ion-card-title>Datos del perfil</ion-card-title>
@@ -36,8 +33,8 @@
         <ion-input type="password" value="{{password}}" disabled></ion-input>
       </ion-item>
     </ion-card-content>
-    <ion-button color="dark" (click)="editProfile()" >Editar perfil</ion-button>
-    <ion-button color="dark"  [routerDirection]="'root'" [routerLink]="'/home'">Volver</ion-button>
+    <ion-button  (click)="editProfile()" >Editar perfil</ion-button>
+    <ion-button  [routerDirection]="'root'" [routerLink]="'/home'">Volver</ion-button>
   <!--  <ion-button color="dark" [routerLink]="['/home']">Volver</ion-button>-->
   </ion-card>
 </ion-content>

@@ -14,6 +14,7 @@ export class VerPerfilPage implements OnInit {
   email: string = "";
   password: string = "";
   id_user!: number;
+  imagen!: any;
 
   constructor(
     private router: Router,
@@ -34,7 +35,11 @@ export class VerPerfilPage implements OnInit {
           this.username = data.nombre;
           this.email = data.correo;
           this.password = data.contrasena;
+          this.imagen = data.imagen;
 
+         // if (data.imagen) {
+          //  this.imagen = `data:image/jpeg;base64,${data.imagen}`;
+         // }
           // Detectar cambios para actualizar la vista
           this.cdr.detectChanges();
         }

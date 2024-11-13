@@ -31,7 +31,11 @@ export class EditarPage implements OnInit {
 
   mensajeError: string = '';
 
-  constructor(private router: Router, private activedrouter: ActivatedRoute,private alertController: AlertController, private bd: ServiceBDService) {
+  constructor(private router: Router, 
+    private activedrouter: ActivatedRoute,
+    private alertController: AlertController, 
+    private bd: ServiceBDService
+  ) {
     this.activedrouter.queryParams.subscribe(res=>{
       if(this.router.getCurrentNavigation()?.extras.state){
         this.crud = this.router.getCurrentNavigation()?.extras?.state?.['crud'];

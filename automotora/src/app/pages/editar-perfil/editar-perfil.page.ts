@@ -10,7 +10,21 @@ import { Camera, CameraResultType } from '@capacitor/camera';
   styleUrls: ['./editar-perfil.page.scss'],
 })
 export class EditarPerfilPage implements OnInit {
+  
   user: any;
+
+  
+  ngOnInit() {}
+  // Función para tomar una foto y actualizar la imagen del usuario
+  takePicture = async () => {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri
+    });
+
+    this.user.imagen = image.webPath;
+  };
 
   constructor(
     private router: Router,
@@ -26,8 +40,6 @@ export class EditarPerfilPage implements OnInit {
     });
   }
 
-  ngOnInit() {}
-
   // Validación del nombre
   validarNombre(): boolean {
     const nameRegex = /^[a-zA-ZÀ-ÿÑñáéíóúÁÉÍÓÚüÜ ]+$/;
@@ -35,16 +47,7 @@ export class EditarPerfilPage implements OnInit {
     return this.user.nombre.length >= longitudMinima && nameRegex.test(this.user.nombre);
   }
 
-  // Función para tomar una foto y actualizar la imagen del usuario
-  takePicture = async () => {
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.Uri
-    });
 
-    this.user.imagen = image.webPath;
-  };
 
   // Función para mostrar alertas dependiendo del estado
   async presentAlert() {
@@ -69,21 +72,24 @@ export class EditarPerfilPage implements OnInit {
         buttons: ['OK'],
       });
       await alert.present();
-
+      this.modificar();
+  
       // Actualizar los datos del usuario en la base de datos
-      this.bd.modificarUsuario(this.user.idusuario, this.user.nombre, this.user.correo)
-        .then(() => {
-          // Regresar a la página principal después de la actualización
-          this.router.navigate(['/home']);
-        })
-        .catch(err => {
-          console.error('Error al actualizar usuario:', err);
-        });
+//.then(() => {
+         // Regresar a la página principal después de la actualización
+          //this.router.navigate(['/home']);
+       // })
+       // .catch(err => {
+         // console.error('Error al actualizar usuario:', err);
+      //  });
     }
+  }
+  modificar(){
+    this.bd.modificarUsuario(this.user.idusuario, this.user.nombre, this.user.correo,this.user.imagen) 
   }
 
   // Función para volver a la página principal
-  volver() {
-    this.router.navigate(['/home']);
-  }
+  //volver() {
+   // this.router.navigate(['/home']);
+ // }
 }
