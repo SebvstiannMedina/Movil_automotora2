@@ -14,23 +14,6 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!--
-  <ion-list>
-     Ejemplo de un producto en la lista
-    <ion-item>
-      <ion-label>
-        <h2>llaves</h2>
-        <p>Precio: $6000</p>
-      </ion-label>
-      <ion-button slot="end" color="primary" (click)="presentAlert() ">
-        Eliminar
-      </ion-button>
-    </ion-item>
-
-     Repite el bloque anterior para cada producto que desees mostrar
-    
-  </ion-list>
--->
 <ion-list>
   <ion-item-sliding *ngFor="let x of arreglocrud">
     <ion-item>

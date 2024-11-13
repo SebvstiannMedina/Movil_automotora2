@@ -33,8 +33,8 @@ export class ServiceBDService {
 
   // Inserts predeterminados
   llantas: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (1, 'Llantas')";
-  aeromatizantes: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (1, 'Aeromatizantes')";
-  otros: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (1, 'Otros')";
+  aeromatizantes: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (2, 'Aeromatizantes')";
+  otros: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (3, 'Otros')";
  
   registroCrud: string = "INSERT or IGNORE INTO crud(idcrud, nombre, descripcion, imagen, precio, idCategoria) VALUES (1, 'nombre', 'descripcion', 'imagen', 10, 1)";
   registroRol: string = "INSERT or IGNORE INTO rol(idRol, nombre) VALUES (1, 'admin'), (2, 'usuario')";
