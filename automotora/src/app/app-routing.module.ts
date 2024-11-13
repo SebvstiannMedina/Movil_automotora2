@@ -84,7 +84,10 @@ const routes: Routes = [
     path: 'apivalores',
     loadChildren: () => import('./pages/apivalores/apivalores.module').then( m => m.ApivaloresPageModule)
   },
-
+  {
+    path: 'productos',
+    loadChildren: () => import('./productos/productos.module').then( m => m.ProductosPageModule)
+  },
 
 
 
@@ -100,6 +103,8 @@ const routes: Routes = [
     path: '**',
     loadChildren: () => import('./pages/notfound/notfound.module').then( m => m.NotfoundPageModule)
   },
+  
+
   
 
   

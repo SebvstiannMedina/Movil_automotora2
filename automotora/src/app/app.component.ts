@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private storage: NativeStorage,
     private alertController: AlertController,
-    private serviceBD: ServiceBDService
+    private bd: ServiceBDService
   ) {
     // Controla la visibilidad del menú según la ruta
     this.router.events.subscribe((event) => {
@@ -38,6 +38,8 @@ export class AppComponent implements OnInit {
         this.nombreUsuario = 'Invitado';  // En caso de error o ausencia de nombre
       }
     );
+
+    
   }
 
   // Lógica para controlar la visibilidad del menú según la ruta
