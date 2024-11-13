@@ -26,7 +26,10 @@
   </ion-card>
 
   <!-- Botón de Registro -->
-  <ion-button expand="full" color="primary" [routerLink]="['/registro']">Regístrate</ion-button>
+  <div class="button-container">
+    <ion-button expand="full" style="--background: #003366; color: white; display: flex; gap: 10px;" [routerLink]="['/registro']">Regístrate</ion-button>
+    <ion-button expand="full" style="--background: #003366; color: white; display: flex; gap: 10px;" [routerLink]="['/login']">Iniciar Sesión</ion-button>
+  </div>
 </ion-content>
 
 <ion-footer collapse="fade">

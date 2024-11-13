@@ -22,15 +22,14 @@ export class VerPerfilPage implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ionViewWillEnter() {
     this.storage.getItem('Id').then((data: any) => {
       this.id_user = data;
 
-      // Llamar la consulta solo cuando se haya obtenido el ID
-      return this.bd.searchUserById(this.id_user).then((data: any) => {
+      // Llamar a la consulta solo cuando se haya obtenido el ID
+      this.bd.searchUserById(this.id_user).then((data: any) => {
         if (data) {
           this.username = data.nombre;
           this.email = data.correo;
@@ -43,5 +42,20 @@ export class VerPerfilPage implements OnInit {
     }).catch((error: any) => {
       console.error("Error retrieving user data", error);
     });
+  }
+
+  // Método para navegar a la página de edición con los datos del usuario
+  editProfile() {
+    const navigationExtras: NavigationExtras = {
+      state: {
+        user: {
+          idusuario: this.id_user,
+          nombre: this.username,
+          correo: this.email,
+          contrasena: this.password
+        }
+      }
+    };
+    this.router.navigate(['/editar-perfil'], navigationExtras);
   }
 }

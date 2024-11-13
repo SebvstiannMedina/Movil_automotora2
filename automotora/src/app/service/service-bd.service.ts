@@ -29,14 +29,16 @@ export class ServiceBDService {
   
   tablaRol: string = "CREATE TABLE IF NOT EXISTS rol(idRol INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL);";
   
-  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), imagen VARCHAR(250), contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
+  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), imagen BLOB, contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
 
   // Inserts predeterminados
-  registroCategoria: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (1, 'Categoría Default')";
+  categorias: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (1, 'Llantas'), (2, 'Aeromatizantes'), (3, 'Otros')";
+
   registroCrud: string = "INSERT or IGNORE INTO crud(idcrud, nombre, descripcion, imagen, precio, idCategoria) VALUES (1, 'nombre', 'descripcion', 'imagen', 10, 1)";
   registroRol: string = "INSERT or IGNORE INTO rol(idRol, nombre) VALUES (1, 'admin'), (2, 'usuario')";
   registroEstados: string = "INSERT or IGNORE INTO estados(idEstado, nombre) VALUES (1, 'Pendiente'), (2, 'En Proceso'), (3, 'Completado')";
 
+  admin: string ="INSERT or IGNORE INTO usuario(nombre,correo, contrasena, id_Rol) VALUES('Sebastian', 'seba.medina@duocuc.cl', 'Admin123.', 1), ('Angel', 'an@gmail.com', 'Angel1235*', 1)"
   // Listado de Observables
   listadoUsuario = new BehaviorSubject<Usuario[]>([]);
   listadoVenta = new BehaviorSubject<Venta[]>([]);
@@ -129,13 +131,12 @@ export class ServiceBDService {
 
       // Insertar datos predeterminados
       await this.database.executeSql(this.registroRol, []);
-      await this.database.executeSql(this.registroCategoria, []);
       await this.database.executeSql(this.registroEstados, []);
       await this.database.executeSql(this.registroCrud, []);
 
       // Insertar usuarios por defecto
-      await this.insertarUsuario('Sebastian', 'seba.medina@duocuc.cl', 'Admin123.', 1);
-      await this.insertarUsuario('Angel', 'an@gmail.com', 'Angel1235*', 2);
+      await this.database.executeSql(this.admin, []);
+
 
       // Cargar datos iniciales
       await this.cargarDatosIniciales();

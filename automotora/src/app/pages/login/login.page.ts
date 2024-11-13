@@ -61,14 +61,16 @@ export class LoginPage implements OnInit {
           this.storage.setItem('Rol', id_Rol); // Asegúrate de que sean strings si es necesario
           this.storage.setItem('Nombre', nombre); // Asegúrate de que sean strings si es necesario
           this.router.navigate(['/home']);
-          this.presentAlert("ver datos " + idusuario + id_Rol + nombre); // id = 1 || rol = 1 + nombre = user
+          ///this.presentAlert("ver datos " + idusuario + id_Rol + nombre); // id = 1 || rol = 1 + nombre = user
           console.log('Login exitoso:', this.objetoLogin);
           this.presentAlert('Login exitoso');
+        }else {
+          console.log('Login fallido');
+          this.presentAlert('Email o contraseña incorrectos');
         }
-      } else {
-        console.log('Login fallido');
-        this.presentAlert('Email o contraseña incorrectos');
-      }
+        } else {
+          console.log('Login fallido');   
+        }
     });
   }
 

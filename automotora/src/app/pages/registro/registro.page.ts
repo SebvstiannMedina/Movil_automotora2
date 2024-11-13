@@ -31,33 +31,30 @@ export class RegistroPage implements OnInit {
 
     await alert.present();
   }
+  nombre: string='';
+  email: string='';
+  contrasena: string='';
+  confirmaContrasena: string='';
 ////declara lo que registrara
-  objetoRegistro = {
-    nombre: '',
-    email: '',
-    contrasena: '',
-    confirmaContrasena: '',
-  };
 
   constructor(private router: Router, private alertController: AlertController, private bd:ServiceBDService,  private storage: NativeStorage) { }
 
   // Validación del registro
   registrar() {
-    if (this.validarNombre(this.objetoRegistro.nombre) &&
-        this.validarEmail(this.objetoRegistro.email) &&
-        this.validarContrasena(this.objetoRegistro.contrasena) &&
-        this.compararContrasenas(this.objetoRegistro.confirmaContrasena)) {
+    if (this.validarNombre(this.nombre) &&
+        this.validarEmail(this.email) &&
+        this.validarContrasena(this.contrasena) &&
+        this.compararContrasenas(this.confirmaContrasena)) {
+    
       
-      console.log('Registro exitoso:', this.objetoRegistro);
-      this.presentAlert();
-      this.bd.insertarUsuario(this.objetoRegistro.nombre, this.objetoRegistro.email, this.objetoRegistro.contrasena, 1);
-      
+      this.bd.insertarUsuario(this.nombre, this.email, this.contrasena, 1);
+      this.router.navigate(['/login']);
       
       
     } else {
       this.router.navigate(['/registro']);
       console.log('Validaciones fallidas');
-      this.presentAlert2();
+      this.presentAlert2()
     }
   }
 
@@ -85,7 +82,7 @@ export class RegistroPage implements OnInit {
     // Comparación de contraseñas
 
     compararContrasenas(confirmaContrasena: string): boolean {
-      return this.objetoRegistro.contrasena === confirmaContrasena;
+      return this.contrasena === confirmaContrasena;
     }
     
   ngOnInit() {
@@ -93,16 +90,4 @@ export class RegistroPage implements OnInit {
   }
 
   
-  // Interpolación y redirección
-  regienvia() {
-    const navigationExtras: NavigationExtras = {
-      state: {
-        objetoRegistro: this.objetoRegistro
-      }
-    };
-    this.router.navigate(['/login'], navigationExtras);
-
-    this.registrar();
-  }
-
 }
