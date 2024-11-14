@@ -57,7 +57,8 @@ export class VerPerfilPage implements OnInit {
           idusuario: this.id_user,
           nombre: this.username,
           correo: this.email,
-          contrasena: this.password
+          contrasena: this.password,
+          imagen: this.imagen
         }
       }
     };
