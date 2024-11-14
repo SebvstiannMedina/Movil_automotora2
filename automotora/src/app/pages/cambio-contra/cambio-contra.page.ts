@@ -88,7 +88,7 @@ export class CambioContraPage implements OnInit {
   
       const alert = await this.alertController.create({
         header: 'Éxito',
-        message: 'Contraseña cambiada correctamente. Por favor, inicie sesión nuevamente.',
+        message: 'Contraseña cambiada correctamente,sera redirigido en breve...',
         buttons: [{
           text: 'OK',
           handler: () => {
