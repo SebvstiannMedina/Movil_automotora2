@@ -74,22 +74,19 @@ export class EditarPerfilPage implements OnInit {
       await alert.present();
       this.modificar();
   
-      // Actualizar los datos del usuario en la base de datos
-//.then(() => {
-         // Regresar a la página principal después de la actualización
-          //this.router.navigate(['/home']);
-       // })
-       // .catch(err => {
-         // console.error('Error al actualizar usuario:', err);
-      //  });
     }
   }
   modificar(){
     this.bd.modificarUsuario(this.user.idusuario, this.user.nombre, this.user.correo,this.user.imagen) 
   }
 
-  // Función para volver a la página principal
-  //volver() {
-   // this.router.navigate(['/home']);
- // }
+
+  irACambioContrasena() {
+    this.router.navigate(['/cambio-contra'], {
+      state: {
+        user: this.user
+      }
+    });
+  }
+
 }

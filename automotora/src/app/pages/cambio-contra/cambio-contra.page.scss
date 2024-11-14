@@ -1,15 +1,68 @@
+ion-list {
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+ion-item {
+  --background: #f8f8f8;
+  --border-radius: 8px;
+  margin: 10px 0;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #003366; /* Azul oscuro */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+ion-label h2 {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+ion-label p {
+  font-size: 1rem;
+  color: #666;
+}
+
+
+ion-button {
+  --background: #003366; /* Azul oscuro */
+  --color: #ffffff; /* Texto blanco */
+  --border-radius: 8px;
+}
+
+ion-button[slot="end"] {
+  --margin-end: 10px;
+}
+
+.volver-button {
+  margin-top: 20px;
+}
 ion-title {
-    display: flex;
-    align-items: center;
-    font-size: 20px;
-    font-weight: bold;
-  
-    img {
-      height: 24px; /* Ajusta la altura de la imagen */
-      margin-right: 8px; /* Añade un pequeño margen a la derecha de la imagen */
-    }
-  
-    ion-icon {
-      margin-left: 8px; /* Añade un margen a la izquierda del ícono */
-    }
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+
+  img {
+    height: 24px; /* Ajusta la altura de la imagen */
+    margin-right: 8px; /* Añade un pequeño margen a la derecha de la imagen */
   }
+
+  ion-icon {
+    margin-left: 8px; /* Añade un margen a la izquierda del ícono */
+  }
+}
+.producto-imagen {
+  width: 150px;  /* Ancho de la imagen */
+  height: auto;  /* Mantiene la proporción */
+}
+
+
+
+

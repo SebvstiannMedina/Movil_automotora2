@@ -57,6 +57,7 @@ export class AppComponent implements OnInit {
       // Limpiar todos los datos de la sesión
       await this.storage.clear();
       this.nombreUsuario = 'Invitado';
+      this.cerrarSesion()
       
       const alert = await this.alertController.create({
         header: 'Sesión Cerrada',
@@ -91,5 +92,9 @@ export class AppComponent implements OnInit {
       buttons: ['OK'],
     });
     await alert.present();
+  }
+
+  cerrarSesion() {
+    this.bd.cerrarSesion();
   }
 }

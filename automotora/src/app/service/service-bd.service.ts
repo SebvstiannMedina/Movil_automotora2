@@ -9,6 +9,7 @@ import { Rol } from './rol';
 import { Categoria } from './categoria';
 import { Detalles } from './detalles';
 import { Estados } from './estados';
+import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -55,7 +56,8 @@ export class ServiceBDService {
   constructor(
     private sqlite: SQLite, 
     private platform: Platform, 
-    private alertController: AlertController
+    private alertController: AlertController,
+    private storage: NativeStorage
   ) {
     this.createBD();
   }
@@ -265,20 +267,55 @@ export class ServiceBDService {
       this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
     }
   }
+  /////////////////////////
 
+  async verificarContrasena(id: string, contrasena: string) {
+    try {
+      const res = await this.database.executeSql(
+        'SELECT * FROM usuario WHERE idusuario = ? AND contrasena = ?',
+        [id, contrasena]
+      );
+      return res.rows.length > 0 ? res.rows.item(0) : null;
+    } catch (e) {
+      console.error('Error al verificar contraseña:', e);
+      return null;
+    }
+  }
+  
+  // Método para cerrar sesión
+  async cerrarSesion() {
+    try {
+      // Eliminar datos de sesión almacenados localmente
+      await this.storage.clear(); // Si usas Ionic Storage
+      // O
+      localStorage.clear(); // Si usas localStorage
+      
+      // También podrías querer limpiar variables de estado en el servicio
+      this.listadoUsuario.next(null as any);
+      
+    } catch (e) {
+      console.error('Error al cerrar sesión:', e);
+      throw e;
+    }
+  }
+  
+  // Actualiza el método modificarContrasena para que sea más robusto
   async modificarContrasena(id: string, contrasena: string) {
     try {
       await this.database.executeSql(
         'UPDATE usuario SET contrasena = ? WHERE idusuario = ?',
         [contrasena, id]
       );
+      // Forzar actualización de los datos en memoria
       await this.seleccionarUsuario();
-      this.presentAlert("Modificar Contraseña", "Contraseña Modificada");
+      return true;
     } catch (e) {
-      this.presentAlert('Modificar Contraseña', 'Error: ' + JSON.stringify(e));
+      console.error('Error al modificar contraseña:', e);
+      throw e;
     }
   }
-
+  
+  /////////////////////////
   async searchUserById(idusuario: number) {
     return this.database.executeSql('SELECT * FROM usuario WHERE idusuario = ?', [idusuario])
       .then((res: any) => { // Declara explícitamente el tipo de res como any o el tipo correcto si lo conoces
