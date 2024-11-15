@@ -30,7 +30,9 @@ export class ServiceBDService {
   
   tablaRol: string = "CREATE TABLE IF NOT EXISTS rol(idRol INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL);";
   
-  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), imagen BLOB, contrasena VARCHAR(250), id_Rol INTEGER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
+  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), imagen BLOB, contrasena VARCHAR(250), id_Rol INTEGER, preguntaSeleccionada VARCHAR(250), respuestaSeguridad VARCHAR(250), FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
+
+  
 
   // Inserts predeterminados
   llantas: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (1, 'Llantas')";
@@ -41,7 +43,7 @@ export class ServiceBDService {
   registroRol: string = "INSERT or IGNORE INTO rol(idRol, nombre) VALUES (1, 'admin'), (2, 'usuario')";
   registroEstados: string = "INSERT or IGNORE INTO estados(idEstado, nombre) VALUES (1, 'Pendiente'), (2, 'En Proceso'), (3, 'Completado')";
 
-  admin: string ="INSERT or IGNORE INTO usuario(nombre,correo, contrasena, id_Rol, imagen) VALUES('MotorSphere', 'admin@gmail.com', 'Admin123.', 1,'imagen')"
+  admin: string ="INSERT or IGNORE INTO usuario(nombre,correo, contrasena, id_Rol, imagen, preguntaSeleccionada, respuestaSeguridad) VALUES('MotorSphere', 'admin@gmail.com', 'Admin123.', 1,null, '¿Cuál fue tu primer auto?', 'MotorSphere')"
   // Listado de Observables
   listadoUsuario = new BehaviorSubject<Usuario[]>([]);
   listadoVenta = new BehaviorSubject<Venta[]>([]);
@@ -235,18 +237,20 @@ export class ServiceBDService {
           correo: res.rows.item(i).correo,
           imagen: res.rows.item(i).imagen,
           contrasena: res.rows.item(i).contrasena,
-          idRol: res.rows.item(i).id_Rol
+          idRol: res.rows.item(i).id_Rol,
+          preguntaSeleccionada: res.rows.item(i).preguntaSeleccionada,
+          respuestaSeguridad: res.rows.item(i).respuestaSeguridad
         });
       }
     }
     this.listadoUsuario.next(items);
   }
 
-  async insertarUsuario(nombre: string, correo: string, contrasena: string, idRol: number, imagen: any) {
+  async insertarUsuario(nombre: string, correo: string, contrasena: string, idRol: number, imagen: any, preguntaSeleccionada: string, respuestaSeguridad: string) {
     try {
       await this.database.executeSql(
-        'INSERT INTO usuario(nombre, correo, contrasena, id_Rol, imagen) VALUES (?, ?, ?, ?, ?)',
-        [nombre, correo, contrasena, idRol, imagen]
+        'INSERT INTO usuario(nombre, correo, contrasena, id_Rol, imagen, preguntaSeleccionada, respuestaSeguridad) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [nombre, correo, contrasena, idRol, imagen, preguntaSeleccionada, respuestaSeguridad]
       );
       await this.seleccionarUsuario();
       this.presentAlert("Insertar", "Usuario Registrado");
@@ -314,6 +318,74 @@ export class ServiceBDService {
       throw e;
     }
   }
+  ////////////
+    // Método modificado para actualizar contraseña
+    async modificarContrasena2(correo: string, nuevaContrasena: string) {
+      try {
+        await this.database.executeSql(
+          'UPDATE usuario SET contrasena = ? WHERE correo = ?',
+          [nuevaContrasena, correo]
+        );
+        await this.seleccionarUsuario();
+        return true;
+      } catch (e) {
+        console.error('Error al modificar contraseña:', e);
+        throw e;
+      }
+    }
+  
+
+    async buscarUsuarioPorCorreo(correo: string) {
+      try {
+        const res = await this.database.executeSql(
+          'SELECT * FROM usuario WHERE correo = ?',
+          [correo]
+        );
+        console.log('Resultado de búsqueda:', res.rows.item(0));
+        if (res.rows.length > 0) {
+          console.log('Pregunta de seguridad encontrada:', res.rows.item(0).preguntaSeleccionada);
+        }
+        return res.rows.length > 0 ? res.rows.item(0) : null;
+      } catch (e) {
+        console.error('Error al buscar usuario:', e);
+        return null;
+      }
+    }
+
+  // Nuevo método para verificar pregunta de seguridad
+  async verificarPreguntaSeguridad(correo: string, respuesta: string) {
+    try {
+      const res = await this.database.executeSql(
+        'SELECT * FROM usuario WHERE correo = ? AND respuestaSeguridad = ?',
+        [correo, respuesta]
+      );
+      return res.rows.length > 0 ? res.rows.item(0) : null;
+    } catch (e) {
+      console.error('Error al verificar pregunta de seguridad:', e);
+      return null;
+    }
+  }
+  async diagnosticarUsuario(correo: string) {
+    try {
+      const res = await this.database.executeSql(
+        'SELECT * FROM usuario WHERE correo = ?',
+        [correo]
+      );
+      if (res.rows.length > 0) {
+        const usuario = res.rows.item(0);
+        console.log('Datos del usuario:', {
+          correo: usuario.correo,
+          preguntaSeleccionada: usuario.preguntaSeleccionada,
+          respuestaSeguridad: usuario.respuestaSeguridad
+        });
+      } else {
+        console.log('Usuario no encontrado');
+      }
+    } catch (e) {
+      console.error('Error en diagnóstico:', e);
+    }
+  }
+
   
   /////////////////////////
   async searchUserById(idusuario: number) {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ServiceBDService } from '../service/service-bd.service';
+import { ServiceBDService } from 'src/app/service/service-bd.service';
+;
 
 @Component({
   selector: 'app-productos',

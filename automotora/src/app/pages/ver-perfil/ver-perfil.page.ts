@@ -15,6 +15,8 @@ export class VerPerfilPage implements OnInit {
   password: string = "";
   id_user!: number;
   imagen!: any;
+  //preguntaSeleccionada: string ="";
+  //respuestaSeguridad: string="";
 
   constructor(
     private router: Router,
@@ -36,6 +38,8 @@ export class VerPerfilPage implements OnInit {
           this.email = data.correo;
           this.password = data.contrasena;
           this.imagen = data.imagen;
+          //this.preguntaSeleccionada = data.preguntaSeleccionada;
+          //this.respuestaSeguridad = data.respuestaSeguridad;
 
          // if (data.imagen) {
           //  this.imagen = `data:image/jpeg;base64,${data.imagen}`;

@@ -4,6 +4,7 @@ export class Usuario {
     correo!:string;
     imagen!:any;
     contrasena!:string;
-    idRol!:number;    
-
+    idRol!:number; 
+    preguntaSeleccionada!:string;
+    respuestaSeguridad!:string;
 }
