@@ -48,7 +48,7 @@ export class LoginPage implements OnInit {
     const { correo, contrasena } = this.objetoLogin;
 
     // Verificar credenciales con la base de datos
-    this.bd.isDBReady.subscribe(async (val) => {
+    this.bd.dbState().subscribe(async (val) => {
       if (val) {
 
         this.storage.clear(); // Limpiamos el almacenamiento antes de iniciar sesión
@@ -65,7 +65,7 @@ export class LoginPage implements OnInit {
           this.router.navigate(['/home']);
           ///this.presentAlert("ver datos " + idusuario + id_Rol + nombre); // id = 1 || rol = 1 + nombre = user
           console.log('Login exitoso:', this.objetoLogin);
-          this.presentAlert('Login exitoso');
+          this.presentAlert(`Login exitoso [${await this.storage.getItem("Id")}; ${await this.storage.getItem("Rol")}; ${await this.storage.getItem("Nombre")}]`);
         }else {
           console.log('Login fallido');
           this.presentAlert('Email o contraseña incorrectos');

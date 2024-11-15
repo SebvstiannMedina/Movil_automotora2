@@ -35,18 +35,18 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Al iniciar la aplicación, intentamos obtener el nombre del usuario desde NativeStorage
-    this.storage.getItem('Nombre').then(
-      (nombre) => {
-        this.nombreUsuario = nombre || 'Invitado';  // Si no existe, ponemos 'Invitado'
-      },
-      (error) => {
-        console.log('Error al obtener el nombre del usuario:', error);
-        this.nombreUsuario = 'Invitado';  // En caso de error o ausencia de nombre
-      }
-    );
-
-    
+    this.bd.dbState().subscribe(res => { if(res){
+      // Al iniciar la aplicación, intentamos obtener el nombre del usuario desde NativeStorage
+      this.storage.getItem('Nombre').then(
+        (nombre) => {
+          this.nombreUsuario = nombre || 'Invitado';  // Si no existe, ponemos 'Invitado'
+        },
+        (error) => {
+          console.log('Error al obtener el nombre del usuario:', error);
+          this.nombreUsuario = 'Invitado';  // En caso de error o ausencia de nombre
+        }
+      );
+    }})
   }
 
   // Lógica para controlar la visibilidad del menú según la ruta

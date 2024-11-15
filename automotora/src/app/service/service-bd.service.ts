@@ -449,6 +449,7 @@ export class ServiceBDService {
           });
         }
       }
+      this.listadoUsuario.next(items);
       return items;
     } catch (e) {
       console.error('Error en guardarTipoStorage:', e);
