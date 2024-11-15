@@ -10,6 +10,7 @@ import { Categoria } from './categoria';
 import { Detalles } from './detalles';
 import { Estados } from './estados';
 import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class ServiceBDService {
   aeromatizantes: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (2, 'Aeromatizantes')";
   otros: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (3, 'Otros')";
  
-  registroCrud: string = "INSERT or IGNORE INTO crud(idcrud, nombre, descripcion, imagen, precio, idCategoria) VALUES (1, 'nombre', 'descripcion', 'imagen', 10, 1)";
+  registroCrud: string = "INSERT or IGNORE INTO crud(nombre, descripcion, imagen, precio, idCategoria) VALUES ( 'nombre', 'descripcion', 'imagen', 10, 1)";
   registroRol: string = "INSERT or IGNORE INTO rol(idRol, nombre) VALUES (1, 'admin'), (2, 'usuario')";
   registroEstados: string = "INSERT or IGNORE INTO estados(idEstado, nombre) VALUES (1, 'Pendiente'), (2, 'En Proceso'), (3, 'Completado')";
 
@@ -59,7 +60,8 @@ export class ServiceBDService {
     private sqlite: SQLite, 
     private platform: Platform, 
     private alertController: AlertController,
-    private storage: NativeStorage
+    private storage: NativeStorage,
+    private router: Router
   ) {
     this.createBD();
   }
@@ -202,14 +204,27 @@ export class ServiceBDService {
     }
   }
 
-  async modificarCrud(id: string, nombre: string, descripcion: string, imagen: any, precio: number, idCategoria: number) {
+  async modificarCrud(id: string, nombre: string, descripcion: string, imagen: any, precio: string, idCategoria: string) {
     try {
+      //this.presentAlert("1",idCategoria);
+      //this.presentAlert("2",id);
+      //this.presentAlert("3",nombre);
+      //this.presentAlert("4",descripcion);
+      //this.presentAlert("5",imagen);
+      //this.presentAlert("6",precio);
+
+
       await this.database.executeSql(
         'UPDATE crud SET nombre = ?, descripcion = ?, imagen = ?, precio = ?, idCategoria = ? WHERE idcrud = ?',
         [nombre, descripcion, imagen, precio, idCategoria, id]
-      );
-      await this.seleccionarCrud();
-      this.presentAlert("Modificar", "Producto Modificado");
+      ).then(a=>{
+        this.seleccionarCrud();
+        this.presentAlert("Modificar", "Producto Modificado");
+        this.router.navigate(['/eliminar']);
+      }).catch(e=>{
+        this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
+      })
+      
     } catch (e) {
       this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
     }

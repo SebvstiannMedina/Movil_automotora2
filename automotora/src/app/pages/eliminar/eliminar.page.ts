@@ -20,6 +20,7 @@ export class EliminarPage implements OnInit {
       idCategoria:''
     }
   ]
+
 /*
   async presentAlert() {
     const alert = await this.alertController.create({
@@ -33,7 +34,18 @@ export class EliminarPage implements OnInit {
   }
 */
 
-  constructor(private alertController: AlertController, private bd: ServiceBDService, private router:Router) { }
+  constructor(private alertController: AlertController, private bd: ServiceBDService, private router:Router) {
+    this.bd.dbState().subscribe(data=>{
+      //validar si la bd esta lista
+      if(data){
+        //subscribir al observable de la listaNoticias
+        this.bd.fetchCrud().subscribe(res=>{
+          this.arreglocrud = res;
+        })
+      }
+    })
+
+   }
 
   ngOnInit() {
     this.bd.dbState().subscribe(data=>{
@@ -45,6 +57,7 @@ export class EliminarPage implements OnInit {
         })
       }
     })
+
   }
   modificar(x:any){
     let navigationsExtras: NavigationExtras = {
@@ -53,6 +66,7 @@ export class EliminarPage implements OnInit {
       }
     }
     this.router.navigate(['/editar'], navigationsExtras);
+   // this.bd.presentAlert("hola",x.idCrud);
 
   }
   eliminar(x:any){

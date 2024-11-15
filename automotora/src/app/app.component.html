@@ -59,8 +59,8 @@
             <ion-label> Valores $$ </ion-label>
             <ion-icon name="cash-outline" slot="start"></ion-icon>
           </ion-item>
-
-          <ion-item [routerDirection]="'root'" [routerLink]="'/eliminar'">
+<!--*ngIf="usuaari.rol==1"-->
+          <ion-item [routerDirection]="'root'" [routerLink]="'/eliminar'" >
             <ion-label>Listado de productos</ion-label>
             <ion-icon name="person-outline" slot="start"></ion-icon>
           </ion-item>

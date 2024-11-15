@@ -65,10 +65,13 @@ export class EditarPage implements OnInit {
         this.crud = this.router.getCurrentNavigation()?.extras?.state?.['crud'];
       }
     })
+    //this.bd.presentAlert("aaa",this.crud.idCrud);
 
   }
 
   modificar(){
-    this.bd.modificarCrud(this.crud.idcrud,this.crud.nombre, this.crud.descripcion,this.crud.imagen, this.crud.precio, this.crud.idCategoria);
+   // this.bd.presentAlert("fff",this.crud.idCategoria);
+   //this.bd.presentAlert("si estoy",this.crud.idcrud);
+    this.bd.modificarCrud(this.crud.idCrud,this.crud.nombre, this.crud.descripcion,this.crud.imagen, this.crud.precio, this.crud.idCategoria);
   }
 }

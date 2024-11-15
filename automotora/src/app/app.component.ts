@@ -12,7 +12,7 @@ import { ServiceBDService } from './service/service-bd.service';
 export class AppComponent implements OnInit {
   verMenu = true;  // Controla la visibilidad del menú
   nombreUsuario: string = '';  // Variable para almacenar el nombre del usuario
-
+  ///usuaari:any
   constructor(
     private router: Router,
     private storage: NativeStorage,
@@ -25,6 +25,13 @@ export class AppComponent implements OnInit {
         this.checkMenuVisibility(event.url);
       }
     });
+/*
+    this.bd.fetchUsuario().subscribe(res=>{
+      this.usuaari=res
+      this.bd.presentAlert("aaa","this.usuaari.rol");
+      //console.log(this.usuaari)
+    })
+      */
   }
 
   ngOnInit() {
