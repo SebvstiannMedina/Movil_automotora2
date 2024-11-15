@@ -268,9 +268,9 @@ export class ServiceBDService {
         [nombre, correo, contrasena, idRol, imagen, preguntaSeleccionada, respuestaSeguridad]
       );
       await this.seleccionarUsuario();
-      this.presentAlert("Insertar", "Usuario Registrado");
+      this.presentAlert("Registro", "Usuario Registrado");
     } catch (e) {
-      this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
+      this.presentAlert('Registro', 'Error: ' + JSON.stringify(e));
     }
   }
 
