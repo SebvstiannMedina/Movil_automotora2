@@ -21,10 +21,12 @@
   <!-- Paso 2: Responder pregunta de seguridad -->
   <div *ngIf="paso === 2">
     <ion-item>
-      <ion-label>Pregunta de seguridad:</ion-label>
-      <ion-text>{{ preguntaSeguridad }}</ion-text>
-    </ion-item>
-    <ion-item>
+      <ion-label>Pregunta de seguridad</ion-label>
+      <ion-select [(ngModel)]="preguntaSeleccionada">
+        <ion-select-option *ngFor="let pregunta of preguntasSeguridad" [value]="pregunta">
+          {{pregunta}}
+        </ion-select-option>
+      </ion-select>
       <ion-label position="floating">Tu respuesta</ion-label>
       <ion-input type="text" [(ngModel)]="respuestaUsuario"></ion-input>
     </ion-item>

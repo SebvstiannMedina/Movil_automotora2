@@ -17,6 +17,21 @@ export class RecuperaContraPage implements OnInit {
   confirmarContrasena: string = '';
   usuarioEncontrado: any = null;
 
+  preguntaSeleccionada: string = '';
+
+
+  preguntasSeguridad = [
+    '¿Cuál es el nombre de tu primera mascota?',
+    '¿En qué ciudad naciste?',
+    '¿Cuál es el nombre de tu mejor amigo de la infancia?',
+    '¿Cuál fue tu primer auto?',
+    '¿Cuál es tu animal favorito?'
+  ];
+
+  compararpreguntas(): boolean {
+    return this.preguntaSeguridad === this.preguntaSeleccionada;
+  }
+
   constructor(
     private bd: ServiceBDService,
     private alertController: AlertController,
@@ -57,7 +72,8 @@ export class RecuperaContraPage implements OnInit {
 
     try {
       // Comparar directamente con la respuesta almacenada en usuarioEncontrado
-      if (this.usuarioEncontrado.respuestaSeguridad.toLowerCase() === this.respuestaUsuario.toLowerCase()) {
+      if (this.usuarioEncontrado.respuestaSeguridad.toLowerCase() === this.respuestaUsuario.toLowerCase()
+      && this.preguntaSeguridad === this.preguntaSeleccionada) {
         this.paso = 3;
       } else {
         await this.mostrarAlerta('Error', 'Respuesta incorrecta');
