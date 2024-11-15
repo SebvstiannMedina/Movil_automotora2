@@ -12,36 +12,39 @@
 </ion-header>
 
 <ion-content>
-<div>
-  <ion-item>
-    <ion-label position="floating">Modelo</ion-label>
-    <ion-input [(ngModel)]="crud.nombre" ></ion-input>
-  </ion-item>
+  <form (ngSubmit)="modificar()">
+    <ion-item>
+      <ion-label position="floating">Modelo</ion-label>
+      <ion-input [(ngModel)]="crud.nombre" name="nombre" required></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label position="floating">Descripción</ion-label>
-    <ion-textarea [(ngModel)]="crud.descripcion"></ion-textarea>
-  </ion-item>
+    <ion-item>
+      <ion-label position="floating">Descripción</ion-label>
+      <ion-textarea [(ngModel)]="crud.descripcion" name="descripcion" required></ion-textarea>
+    </ion-item>
 
-  <ion-item>
-    <ion-label position="floating">Precio</ion-label>
-    <ion-textarea [(ngModel)]="crud.precio" inputmode="decimal"></ion-textarea>
-  </ion-item>
-  <ion-item>
-    <ion-button (click)="takePicture()">Subir imagen</ion-button>
-    <img [src]="crud.imagen" alt="Imagen del producto" class="producto-imagen" *ngIf="crud.imagen">
-  </ion-item>
-  
+    <ion-item>
+      <ion-label position="floating">Precio</ion-label>
+      <ion-input [(ngModel)]="crud.precio" name="precio" type="number" inputmode="decimal" required></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label position="floating">Página del producto</ion-label>
-    <ion-select [(ngModel)]="crud.idCategoria" placeholder="Seleccionar página de destino">
-      <ion-select-option value="aeromatizantes">Aeromatizantes</ion-select-option>
-      <ion-select-option value="llantas">Llantas</ion-select-option>
-      <ion-select-option value="otros">Otros</ion-select-option>
-    </ion-select>
-  </ion-item>
+    <ion-item>
+      <ion-button type="button" (click)="takePicture()">Subir imagen</ion-button>
+      <img [src]="crud.imagen" alt="Imagen del producto" class="producto-imagen" *ngIf="crud.imagen">
+    </ion-item>
 
-  <ion-button expand="full"  (click)="modificar()">modificar</ion-button>
-</div>
+    <ion-item>
+      <ion-label>Categoría</ion-label>
+      <ion-select  [(ngModel)]="categoriaSeleccionada"  [(ngModel)]="crud.idCategoria" name="categoria" required>
+        <ion-select-option  
+          *ngFor="let categoria of categorias" 
+          [value]="categoria.idCategoria"
+        >
+          {{ categoria.nomCateg }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button expand="full" type="submit">Modificar</ion-button>
+  </form>
 </ion-content>

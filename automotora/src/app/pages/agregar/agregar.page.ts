@@ -17,7 +17,7 @@ export class AgregarPage implements OnInit {
   mensajeError: string = '';
   categoriaSeleccionada: number = 0; // Nueva propiedad para almacenar la categoría seleccionada
 
-  categorias: any[] = [];  // Inicializamos como array vacío
+  categorias: any;  // Inicializamos como array vacío
   
   constructor(
     private alertController: AlertController,
