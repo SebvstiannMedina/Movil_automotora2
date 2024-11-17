@@ -47,7 +47,10 @@ export class EditarPerfilPage implements OnInit {
     return this.user.nombre.length >= longitudMinima && nameRegex.test(this.user.nombre);
   }
 
-
+  validarEmail(): boolean {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailRegex.test(this.user.correo);
+  }
 
   // Función para mostrar alertas dependiendo del estado
   async presentAlert() {
@@ -62,6 +65,13 @@ export class EditarPerfilPage implements OnInit {
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'El nombre debe contener al menos 3 letras y no debe incluir números.',
+        buttons: ['OK'],
+      });
+      await alert.present();
+    } else if (!this.validarEmail()) {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'El correo electrónico no es válido.',
         buttons: ['OK'],
       });
       await alert.present();

@@ -69,9 +69,62 @@ export class EditarPage implements OnInit {
 
   }
 
-  modificar(){
-   // this.bd.presentAlert("fff",this.crud.idCategoria);
-   //this.bd.presentAlert("si estoy",this.crud.idcrud);
-    this.bd.modificarCrud(this.crud.idCrud,this.crud.nombre, this.crud.descripcion,this.crud.imagen, this.crud.precio, this.crud.idCategoria);
+  validarPrecio(event: any) {
+    const valor = event.target.value;
+
+    if (!/^\d*\.?\d+$/.test(valor)) {
+      this.mensajeError = 'Solo se permiten números';
+    } else if (parseFloat(valor) < 1000) {
+      this.mensajeError = 'El precio no puede ser menor a 1000';
+    } else if (!/^\d+(\.\d{1,2})?$/.test(valor)) {
+      this.mensajeError = 'Solo se permiten dos decimales';
+    } else {
+      this.mensajeError = '';
+      this.crud.precio = parseFloat(valor);
+    }
   }
+
+  async presentAlert() {
+    if (!this.crud.nombre || !this.crud.descripcion || !this.crud.precio || 
+        !this.crud.idCategoria || this.mensajeError ) {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Todos los campos son obligatorios',
+        buttons: ['Volver'],
+      });
+      await alert.present();
+    } else {
+      const alert = await this.alertController.create({
+        header: 'Éxito',
+        message: 'El producto fue modificado exitosamente.',
+        buttons: [{
+          text: 'OK',
+          handler: () => {
+            this.modificar();
+          }
+        }],
+      });
+      await alert.present();
+    }
+  }
+
+  private limpiarFormulario() {
+    this.crud.nombre = '';
+    this.crud.descripcion = '';
+    this.crud.precio = 0;
+    this.crud.imagen = null;
+    this.crud.idCategoria = 0;
+  }
+
+  modificar() {
+    this.bd.modificarCrud(
+      this.crud.idCrud,
+      this.crud.nombre,
+      this.crud.descripcion,
+      this.crud.imagen,
+      this.crud.precio,
+      this.crud.idCategoria
+    );
+  }
+  
 }

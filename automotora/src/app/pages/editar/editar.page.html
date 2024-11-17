@@ -1,7 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
       <img src="assets/icon/Logo.png" alt="logo">
@@ -12,7 +11,7 @@
 </ion-header>
 
 <ion-content>
-  <form (ngSubmit)="modificar()">
+  <form (ngSubmit)="presentAlert()">
     <ion-item>
       <ion-label position="floating">nombre</ion-label>
       <ion-input [(ngModel)]="crud.nombre" name="nombre" required></ion-input>
@@ -25,8 +24,12 @@
 
     <ion-item>
       <ion-label position="floating">Precio</ion-label>
-      <ion-input [(ngModel)]="crud.precio" name="precio" type="number" inputmode="decimal" required></ion-input>
+      <ion-input [(ngModel)]="crud.precio" name="precio" type="number" inputmode="decimal" required (ionChange)="validarPrecio($event)"></ion-input>
+      <ion-text color="danger" *ngIf="mensajeError">
+        {{ mensajeError }}
+      </ion-text>
     </ion-item>
+    
 
     <ion-item>
       <ion-button type="button" (click)="takePicture()">Subir imagen</ion-button>
