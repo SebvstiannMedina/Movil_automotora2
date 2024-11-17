@@ -1,55 +1,80 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';  
 import { AlertController } from '@ionic/angular';
 import { ServiceBDService } from './service/service-bd.service';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
-export class AppComponent implements OnInit {
-  verMenu = true;  // Controla la visibilidad del menú
-  nombreUsuario: string = '';  // Variable para almacenar el nombre del usuario
-  ///usuaari:any
+export class AppComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  verMenu = true;
+  nombreUsuario: string = '';
+  
+  
   constructor(
     private router: Router,
     private storage: NativeStorage,
     private alertController: AlertController,
     private bd: ServiceBDService
   ) {
-    // Controla la visibilidad del menú según la ruta
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.checkMenuVisibility(event.url);
-      }
+    // Mejora en el manejo de eventos de navegación
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntil(this.destroy$)
+    ).subscribe((event: any) => {
+      this.checkMenuVisibility(event.url);
+      this.updateUserData(); // Actualiza los datos cuando cambia la página
     });
-/*
-    this.bd.fetchUsuario().subscribe(res=>{
-      this.usuaari=res
-      this.bd.presentAlert("aaa","this.usuaari.rol");
-      //console.log(this.usuaari)
-    })
-      */
   }
 
   ngOnInit() {
-    this.bd.dbState().subscribe(res => { if(res){
-      // Al iniciar la aplicación, intentamos obtener el nombre del usuario desde NativeStorage
-      this.storage.getItem('Nombre').then(
-        (nombre) => {
-          this.nombreUsuario = nombre || 'Invitado';  // Si no existe, ponemos 'Invitado'
-        },
-        (error) => {
-          console.log('Error al obtener el nombre del usuario:', error);
-          this.nombreUsuario = 'Invitado';  // En caso de error o ausencia de nombre
-        }
-      );
-    }})
+    // Suscripción al estado de la base de datos
+    this.bd.dbState().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(async (isReady) => {
+      if (isReady) {
+        await this.updateUserData();
+      }
+    });
   }
 
-  // Lógica para controlar la visibilidad del menú según la ruta
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // Método para actualizar datos del usuario
+  private async updateUserData() {
+    try {
+      const nombre = await this.storage.getItem('Nombre');
+      this.nombreUsuario = nombre || 'Invitado';
+      
+      // Aquí puedes agregar más actualizaciones de datos si es necesario
+      this.bd.fetchUsuario().pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(
+        (userData) => {
+          // Actualiza los datos del usuario según sea necesario
+          if (userData) {
+            // Actualiza los datos necesarios
+            this.nombreUsuario =  this.nombreUsuario;
+          }
+        },
+        (error) => {
+          console.error('Error fetching user data:', error);
+        }
+      );
+    } catch (error) {
+      console.error('Error updating user data:', error);
+    }
+  }
+
   checkMenuVisibility(url: string) {
     const noveras = [
       '/login', '/registro', '/ver-perfil', '/editar-perfil',
@@ -58,29 +83,22 @@ export class AppComponent implements OnInit {
     this.verMenu = !noveras.includes(url);
   }
 
-  // Método para cerrar sesión
   async logout() {
     try {
-      // Limpiar todos los datos de la sesión
       await this.storage.clear();
-      this.nombreUsuario = 'Invitado';
-      this.cerrarSesion()
+      await this.cerrarSesion();
       
       const alert = await this.alertController.create({
         header: 'Sesión Cerrada',
         message: 'Has cerrado sesión exitosamente',
-        buttons: [
-          {
-            text: 'OK',
-            handler: () => {
-              // Redirigir al login después de que el usuario presione OK
-              this.router.navigate(['/login']);
-            }
+        buttons: [{
+          text: 'OK',
+          handler: () => {
+            this.router.navigate(['/login']);
           }
-        ]
+        }]
       });
       await alert.present();
-      
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
       const errorAlert = await this.alertController.create({

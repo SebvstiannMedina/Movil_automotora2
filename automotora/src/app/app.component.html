@@ -16,12 +16,12 @@
         <ion-list>
 
           <!-- Mostrar el nombre del usuario en el menú -->
-          <ion-item>
+          <ion-item [routerLink]="'/ver-perfil'">
             <ion-avatar slot="start">
               <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" [routerLink]="'/ver-perfil'" />
             </ion-avatar>
             <ion-label>
-              <h2>{{nombreUsuario}}</h2> <!-- Aquí mostramos el nombre -->
+              <h6>{{nombreUsuario}}</h6> <!-- Aquí mostramos el nombre -->
             </ion-label>
           </ion-item>
         <!-- Botones [routerLink]="ver-perfil"-->
@@ -55,12 +55,12 @@
             <ion-icon name="storefront-outline" slot="start"></ion-icon>
           </ion-item> 
 
-          <ion-item [routerDirection]="'root'" [routerLink]="'/editar'">
+          <ion-item [routerDirection]="'root'" [routerLink]="'/apivalores'" >
             <ion-label> Valores $$ </ion-label>
             <ion-icon name="cash-outline" slot="start"></ion-icon>
           </ion-item>
 <!--*ngIf="usuaari.rol==1"-->
-          <ion-item [routerDirection]="'root'" [routerLink]="'/eliminar'" >
+          <ion-item [routerDirection]="'root'" [routerLink]="'/eliminar'" *ngIf="nombreUsuario === 'MotorSphere'" >
             <ion-label>Listado de productos</ion-label>
             <ion-icon name="person-outline" slot="start"></ion-icon>
           </ion-item>
