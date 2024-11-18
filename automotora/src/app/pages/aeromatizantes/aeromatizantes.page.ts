@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx'; // Importa SQLite y SQLiteObject
+import { CartService, CartItem  } from 'src/app/service/cart.service';
+import { Router } from '@angular/router';
+import { ServiceBDService } from 'src/app/service/service-bd.service';
 
 @Component({
   selector: 'app-aeromatizantes',
@@ -8,112 +11,94 @@ import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx'; // I
   styleUrls: ['./aeromatizantes.page.scss'],
 })
 export class AeromatizantesPage implements OnInit {
-  // Definir el array de productos
-  products: any[] = [];
-  cart: any[] = [];
-
-  // Base de datos SQLite
-  database: SQLiteObject | null = null; // Inicializar como null
+  cartItems: CartItem[] = [];
 
   constructor(
-    private navCtrl: NavController,
-    private sqlite: SQLite // Inyecta el servicio SQLite
+    private cartService: CartService,
+    private alertController: AlertController,
+    private router: Router,
+    service: ServiceBDService
   ) {}
 
   ngOnInit() {
-    // Inicializar la base de datos
-    this.sqlite.create({
-      name: 'automotora.db',
-      location: 'default'
-    }).then((db: SQLiteObject) => {
-      this.database = db;
-      console.log('Base de datos creada con éxito');
-      this.createTable(); // Crear tabla si no existe
-      this.insertAeromatizantes(); // Insertar productos si la tabla está vacía
-      this.selectAeromatizantes(); // Cargar productos
-    }).catch(e => {
-      console.log('Error al crear la base de datos', e);
+    this.cartService.getCartItems().subscribe(items => {
+      this.cartItems = items;
     });
   }
 
-  // Crear tabla si no existe
-  createTable() {
-    if (this.database) {
-      this.database.executeSql(`
-        CREATE TABLE IF NOT EXISTS aeromatizantes (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          nombre TEXT,
-          descripcion TEXT,
-          imagen TEXT,
-          precio INTEGER
-        );`, [])
-        .then(() => {
-          console.log('Tabla "aeromatizantes" creada o ya existe');
-        })
-        .catch(e => {
-          console.log('Error al crear la tabla', e);
-        });
+  updateQuantity(item: CartItem, change: number) {
+    const newQuantity = item.quantity + change;
+    if (newQuantity > 0) {
+      this.cartService.updateQuantity(item.product.idCrud, newQuantity);
     }
   }
 
-  // Insertar productos en la tabla
-  insertAeromatizantes() {
-    if (this.database) {
-      this.database.executeSql(`
-        INSERT OR IGNORE INTO aeromatizantes (nombre, descripcion, imagen, precio) VALUES 
-        ('Aromatizante Glade Auto Esencia Auto Nuevo', 'Aeromatizante Glade.', 'https://easycl.vtexassets.com/arquivos/ids/300411/1152016-03.jpg?v=637530216465300000', 12000),
-        ('Little Trees Pino Aromatizante Royal Pine 1 Unid', 'Aeromatizante Little Trees Pino', 'https://santaisabel.vtexassets.com/arquivos/ids/177985/Aromatizante-para-Auto-Little-Trees-Pino-1-Unidad.jpg?v=637635341246600000', 200000),
-        ('Ambientador Auto Frutos Rojos 8 ml', 'Ambientador Auto Frutos Rojos 8 ml', 'https://cdnx.jumpseller.com/jardindehadas/image/11817055/Ambientador-Auto-Frutos-Rojos-8-ml-Boles-d-olor-8432097083734.jpg?1603486397', 5800),
-        ('Pack 3 Aromatizantes Auto Deosol Variedad De Aromas', 'Aeromatizantes tree pack, variedades', 'https://http2.mlstatic.com/D_NQ_NP_900664-MLC52802648376_122022-O.webp', 10990);
-      `, [])
-        .then(() => {
-          console.log('Aeromatizantes insertados correctamente');
-          this.selectAeromatizantes(); // Refrescar listado de productos
-        })
-        .catch(e => console.log('Error al insertar aeromatizantes', e));
-    }
+  removeItem(item: CartItem) {
+    this.cartService.removeFromCart(item.product.idCrud);
   }
 
-  // Seleccionar productos desde la base de datos
-  selectAeromatizantes() {
-    if (this.database) {
-      this.database.executeSql('SELECT * FROM aeromatizantes', []).then(res => {
-        this.products = [];
-        for (let i = 0; i < res.rows.length; i++) {
-          this.products.push(res.rows.item(i));
-        }
-        console.log('Productos cargados:', this.products);
-      })
-      .catch(e => {
-        console.log('Error al cargar productos', e);
-      });
-    }
-  }
-
-  // Añadir producto al carrito
-  addToCart(product: any) {
-    const existingProduct = this.cart.find(item => item.nombre === product.nombre);
-    if (existingProduct) {
-      existingProduct.quantity += 1;
-    } else {
-      this.cart.push({ ...product, quantity: 1 });
-    }
-  }
-
-  // Eliminar producto del carrito
-  removeFromCart(product: any) {
-    this.cart = this.cart.filter(item => item.nombre !== product.nombre);
-  }
-
-  // Vaciar el carrito
   clearCart() {
-    this.cart = [];
+    this.presentAlertConfirm();
   }
 
-  // Navegar al carrito de compras
-  goToCart() {
-    this.navCtrl.navigateForward('/carrito-compra', {
-      state: { cart: this.cart }
+  getSubtotal(): number {
+    return this.cartService.getTotal();
+  }
+
+  getTotal(): number {
+    return this.getSubtotal(); // Puedes agregar impuestos o descuentos aquí
+  }
+
+  async presentAlertConfirm() {
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: '¿Estás seguro de que deseas vaciar el carrito?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Aceptar',
+          handler: () => {
+            this.cartService.clearCart();
+          }
+        }
+      ]
     });
+
+    await alert.present();
+  }
+
+  async checkout() {
+    try {
+      await this.cartService.checkout();
+      this.presentSuccessAlert();
+    } catch (error) {
+      this.presentErrorAlert();
+    }
+  }
+
+  async presentSuccessAlert() {
+    const alert = await this.alertController.create({
+      header: '¡Éxito!',
+      message: 'Tu compra se ha procesado correctamente',
+      buttons: [{
+        text: 'OK',
+        handler: () => {
+          this.router.navigate(['/home']); // O donde quieras redirigir
+        }
+      }]
+    });
+    await alert.present();
+  }
+
+  async presentErrorAlert() {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: 'Hubo un problema al procesar tu compra. Por favor, intenta nuevamente.',
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 }

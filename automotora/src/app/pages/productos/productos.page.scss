@@ -38,3 +38,28 @@
       font-size: 1.1em;
     }
   }
+
+  ion-title {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+  
+    img {
+      height: 24px; /* Ajusta la altura de la imagen */
+      margin-right: 8px; /* Añade un pequeño margen a la derecha de la imagen */
+    }
+  
+    ion-icon {
+      margin-left: 8px; /* Añade un margen a la izquierda del ícono */
+    }
+  }
+  ion-button {
+    --background: #003366; /* Azul oscuro */
+    --color: #ffffff; /* Texto blanco */
+    --border-radius: 8px;
+  }
+  
+  ion-footer ion-title {
+    color: #ffffff; /* Texto blanco */
+  }

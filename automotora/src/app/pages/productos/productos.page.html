@@ -9,7 +9,8 @@
       </ion-button>
     </ion-buttons>
     <ion-title>
-      {{ categoriaSeleccionada ? nombreCategoriaSeleccionada : 'Categorías' }}
+      <img src="assets/icon/Logo.png" alt="logo">
+      {{ categoriaSeleccionada ? nombreCategoriaSeleccionada : 'MotorSphere' }}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -61,40 +62,13 @@
               <ion-col size="auto">
                 <ion-button 
                   fill="clear" 
-                  color="primary"
-                  [routerLink]="['/editar-crud', crud.id]">
-                  <ion-icon name="create" slot="start"></ion-icon>
-                  Editar
+                  color="primary" (click)="anadirAlCarrito(crud)">
+                  <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+                  agregar
                 </ion-button>
-              </ion-col>
-              <ion-col size="auto">
-                <ion-button 
-                  fill="clear" 
-                  color="danger">
-                  <ion-icon name="trash" slot="start"></ion-icon>
-                  Eliminar
-                </ion-button>
-              </ion-col>
+              </ion-col> <!-- 
+                [routerLink]="['/editar-crud', crud.id]"  -->
             </ion-row>
           </ion-card>
         </ion-col>
       </ion-row>
-
-      <!-- Mensaje si no hay Crud en la categoría -->
-      <ion-row *ngIf="Crud.length === 0">
-        <ion-col>
-          <ion-text color="medium" class="ion-text-center ion-padding">
-            <h3>No hay productos en esta categoría</h3>
-          </ion-text>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
-</ion-content>
-
-<!-- Botón flotante para agregar nuevo crud -->
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button routerLink="/agregar">
-    <ion-icon name="add"></ion-icon>
-  </ion-fab-button>
-</ion-fab>

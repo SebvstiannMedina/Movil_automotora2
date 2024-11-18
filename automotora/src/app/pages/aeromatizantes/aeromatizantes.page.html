@@ -1,7 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
       <img src="assets/icon/Logo.png" alt="logo">
@@ -11,36 +10,78 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Productos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <!-- Header del carrito -->
+  <div class="flex justify-between items-center mb-6">
+    <h5 class="text-2xl font-bold">Carrito de Compras</h5>
+    <ion-button fill="clear" (click)="clearCart()" *ngIf="cartItems.length > 0">
+      <ion-icon name="trash-outline" slot="start"></ion-icon>
+      Vaciar Carrito
+    </ion-button>
+  </div>
 
-  <section class="products-section">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="12" size-md="6" size-lg="4" *ngFor="let product of products">
-          <ion-card class="product-card">
-            <img [src]="product.imagen" alt="{{product.nombre}}" />
-            <ion-card-header>
-              <ion-card-title>{{ product.nombre }}</ion-card-title>
-              <ion-card-subtitle>${{ product.precio }}</ion-card-subtitle>
-            </ion-card-header>
-            <ion-card-content>
-              <p>{{ product.descripcion }}</p>
-              <ion-button expand="full" color="primary" (click)="addToCart(product)">Añadir al carrito</ion-button>
-              <ion-button expand="full" color="danger" (click)="removeFromCart(product)">Eliminar del carrito</ion-button>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+  <!-- Carrito vacío -->
+  <div *ngIf="cartItems.length === 0" class="text-center py-8">
+    <ion-icon name="cart-outline" class="text-6xl text-gray-400"></ion-icon>
+    <p class="text-xl text-gray-500 mt-4">Tu carrito está vacío</p>
+    <ion-button routerLink="/productos" class="mt-4">
+      Ir a Productos
+    </ion-button>
+  </div>
 
-    <!-- Botón para vaciar el carrito -->
-    <ion-button expand="full" color="danger" (click)="clearCart()">Vaciar carrito</ion-button>
-    <!-- Botón para ir al carrito -->
-    <ion-button expand="full" color="secondary" (click)="goToCart()">Ir al carrito ({{ cart.length }})</ion-button>
-  </section>
+  <!-- Lista de productos -->
+  <ion-list *ngIf="cartItems.length > 0">
+    <ion-item-sliding *ngFor="let item of cartItems">
+      <ion-item>
+        <ion-thumbnail slot="start">
+          <img [src]="item.product.imagen || 'assets/placeholder.png'" alt="Producto">
+        </ion-thumbnail>
+        <ion-label>
+          <h2 class="font-semibold">{{ item.product.nombre }}</h2>
+          <p class="text-gray-600">{{ item.product.descripcion }}</p>
+          <p class="text-primary">$ {{ item.product.precio }}</p>
+        </ion-label>
+
+        <!-- Control de cantidad -->
+        <div slot="end" class="flex items-center space-x-2">
+          <ion-button fill="clear" size="small" (click)="updateQuantity(item, -1)" [disabled]="item.quantity <= 1">
+            <ion-icon name="remove-circle-outline"></ion-icon>
+          </ion-button>
+          <span class="mx-2">{{ item.quantity }}</span>
+          <ion-button fill="clear" size="small" (click)="updateQuantity(item, 1)">
+            <ion-icon name="add-circle-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-item>
+
+      <!-- Opción de deslizar para eliminar -->
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="removeItem(item)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+
+    <!-- Resumen del carrito -->
+    <ion-item lines="none" class="mt-4">
+      <ion-label>
+        <div class="flex justify-between items-center">
+          <span class="text-lg font-semibold">Subtotal:</span>
+          <span class="text-lg">$ {{ getSubtotal() }}</span>
+        </div>
+        <div class="flex justify-between items-center mt-2">
+          <span class="text-xl font-bold">Total:</span>
+          <span class="text-xl font-bold text-primary">$ {{ getTotal() }}</span>
+        </div>
+      </ion-label>
+    </ion-item>
+
+    <!-- Botón de checkout -->
+    <div class="p-4">
+      <ion-button expand="block" (click)="checkout()">
+        Proceder al Pago
+        <ion-icon name="cart-outline" slot="end"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-list>
 </ion-content>

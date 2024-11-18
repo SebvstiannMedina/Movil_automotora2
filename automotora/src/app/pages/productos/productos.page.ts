@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ServiceBDService } from 'src/app/service/service-bd.service';
-;
+import { CartService } from 'src/app/service/cart.service';
 
 @Component({
   selector: 'app-productos',
@@ -13,12 +13,13 @@ export class ProductosPage implements OnInit {
   categoriaSeleccionada: number | null = null;
   nombreCategoriaSeleccionada: string = '';
 
-  constructor(private bd: ServiceBDService) {}
+  constructor(private bd: ServiceBDService, private cartService: CartService, ) {}
 
   ngOnInit() {
     this.bd.dbState().subscribe(ready => {
       if (ready) {
         this.cargarCategorias();
+        this.cargarCrud();
       }
     });
   }
@@ -29,23 +30,29 @@ export class ProductosPage implements OnInit {
     });
   }
 
+  cargarCrud() {
+    this.bd.fetchCrud().subscribe(crud => {
+      this.Crud = crud;
+    });
+  }
+
   cargarCrudPorCategoria(idCategoria: number) {
     this.categoriaSeleccionada = idCategoria;
-    // Guardamos el nombre de la categoría seleccionada
     this.nombreCategoriaSeleccionada = this.categorias.find(
       cat => cat.idCategoria === idCategoria
     )?.nomCateg || '';
     
     this.bd.fetchCrud().subscribe(Crud => {
-      // Filtramos los Crud por la categoría seleccionada
-      this.Crud = Crud.filter(Crud => 
-        Crud.idCategoria === idCategoria
-      );
+      this.Crud = Crud.filter(crud => crud.idCategoria === idCategoria);
     });
   }
 
   volverACategorias() {
     this.categoriaSeleccionada = null;
     this.Crud = [];
+  }
+
+  anadirAlCarrito(producto: any) {
+    this.cartService.addToCart(producto, 1); // Añadir una unidad del producto al carrito
   }
 }
