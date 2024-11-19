@@ -65,16 +65,8 @@ const routes: Routes = [
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   },
   {
-    path: 'llanta',
-    loadChildren: () => import('./pages/llanta/llanta.module').then( m => m.LlantaPageModule)
-  },
-  {
     path: 'aeromatizantes',
     loadChildren: () => import('./pages/aeromatizantes/aeromatizantes.module').then( m => m.AeromatizantesPageModule)
-  },
-  {
-    path: 'otros',
-    loadChildren: () => import('./pages/otros/otros.module').then( m => m.OtrosPageModule)
   },
   {
     path: 'ubicacion',
