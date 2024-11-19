@@ -198,7 +198,7 @@ export class ServiceBDService {
         [nombre, descripcion, imagen, precio, idCategoria]
       );
       await this.seleccionarCrud();
-      this.presentAlert("Insertar", "Producto Registrado");
+      ///this.presentAlert("Insertar", "Producto Registrado");
     } catch (e) {
       this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
     }
@@ -268,7 +268,7 @@ export class ServiceBDService {
         [nombre, correo, contrasena, idRol, imagen, preguntaSeleccionada, respuestaSeguridad]
       );
       await this.seleccionarUsuario();
-      this.presentAlert("Registro", "Usuario Registrado");
+     // this.presentAlert("Registro", "Usuario Registrado");
     } catch (e) {
       this.presentAlert('Registro', 'Error: ' + JSON.stringify(e));
     }
@@ -281,7 +281,7 @@ export class ServiceBDService {
         [nombre, correo, imagen, id]
       );
       await this.seleccionarUsuario();
-      this.presentAlert("Modificar", "Usuario Modificado");
+     // this.presentAlert("Modificar", "Usuario Modificado");
     } catch (e) {
       this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
     }

@@ -16,13 +16,21 @@ export class CartService {
   private cartItems: BehaviorSubject<CartItem[]> = new BehaviorSubject<CartItem[]>([]);
   private currentUserId: number | null = null;
 
-  constructor(private dbService: ServiceBDService) {}
+  constructor(private dbService: ServiceBDService) {
+    // Sincronizar el carrito con el localStorage
+    this.cartItems.subscribe(items => {
+      if (this.currentUserId !== null) {
+        this.saveCartToLocalStorage(this.currentUserId, items);
+      }
+    });
+  }
 
   // Establecer el usuario actual
-  setCurrentUser(userId: number) {
+  async setCurrentUser(userId: number) {
     this.currentUserId = userId;
-    // Limpiar el carrito al cambiar de usuario
-    this.clearCart();
+    // Cargar el carrito del usuario desde el localStorage
+    const userCart = this.loadCartFromLocalStorage(userId);
+    this.cartItems.next(userCart);
   }
 
   // Obtener el contenido del carrito
@@ -122,5 +130,16 @@ export class CartService {
       console.error('Error al procesar la compra:', error);
       throw error;
     }
+  }
+
+  // Guardar el carrito en el localStorage
+  private saveCartToLocalStorage(userId: number, items: CartItem[]) {
+    localStorage.setItem(`cart_${userId}`, JSON.stringify(items));
+  }
+
+  // Cargar el carrito desde el localStorage
+  private loadCartFromLocalStorage(userId: number): CartItem[] {
+    const savedCart = localStorage.getItem(`cart_${userId}`);
+    return savedCart ? JSON.parse(savedCart) : [];
   }
 }
