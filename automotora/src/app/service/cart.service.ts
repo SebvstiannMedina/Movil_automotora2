@@ -28,9 +28,8 @@ export class CartService {
   // Establecer el usuario actual
   async setCurrentUser(userId: number) {
     this.currentUserId = userId;
-    // Cargar el carrito del usuario desde el localStorage
-    const userCart = this.loadCartFromLocalStorage(userId);
-    this.cartItems.next(userCart);
+    const userCart = this.loadCartFromLocalStorage(userId); // Cargar el carrito desde el localStorage
+    this.cartItems.next(userCart); // Actualizar el carrito actual
   }
 
   // Obtener el contenido del carrito
@@ -44,11 +43,9 @@ export class CartService {
     const existingItem = currentItems.find(item => item.product.idCrud === product.idCrud);
 
     if (existingItem) {
-      // Actualizar cantidad si el producto ya existe
       existingItem.quantity += quantity;
       existingItem.subtotal = existingItem.quantity * product.precio;
     } else {
-      // Agregar nuevo item si no existe
       currentItems.push({
         product: product,
         quantity: quantity,
@@ -70,7 +67,7 @@ export class CartService {
   updateQuantity(productId: number, quantity: number) {
     const currentItems = this.cartItems.value;
     const item = currentItems.find(item => item.product.idCrud === productId);
-    
+
     if (item) {
       item.quantity = quantity;
       item.subtotal = quantity * item.product.precio;
@@ -86,6 +83,9 @@ export class CartService {
   // Limpiar el carrito
   clearCart() {
     this.cartItems.next([]);
+    if (this.currentUserId !== null) {
+      this.saveCartToLocalStorage(this.currentUserId, []); // Limpiar también en localStorage
+    }
   }
 
   // Procesar la compra
@@ -96,13 +96,13 @@ export class CartService {
 
     try {
       const total = this.getTotal();
-      
+
       // Crear la venta principal
       await this.dbService.insertarVenta(
         total,
         this.currentUserId,
         total, // subtotal igual al total si no hay descuentos
-        this.cartItems.value[0].product.idCrud // referencia al primer producto
+        this.cartItems.value[0]?.product.idCrud || 0 // referencia al primer producto
       );
 
       // Obtener el ID de la última venta
@@ -124,7 +124,7 @@ export class CartService {
 
       // Limpiar el carrito después de la compra exitosa
       this.clearCart();
-      
+
       return true;
     } catch (error) {
       console.error('Error al procesar la compra:', error);
@@ -134,12 +134,21 @@ export class CartService {
 
   // Guardar el carrito en el localStorage
   private saveCartToLocalStorage(userId: number, items: CartItem[]) {
-    localStorage.setItem(`cart_${userId}`, JSON.stringify(items));
+    try {
+      localStorage.setItem(`cart_${userId}`, JSON.stringify(items));
+    } catch (error) {
+      console.error('Error al guardar el carrito en localStorage:', error);
+    }
   }
 
   // Cargar el carrito desde el localStorage
   private loadCartFromLocalStorage(userId: number): CartItem[] {
-    const savedCart = localStorage.getItem(`cart_${userId}`);
-    return savedCart ? JSON.parse(savedCart) : [];
+    try {
+      const savedCart = localStorage.getItem(`cart_${userId}`);
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (error) {
+      console.error('Error al cargar el carrito desde localStorage:', error);
+      return [];
+    }
   }
 }

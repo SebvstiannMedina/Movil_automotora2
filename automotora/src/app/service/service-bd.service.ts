@@ -305,9 +305,9 @@ export class ServiceBDService {
   async cerrarSesion() {
     try {
       // Eliminar datos de sesión almacenados localmente
-      await this.storage.clear(); // Si usas Ionic Storage
+      await this.storage.remove('Id');
       // O
-      localStorage.clear(); // Si usas localStorage
+      localStorage.removeItem('Id');
       
       // También podrías querer limpiar variables de estado en el servicio
       this.listadoUsuario.next(null as any);

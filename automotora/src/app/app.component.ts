@@ -85,7 +85,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   async logout() {
     try {
-      await this.storage.clear();
+      await this.storage.remove('Id');
       await this.cerrarSesion();
       
       const alert = await this.alertController.create({

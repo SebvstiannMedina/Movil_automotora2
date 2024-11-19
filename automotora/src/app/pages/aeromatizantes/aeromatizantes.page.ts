@@ -13,7 +13,7 @@ import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';
 })
 export class AeromatizantesPage implements OnInit {
   cartItems: CartItem[] = [];
-  id_user: number | null = null;
+  id_user: number = 0;
   username: string = '';
   email: string = '';
   total: number = 0;
@@ -140,6 +140,14 @@ export class AeromatizantesPage implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  hola() {
+    this.bd.presentAlert('Hola1', this.email);
+    
+    this.bd.presentAlert('Hola1', this.username);
+    
+    //this.bd.presentAlert('Hola2', this.id_user);
   }
 }
 
