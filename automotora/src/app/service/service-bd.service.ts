@@ -40,7 +40,7 @@ export class ServiceBDService {
   aeromatizantes: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (2, 'Aeromatizantes')";
   otros: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (3, 'Otros')";
  
-  registroCrud: string = "INSERT or IGNORE INTO crud(nombre, descripcion, imagen, precio, idCategoria) VALUES ( 'nombre', 'descripcion', 'imagen', 10, 1)";
+  //registroCrud: string = "INSERT or IGNORE INTO crud(nombre, descripcion, imagen, precio, idCategoria) VALUES ( 'nombre', 'descripcion', 'imagen', 10, 1)";
   registroRol: string = "INSERT or IGNORE INTO rol(idRol, nombre) VALUES (1, 'admin'), (2, 'usuario')";
   registroEstados: string = "INSERT or IGNORE INTO estados(idEstado, nombre) VALUES (1, 'Pendiente'), (2, 'En Proceso'), (3, 'Completado')";
 
@@ -140,7 +140,7 @@ export class ServiceBDService {
       // Insertar datos predeterminados
       await this.database.executeSql(this.registroRol, []);
       await this.database.executeSql(this.registroEstados, []);
-      await this.database.executeSql(this.registroCrud, []);
+      //await this.database.executeSql(this.registroCrud, []);
 
       // Insertar usuarios por defecto
       await this.database.executeSql(this.admin, []); 
@@ -219,7 +219,7 @@ export class ServiceBDService {
         [nombre, descripcion, imagen, precio, idCategoria, id]
       ).then(a=>{
         this.seleccionarCrud();
-        this.presentAlert("Modificar", "Producto Modificado");
+        //this.presentAlert("Modificar", "Producto Modificado");
         this.router.navigate(['/eliminar']);
       }).catch(e=>{
         this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
