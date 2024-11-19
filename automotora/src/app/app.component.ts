@@ -78,7 +78,7 @@ export class AppComponent implements OnInit, OnDestroy {
   checkMenuVisibility(url: string) {
     const noveras = [
       '/login', '/registro', '/ver-perfil', '/editar-perfil',
-      '/recupera-contra', '/cambio-contra', '/not-found', '/registro-venta'
+      '/recupera-contra', '/cambio-contra', '/not-found'
     ];
     this.verMenu = !noveras.includes(url);
   }

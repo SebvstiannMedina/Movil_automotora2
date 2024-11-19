@@ -1,35 +1,28 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>
       <img src="assets/icon/Logo.png" alt="logo">
       <ion-icon name="logo-ionitron" slot="start"></ion-icon>
       MotorSphere
     </ion-title>
-
   </ion-toolbar>
 </ion-header>
 
+
 <ion-content [fullscreen]="true" class="ion-padding">
-  <!-- Introducción -->
-  <section class="intro-section">
-    <h4>Bienvenido a MotorSphere</h4>
-    <p>Descubre nuestra amplia gama de autos nuevos y usados, y encuentra el modelo perfecto para ti.</p>
-  </section>
-
-  <!-- Tarjeta de Auto Destacado -->
-  <ion-card class="highlight-card">
-    <img alt="Fast" src="https://i.pinimg.com/736x/7d/4b/e3/7d4be3480669472c1409d29beb9c68c7.jpg" />
-    <ion-card-header>
-      <ion-card-title style="color: white;">Próximamente en nuestra tienda</ion-card-title>
-      <ion-card-subtitle>Nuestro principal objetivo es generar amplia gratitud del cliente junto a nuestros servicios</ion-card-subtitle>
-    </ion-card-header>
-  </ion-card>
-
-  <!-- Botón de Registro -->
-  <div class="button-container">
-    <ion-button expand="full" style="--background: #003366; color: white; display: flex; gap: 10px;" [routerLink]="['/registro']">Regístrate</ion-button>
-    <ion-button expand="full" style="--background: #003366; color: white; display: flex; gap: 10px;" [routerLink]="['/login']">Iniciar Sesión</ion-button>
-  </div>
+  <ion-title><h1> Ventas </h1></ion-title>
+  <ion-list>
+    <ion-item *ngFor="let x of ventas">
+      <ion-label>
+        <h6>  Compra N°:  {{ x.idVenta }} </h6>
+        <ion-label> Codigo de usuario:{{ x.idusuario }} </ion-label>
+        <p>Total de compra {{x.total}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list> 
 </ion-content>
 
 <ion-footer collapse="fade">

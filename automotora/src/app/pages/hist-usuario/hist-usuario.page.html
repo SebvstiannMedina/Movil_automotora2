@@ -16,6 +16,7 @@
 
 <ion-content [fullscreen]="true">
 <ion-list>
+  <ion-title><h1> Usuarios </h1></ion-title>
   <ion-item *ngFor="let x of AllUsers">
     <ion-label>
       <h6>{{ x.nombre }} </h6>
@@ -34,7 +35,11 @@
         [routerLink]="['/editar-crud', crud.id]"   [routerLink]="'/aeromatizantes'"-->
     </ion-row>
   </ion-item>
-
 </ion-list> 
-
 </ion-content>
+
+<ion-footer collapse="fade">
+  <ion-toolbar>
+    <ion-title></ion-title>
+  </ion-toolbar>
+</ion-footer>
