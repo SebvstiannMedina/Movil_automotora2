@@ -87,7 +87,16 @@ const routes: Routes = [
   {
     path: 'productos',
     loadChildren: () => import('./pages/productos/productos.module').then( m => m.ProductosPageModule)
+  }, 
+  {
+    path: 'hist-usuario',
+    loadChildren: () => import('./pages/hist-usuario/hist-usuario.module').then( m => m.HistUsuarioPageModule)
   },
+  {
+    path: 'histdetalle',
+    loadChildren: () => import('./pages/histdetalle/histdetalle.module').then( m => m.HistdetallePageModule)
+  },
+
 
 
 
@@ -103,6 +112,7 @@ const routes: Routes = [
     path: '**',
     loadChildren: () => import('./pages/notfound/notfound.module').then( m => m.NotfoundPageModule)
   },
+ 
   
 
   
