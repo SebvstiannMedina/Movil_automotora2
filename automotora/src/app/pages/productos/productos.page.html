@@ -1,17 +1,22 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+    <ion-buttons slot="start" >
+      <ion-buttons *ngIf="categoriaSeleccionada === null">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
     </ion-buttons>
     <ion-buttons slot="start" *ngIf="categoriaSeleccionada">
       <ion-button (click)="volverACategorias()">
-        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+        <ion-icon slot="icon-only" name="arrow-back">  volver</ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-title>
       <img src="assets/icon/Logo.png" alt="logo">
       {{ categoriaSeleccionada ? nombreCategoriaSeleccionada : 'MotorSphere' }}
     </ion-title>
+    <ion-button  [routerLink]="'/carrito-compra'" slot="end"  >
+      <ion-icon name="cart" ></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -68,7 +73,6 @@
                 </ion-button>
               </ion-col> <!-- 
                 [routerLink]="['/editar-crud', crud.id]"   [routerLink]="'/aeromatizantes'"-->
-                <ion-button [routerLink]="'/aeromatizantes'">nono</ion-button>
             </ion-row>
           </ion-card>
         </ion-col>
