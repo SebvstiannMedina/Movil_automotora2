@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar >
     <ion-buttons slot="start" >
       <ion-buttons *ngIf="categoriaSeleccionada === null">
         <ion-menu-button></ion-menu-button>
@@ -67,7 +67,7 @@
               <ion-col size="auto">
                 <ion-button 
                   fill="clear" 
-                  color="primary" (click)="anadirAlCarrito(crud)">
+                   (click)="anadirAlCarrito(crud)">
                   <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
                   agregar
                 </ion-button>
