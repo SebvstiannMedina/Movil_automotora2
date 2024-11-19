@@ -143,8 +143,12 @@ export class ServiceBDService {
       //await this.database.executeSql(this.registroCrud, []);
 
       // Insertar usuarios por defecto
-      await this.database.executeSql(this.admin, []); 
+      const adminExiste = await this.verificarAdminExiste();
+        if (!adminExiste) {
+          await this.database.executeSql(this.admin, []); 
+        }
 
+    // Insertar categorias por defecto
       await this.database.executeSql(this.llantas, []);
       await this.database.executeSql(this.aeromatizantes, []);
       await this.database.executeSql(this.otros, []);
@@ -156,6 +160,19 @@ export class ServiceBDService {
       this.isDBReady.next(true);
     } catch (e) {
       this.presentAlert('Creación de Tablas', 'Error en crear las tablas: ' + JSON.stringify(e));
+    }
+  }
+
+  async verificarAdminExiste(): Promise<boolean> {
+    try {
+      const res = await this.database.executeSql(
+        'SELECT * FROM usuario WHERE correo = ?',
+        ['admin@gmail.com']
+      );
+      return res.rows.length > 0;
+    } catch (e) {
+      console.error('Error al verificar admin:', e);
+      return false;
     }
   }
 
@@ -263,14 +280,29 @@ export class ServiceBDService {
 
   async insertarUsuario(nombre: string, correo: string, contrasena: string, idRol: number, imagen: any, preguntaSeleccionada: string, respuestaSeguridad: string) {
     try {
+      // First, check if the email already exists
+      const existingUser = await this.database.executeSql(
+        'SELECT * FROM usuario WHERE correo = ?',
+        [correo]
+      );
+  
+      if (existingUser.rows.length > 0) {
+        // Email already exists, show an alert and return
+        this.presentAlert('Registro', 'El correo electrónico ya está registrado');
+        return false;
+      }
+  
+      // If email doesn't exist, proceed with user insertion
       await this.database.executeSql(
         'INSERT INTO usuario(nombre, correo, contrasena, id_Rol, imagen, preguntaSeleccionada, respuestaSeguridad) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [nombre, correo, contrasena, idRol, imagen, preguntaSeleccionada, respuestaSeguridad]
       );
       await this.seleccionarUsuario();
-     // this.presentAlert("Registro", "Usuario Registrado");
+      ///this.presentAlert('Registro', 'Usuario Registrado');
+      return true;
     } catch (e) {
       this.presentAlert('Registro', 'Error: ' + JSON.stringify(e));
+      return false;
     }
   }
 

@@ -66,32 +66,41 @@ export class RegistroPage implements OnInit {
   }
 
   // Método de registro modificado
-  registrar() {
+  async registrar() {
     if (this.validarNombre(this.nombre) &&
         this.validarEmail(this.email) &&
         this.validarContrasena(this.contrasena) &&
         this.compararContrasenas(this.confirmaContrasena) &&
         this.validarPreguntaSeguridad()) {
-          
-      // Modificar el método insertarUsuario en el servicio para incluir la pregunta y respuesta
-      this.bd.insertarUsuario(
-        this.nombre, 
-        this.email, 
-        this.contrasena, 
-        Number(this.id_rol), 
-        this.imagen,
-        this.preguntaSeleccionada,
-        this.respuestaSeguridad
-      );
       
-      this.presentAlert();
-      this.router.navigate(['/login']);
+      try {
+        // Use await to check the result of insertarUsuario
+        const registroExitoso = await this.bd.insertarUsuario(
+          this.nombre, 
+          this.email, 
+          this.contrasena, 
+          Number(this.id_rol), 
+          this.imagen,
+          this.preguntaSeleccionada,
+          this.respuestaSeguridad
+        );
+        
+        // Only navigate and show success alert if registration was successful
+        if (registroExitoso) {
+          this.presentAlert();
+          this.router.navigate(['/login']);
+        }
+        // If registroExitoso is false, the alert will have been shown in the service method
+      } catch (error) {
+        console.error('Error en registro:', error);
+        this.bd.presentAlert('error','correo ya existe')
+        this.presentAlert2();
+      }
     } else {
       this.presentAlert2();
       console.log('Validaciones fallidas');
     }
   }
-
   // Métodos de validación existentes
   validarNombre(nombre: string): boolean {
     const nameRegex = /^[a-zA-ZÀ-ÿÑñáéíóúÁÉÍÓÚüÜ ]+$/;
