@@ -142,13 +142,13 @@ export class AeromatizantesPage implements OnInit {
     await alert.present();
   }
 
-  hola() {
-    this.bd.presentAlert('Hola1', this.email);
+ // hola() {
+    //this.bd.presentAlert('Hola1', this.email);
     
-    this.bd.presentAlert('Hola1', this.username);
+    //this.bd.presentAlert('Hola1', this.username);
     
-    //this.bd.presentAlert('Hola2', this.id_user);
-  }
+  //  //this.bd.presentAlert('Hola2', this.id_user);
+ // }
 }
 
 

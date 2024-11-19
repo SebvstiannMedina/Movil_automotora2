@@ -555,7 +555,7 @@ export class ServiceBDService {
         [total, idusuario, subtotal, idCrud]
       );
       await this.seleccionarVenta();
-      this.presentAlert("Insertar", "Venta Registrada");
+     // this.presentAlert("Insertar", "Venta Registrada");
     } catch (e) {
       this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
     }
@@ -568,7 +568,7 @@ export class ServiceBDService {
         [idVenta, idProducto, cantidad, subtotal]
       );
       await this.seleccionarDetalles();
-      this.presentAlert("Insertar", "Detalle Registrado");
+     // this.presentAlert("Insertar", "Detalle Registrado");
     } catch (e) {
       this.presentAlert('Insertar', 'Error: ' + JSON.stringify(e));
     }
