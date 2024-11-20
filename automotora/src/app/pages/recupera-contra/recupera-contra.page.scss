@@ -67,3 +67,58 @@ ion-button {
   --color: #ffffff; /* Texto blanco */
   --border-radius: 8px;
 }
+
+/* Centrar el contenido en el ion-header */
+.center-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 16px;
+}
+
+.center-title .logo {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.center-title .icon {
+  font-size: 24px;
+  margin-left: 10px;
+}
+
+/* Centrar el contenido dentro de ion-content */
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 450px; /* Limita el ancho máximo para pantallas grandes */
+  margin-bottom: 20px; /* Espacio entre los formularios */
+}
+
+ion-item {
+  margin-bottom: 10px;
+}
+
+ion-button[expand="block"] {
+  margin-top: 16px; /* Espacio superior para los botones */
+  width: 100%; /* Asegura que los botones ocupen todo el ancho disponible */
+}
+
+/* Ajustes de padding y márgenes para mejorar el espaciado */
+ion-input, ion-select {
+  padding: 10px;
+}
+
+/* Mejora la apariencia del botón al pasar el ratón */
+ion-button:hover {
+  background-color: #3880ff;
+  opacity: 0.8;
+}
