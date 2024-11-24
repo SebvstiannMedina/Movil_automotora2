@@ -76,11 +76,10 @@ export class RecuperaContraPage implements OnInit {
       && this.preguntaSeguridad === this.preguntaSeleccionada) {
         this.paso = 3;
       } else {
-        await this.mostrarAlerta('Error', 'Respuesta incorrecta');
+        await this.mostrarAlerta('Error', 'Informacion de seguridad incorrecta');
       }
     } catch (error) {
-      console.error('Error al verificar respuesta:', error);
-      await this.mostrarAlerta('Error', 'Ocurrió un error al verificar la respuesta');
+      await this.mostrarAlerta('Error', 'Informacion de seguridad incorrecta');
     }
   }
 
@@ -115,8 +114,8 @@ export class RecuperaContraPage implements OnInit {
       return false;
     }
 
-    if (!/[!@#$%^&*]/.test(this.nuevaContrasena)) {
-      this.mostrarAlerta('Error', 'La contraseña debe contener al menos un carácter especial (!@#$%^&*)');
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(this.nuevaContrasena)) {
+      this.mostrarAlerta('Error', 'La contraseña debe contener al menos un carácter especial (!@#$%^&*(),.?":{}|<>)');
       return false;
     }
 
