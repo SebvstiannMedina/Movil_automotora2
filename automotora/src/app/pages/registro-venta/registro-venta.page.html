@@ -12,18 +12,20 @@
 </ion-header>
 
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <ion-title><h1> Ventas </h1></ion-title>
+<ion-content>
+  <!-- Lista de Ventas -->
   <ion-list>
-    <ion-item *ngFor="let x of ventas">
+    <ion-item *ngFor="let venta of ventas">
       <ion-label>
-        <h6>  Compra N°:  {{ x.idVenta }} </h6>
-        <ion-label> Codigo de usuario:{{ x.idusuario }} </ion-label>
-        <p>Total de compra {{x.total}}</p>
+        <h2>ID: {{ venta.idVenta }}</h2>
+        <p>Total: {{ venta.total }}</p>
+        <p>Subtotal: {{ venta.subtotal }}</p>
       </ion-label>
+      <ion-button (click)="verDetalles(venta.idVenta)">Ver Detalles</ion-button>
     </ion-item>
-  </ion-list> 
+  </ion-list>
 </ion-content>
+
 
 <ion-footer collapse="fade">
   <ion-toolbar>

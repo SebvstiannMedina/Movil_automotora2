@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { ServiceBDService } from 'src/app/service/service-bd.service';
+import { HistdetallePage } from '../histdetalle/histdetalle.page';
 
 @Component({
   selector: 'app-registro-venta',
@@ -9,41 +10,30 @@ import { ServiceBDService } from 'src/app/service/service-bd.service';
   styleUrls: ['./registro-venta.page.scss'],
 })
 export class RegistroVentaPage implements OnInit {
-  ventas: any = [
-    {
-      idVenta: '',
-      total: '',
-      idusuario: '',
-      subtotal: '',
-      idCrud: ''
-    }
-  ];
-  constructor(
-    private alertController: AlertController, 
-    private bd: ServiceBDService, 
-    private router:Router
-  ) { 
-    this.bd.dbState().subscribe(data=>{
-      //validar si la bd esta lista
-      if(data){
-        //subscribir al observable de la listaNoticias
-        this.bd.fetchVenta().subscribe(res=>{
-          this.ventas = res;
-        })
-      }
-    })
-  }
+  ventas: any[] = [];
+
+  constructor(private serviceBD: ServiceBDService, private modalController: ModalController) {}
 
   ngOnInit() {
-    this.bd.dbState().subscribe(data=>{
-      //validar si la bd esta lista
-      if(data){
-        //subscribir al observable de la listaNoticias
-        this.bd.fetchVenta().subscribe(res=>{
-          this.ventas = res;
-        })
-      }
-    })
+    this.cargarVentas();
   }
 
+  // Cargar ventas desde la base de datos
+  cargarVentas() {
+    this.serviceBD.getVentas().then((ventas) => {
+      this.ventas = ventas;
+    });
+  }
+
+  // Mostrar detalles de la venta seleccionada
+  async verDetalles(idVenta: number) {
+    const detalles = await this.serviceBD.getDetallesVenta(idVenta);
+
+    const modal = await this.modalController.create({
+      component: HistdetallePage,
+      componentProps: { detalles: detalles }
+    });
+
+    await modal.present();
+  }
 }

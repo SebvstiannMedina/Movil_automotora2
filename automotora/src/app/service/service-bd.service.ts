@@ -682,4 +682,31 @@ export class ServiceBDService {
       this.presentAlert('Eliminar', 'Error: ' + JSON.stringify(e));
     }
   }
+
+  getVentas(): Promise<any[]> {
+    return this.database.executeSql('SELECT * FROM venta', [])
+      .then((res) => {
+        let ventas = [];
+        for (let i = 0; i < res.rows.length; i++) {
+          ventas.push(res.rows.item(i));
+        }
+        return ventas;
+      });
+  }
+
+  getDetallesVenta(idVenta: number): Promise<any[]> {
+    return this.database.executeSql('SELECT * FROM detalles WHERE idVenta = ?', [idVenta])
+      .then((res) => {
+        let detalles = [];
+        for (let i = 0; i < res.rows.length; i++) {
+          detalles.push(res.rows.item(i));
+        }
+        return detalles;
+      });
+  }
+  
+  
+
+
+
 } 
