@@ -88,12 +88,12 @@ export class CambioContraPage implements OnInit {
   
       const alert = await this.alertController.create({
         header: 'Éxito',
-        message: 'Contraseña cambiada correctamente,sera redirigido en breve...',
+        message: 'Contraseña cambiada correctamente',
         buttons: [{
           text: 'OK',
           handler: () => {
             // Redirigimos al login
-            this.router.navigate(['/home'], { replaceUrl: true });
+            this.router.navigate(['/ver-perfil'], { replaceUrl: true });
           }
         }],
       });

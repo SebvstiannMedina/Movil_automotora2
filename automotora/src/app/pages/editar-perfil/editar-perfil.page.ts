@@ -12,19 +12,8 @@ import { Camera, CameraResultType } from '@capacitor/camera';
 export class EditarPerfilPage implements OnInit {
   
   user: any;
-
-  
-  ngOnInit() {}
-  // Función para tomar una foto y actualizar la imagen del usuario
-  takePicture = async () => {
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.Uri
-    });
-
-    this.user.imagen = image.webPath;
-  };
+  correoOriginal: string = ''; // Variable local para guardar el correo original
+  isLoading = false; // Variable para el spinner
 
   constructor(
     private router: Router,
@@ -36,9 +25,23 @@ export class EditarPerfilPage implements OnInit {
     this.activedrouter.queryParams.subscribe(res => {
       if (this.router.getCurrentNavigation()?.extras.state) {
         this.user = this.router.getCurrentNavigation()?.extras?.state?.['user'];
+        this.correoOriginal = this.user.correo; // Almacenar el correo original en la variable local
       }
     });
   }
+
+  ngOnInit() {}
+
+  // Función para tomar una foto y actualizar la imagen del usuario
+  takePicture = async () => {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri
+    });
+
+    this.user.imagen = image.webPath;
+  };
 
   // Validación del nombre
   validarNombre(): boolean {
@@ -47,12 +50,13 @@ export class EditarPerfilPage implements OnInit {
     return this.user.nombre.length >= longitudMinima && nameRegex.test(this.user.nombre);
   }
 
+  // Validación del correo electrónico
   validarEmail(): boolean {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return emailRegex.test(this.user.correo);
   }
 
-  // Función para mostrar alertas dependiendo del estado
+  // Mostrar alertas dependiendo del estado
   async presentAlert() {
     if (!this.user.nombre) {
       const alert = await this.alertController.create({
@@ -64,7 +68,7 @@ export class EditarPerfilPage implements OnInit {
     } else if (!this.validarNombre()) {
       const alert = await this.alertController.create({
         header: 'Error',
-        message: 'El nombre debe contener al menos 3 letras y no debe incluir números.',
+        message: 'El nombre debe contener al menos 3 letras y no incluir números.',
         buttons: ['OK'],
       });
       await alert.present();
@@ -76,21 +80,42 @@ export class EditarPerfilPage implements OnInit {
       });
       await alert.present();
     } else {
+      await this.verificarYModificar(); 
+    }
+  }
+
+  // Verificación de correo y modificación
+  async verificarYModificar() {
+    this.isLoading = true; // Activa el spinner
+
+    // Comprobar si el correo no ha cambiado
+    if (this.user.correo === this.correoOriginal) {
+      this.isLoading = false; // Desactiva el spinner
+      // Modificar directamente si el correo no ha cambiado
+      await this.bd.modificarUsuario(this.user.idusuario, this.user.nombre, this.user.correo, this.user.imagen);
+      this.router.navigate(['/ver-perfil'], { replaceUrl: true });
+      return;
+    }
+
+    // Si el correo cambió, verificar si ya existe
+    const correoExiste = await this.bd.verificarCorreoExistente(this.user.correo);
+    this.isLoading = false; // Desactiva el spinner
+
+    if (correoExiste) {
       const alert = await this.alertController.create({
-        header: 'EDITADO',
-        message: 'Perfil fue editado correctamente.',
+        header: 'Error',
+        message: 'El correo electrónico ya está registrado. Por favor, usa uno diferente.',
         buttons: ['OK'],
       });
       await alert.present();
-      this.modificar();
-  
+    } else {
+      // Modificar usuario si el correo no está en uso
+      await this.bd.modificarUsuario(this.user.idusuario, this.user.nombre, this.user.correo, this.user.imagen);
+      this.router.navigate(['/ver-perfil'], { replaceUrl: true });
     }
   }
-  modificar(){
-    this.bd.modificarUsuario(this.user.idusuario, this.user.nombre, this.user.correo,this.user.imagen) 
-  }
 
-
+  // Navegar a la página de cambio de contraseña
   irACambioContrasena() {
     this.router.navigate(['/cambio-contra'], {
       state: {
@@ -98,5 +123,4 @@ export class EditarPerfilPage implements OnInit {
       }
     });
   }
-
 }

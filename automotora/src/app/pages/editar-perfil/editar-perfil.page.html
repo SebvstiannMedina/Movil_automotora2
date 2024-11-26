@@ -12,34 +12,53 @@
   <ion-card>
     <h1>Editar perfil</h1>
     <ion-card-header>
-    <h3>
-        <img [src]="user.imagen || 'assets/defectoimagen.png'" alt="Imagen de perfil por defecto" class="usuario-imagen" *ngIf="user.imagen || !user.imagen">  
-      <ion-button  (click)="takePicture()">cambiar foto de perfil </ion-button> 
+      <h3>
+        <img 
+          [src]="user.imagen || 'assets/defectoimagen.png'" 
+          alt="Imagen de perfil" 
+          class="usuario-imagen">
+          
+        <ion-button (click)="takePicture()">Cambiar foto de perfil</ion-button>
       </h3>
-    
-      </ion-card-header>
+    </ion-card-header>
     <ion-card-header>
       <ion-card-title>Datos del perfil</ion-card-title>
     </ion-card-header>
-    <ion-card-content >
+    <ion-card-content>
+      <!-- Campo Nombre -->
       <ion-item>
         <ion-label position="floating">Nombre</ion-label>
-        <ion-input [(ngModel)]="user.nombre" ></ion-input>
+        <ion-input [(ngModel)]="user.nombre"></ion-input>
+        <ion-note slot="error" *ngIf="!validarNombre() && user.nombre">
+          El nombre debe contener al menos 3 letras y no incluir números.
+        </ion-note>
       </ion-item>
+      
+      <!-- Campo Correo -->
       <ion-item>
-        <ion-label position="floating">correo</ion-label>
-        <ion-input [(ngModel)]="user.correo" ></ion-input>
+        <ion-label position="floating">Correo</ion-label>
+        <ion-input [(ngModel)]="user.correo"></ion-input>
+        <ion-note slot="error" *ngIf="!validarEmail() && user.correo">
+          El correo electrónico no es válido.
+        </ion-note>
       </ion-item>
+
+      <!-- Cambiar Contraseña -->
       <ion-item>
         <ion-button expand="block" fill="clear" (click)="irACambioContrasena()">
           Cambiar tu contraseña 
           <ion-icon name="create" slot="end"></ion-icon>
         </ion-button>
       </ion-item>
-      
     </ion-card-content>
     
-      <ion-button (click)="presentAlert()" >Guardar cambios </ion-button>
-      <ion-button  [routerLink]="['/ver-perfil']" >volver </ion-button>
+    <!-- Botón Guardar Cambios con Spinner -->
+    <ion-button (click)="presentAlert()" [disabled]="isLoading || !validarNombre() || !validarEmail()">
+      Guardar cambios
+    </ion-button>
+    <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+    
+    <!-- Botón Volver -->
+    <ion-button [routerLink]="['/ver-perfil']">Volver</ion-button>
   </ion-card>
 </ion-content>

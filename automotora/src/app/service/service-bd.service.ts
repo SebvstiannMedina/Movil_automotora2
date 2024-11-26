@@ -313,7 +313,7 @@ export class ServiceBDService {
         [nombre, correo, imagen, id]
       );
       await this.seleccionarUsuario();
-     // this.presentAlert("Modificar", "Usuario Modificado");
+      this.presentAlert("Exito", "perfil editado con exito");
     } catch (e) {
       this.presentAlert('Modificar', 'Error: ' + JSON.stringify(e));
     }
@@ -465,6 +465,12 @@ export class ServiceBDService {
     }
   }
 
+  async verificarCorreoExistente(correo: string): Promise<boolean> {
+    const query = 'SELECT COUNT(*) AS cantidad FROM usuario WHERE correo = ?';
+    const resultado = await this.database.executeSql(query, [correo]);
+    return resultado.rows.item(0).cantidad > 0;
+  }
+  
   async guardarTipoStorage(correo: string, contrasena: string) {
     try {
       const res = await this.database.executeSql(
