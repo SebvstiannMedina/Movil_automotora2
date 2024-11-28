@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ServiceBDService } from 'src/app/service/service-bd.service';
@@ -18,7 +18,9 @@ export class LoginPage implements OnInit {
 
   rol!: number;
 
-  constructor(private router: Router, private alertController: AlertController, private bd: ServiceBDService, private storage: NativeStorage) { 
+  constructor(private router: Router, private alertController: AlertController, private bd: ServiceBDService, private storage: NativeStorage,
+    private cdr: ChangeDetectorRef
+  ) { 
     // Eliminamos la llamada a this.storage.clear() del constructor
   }
 
@@ -28,6 +30,9 @@ export class LoginPage implements OnInit {
       if (id) {
         // El usuario ya está logueado, redirige al home
         this.router.navigate(['/home']);
+      }else{
+        this.storage.clear(); // Limpiamos el almacenamiento antes de iniciar sesión
+        this.cdr.detectChanges();
       }
     }).catch(error => {
       // Si no se encuentra el item o ocurre un error, continúa con el login
@@ -51,8 +56,7 @@ export class LoginPage implements OnInit {
     this.bd.isDBReady.subscribe(async (val) => {
       if (val) {
 
-        this.storage.clear(); // Limpiamos el almacenamiento antes de iniciar sesión
-
+       
         const validar = await this.bd.validarCredenciales(correo, contrasena);
         if (validar) {
           const usuarioStorage = await this.bd.guardarTipoStorage(correo, contrasena);
@@ -67,11 +71,11 @@ export class LoginPage implements OnInit {
           console.log('Login exitoso:', this.objetoLogin);
           this.presentAlert(`Bienvenido  ${await this.storage.getItem("Nombre")}`);
         }else {
-          console.log('Login fallido');
-          this.presentAlert('Email o contraseña incorrectos');
+         // console.log('Login fallido');
+         // this.presentAlert('Email o contraseña incorrectos');
         }
         } else {
-          console.log('Login fallido');   
+          //console.log('Login fallido');   
         }
     });
   }

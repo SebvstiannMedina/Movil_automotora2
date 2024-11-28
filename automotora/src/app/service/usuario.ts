@@ -7,4 +7,5 @@ export class Usuario {
     idRol!:number; 
     preguntaSeleccionada!:string;
     respuestaSeguridad!:string;
+    token!:number
 }

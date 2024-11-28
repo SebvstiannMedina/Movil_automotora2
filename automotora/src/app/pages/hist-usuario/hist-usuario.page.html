@@ -6,7 +6,7 @@
     <ion-title>
       <img src="assets/icon/Logo.png" alt="logo">
       <ion-icon name="logo-ionitron" slot="start"></ion-icon>
-      MotorSphere
+      MotorSphere "Gestion de usuarios"
     </ion-title>
 
 
@@ -15,29 +15,94 @@
 
 
 <ion-content [fullscreen]="true">
-<ion-list>
-  <ion-title><h1> Usuarios </h1></ion-title>
-  <ion-item *ngFor="let x of AllUsers">
-    <ion-label>
-      <h6>{{ x.nombre }} </h6>
-      <ion-label>{{ x.correo }} </ion-label>
-      <p>codigo de usuario: {{x.idusuario}}</p>
-    </ion-label>
-    <ion-row class="ion-justify-content-center ion-padding">
-      <ion-col size="auto">
-        <ion-button 
-          fill="clear" 
-          side="end" color="danger">
-          <ion-icon name="pencil" slot="icon-only"></ion-icon>
-          bannear
-        </ion-button>
-      </ion-col> <!-- 
-        [routerLink]="['/editar-crud', crud.id]"   [routerLink]="'/aeromatizantes'"-->
-    </ion-row>
-  </ion-item>
-</ion-list> 
-</ion-content>
+  <!-- Segmento para alternar entre usuarios activos y bloqueados -->
+  <ion-segment [(ngModel)]="seccionActual" (ionChange)="cambiarSeccion()">
+    <ion-segment-button value="activos">
+      <ion-label>Usuarios Activos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="bloqueados">
+      <ion-label>Usuarios Bloqueados</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 
+  <!-- Sección de Usuarios Activos -->
+  <ng-container *ngIf="seccionActual === 'activos'">
+    <ion-refresher slot="fixed" (ionRefresh)="cargarUsuarios($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list *ngIf="usuariosConTokenActivo.length > 0">
+      <ion-item-sliding *ngFor="let usuario of usuariosConTokenActivo">
+        <ion-item>
+          <ion-avatar slot="start">
+            <ion-icon name="person-circle-outline"></ion-icon>
+          </ion-avatar>
+          <ion-label>
+            <h2>{{ usuario.nombre }}</h2>
+            <p>{{ usuario.correo }}</p>
+            <p>Rol: {{ obtenerNombreRol(usuario.id_Rol) }}, Activo</p>
+          </ion-label>
+          <ion-badge color="primary" *ngIf="usuario.token === 1">Activo</ion-badge>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="bloquearUsuario(usuario.idusuario)">
+            <ion-icon name="lock-closed" slot="start"></ion-icon>
+            Bloquear
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+
+    <ion-list *ngIf="usuariosConTokenActivo.length === 0">
+      <ion-item>
+        <ion-label>No hay usuarios activos</ion-label>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+
+  <!-- Sección de Usuarios Bloqueados -->
+  <ng-container *ngIf="seccionActual === 'bloqueados'">
+    <ion-refresher slot="fixed" (ionRefresh)="cargarUsuariosBloqueados($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list *ngIf="usuariosBloqueados.length > 0">
+      <ion-item-sliding *ngFor="let usuario of usuariosBloqueados">
+        <ion-item>
+          <ion-avatar slot="start">
+            <ion-icon name="person-circle-outline"></ion-icon>
+          </ion-avatar>
+          <ion-label>
+            <h2>{{ usuario.nombre }}</h2>
+            <p>{{ usuario.correo }}</p>
+            <p>Rol: {{ obtenerNombreRol(usuario.id_Rol) }}, Bloqueado</p>
+          </ion-label>
+          <ion-badge color="danger" *ngIf="usuario.token === 0">Bloqueado</ion-badge>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="success" (click)="desbloquearUsuario(usuario.idusuario)">
+            <ion-icon name="lock-open" slot="start"></ion-icon>
+            Desbloquear
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+
+    <ion-list *ngIf="usuariosBloqueados.length === 0">
+      <ion-item>
+        <ion-label>No hay usuarios bloqueados</ion-label>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="actualizarTokens()">
+      <ion-icon name="sync-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
 <ion-footer collapse="fade">
   <ion-toolbar>
     <ion-title></ion-title>

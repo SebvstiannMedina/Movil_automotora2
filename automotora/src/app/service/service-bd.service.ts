@@ -31,7 +31,7 @@ export class ServiceBDService {
   
   tablaRol: string = "CREATE TABLE IF NOT EXISTS rol(idRol INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL);";
   
-  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), imagen BLOB, contrasena VARCHAR(250), id_Rol INTEGER, preguntaSeleccionada VARCHAR(250), respuestaSeguridad VARCHAR(250), FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
+  tablaUsuario: string = "CREATE TABLE IF NOT EXISTS usuario(idusuario INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(250), correo VARCHAR(250), imagen BLOB, contrasena VARCHAR(250), id_Rol INTEGER, preguntaSeleccionada VARCHAR(250), respuestaSeguridad VARCHAR(250), token NUMBER, FOREIGN KEY(id_Rol) REFERENCES rol(idRol));";
 
   
 
@@ -44,7 +44,7 @@ export class ServiceBDService {
   registroRol: string = "INSERT or IGNORE INTO rol(idRol, nombre) VALUES (1, 'admin'), (2, 'usuario')";
   registroEstados: string = "INSERT or IGNORE INTO estados(idEstado, nombre) VALUES (1, 'Pendiente'), (2, 'En Proceso'), (3, 'Completado')";
 
-  admin: string ="INSERT or IGNORE INTO usuario(nombre,correo, contrasena, id_Rol, imagen, preguntaSeleccionada, respuestaSeguridad) VALUES('MotorSphere', 'admin@gmail.com', 'Admin123.', 1,null, '¿Cuál fue tu primer auto?', 'MotorSphere')"
+  admin: string ="INSERT or IGNORE INTO usuario(nombre,correo, contrasena, id_Rol, imagen, preguntaSeleccionada, respuestaSeguridad,token ) VALUES('MotorSphere', 'admin@gmail.com', 'Admin123.', 1,null, '¿Cuál fue tu primer auto?', 'MotorSphere',1)"
   // Listado de Observables
   listadoUsuario = new BehaviorSubject<Usuario[]>([]);
   listadoVenta = new BehaviorSubject<Venta[]>([]);
@@ -271,14 +271,15 @@ export class ServiceBDService {
           contrasena: res.rows.item(i).contrasena,
           idRol: res.rows.item(i).id_Rol,
           preguntaSeleccionada: res.rows.item(i).preguntaSeleccionada,
-          respuestaSeguridad: res.rows.item(i).respuestaSeguridad
+          respuestaSeguridad: res.rows.item(i).respuestaSeguridad,
+          token: res.rows.item(i).token
         });
       }
     }
-    this.listadoUsuario.next(items);
+    this.listadoUsuario.next(items as any);
   }
 
-  async insertarUsuario(nombre: string, correo: string, contrasena: string, idRol: number, imagen: any, preguntaSeleccionada: string, respuestaSeguridad: string) {
+  async insertarUsuario(nombre: string, correo: string, contrasena: string, idRol: number, imagen: any, preguntaSeleccionada: string, respuestaSeguridad: string, token: number) {
     try {
       // First, check if the email already exists
       const existingUser = await this.database.executeSql(
@@ -294,8 +295,8 @@ export class ServiceBDService {
   
       // If email doesn't exist, proceed with user insertion
       await this.database.executeSql(
-        'INSERT INTO usuario(nombre, correo, contrasena, id_Rol, imagen, preguntaSeleccionada, respuestaSeguridad) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [nombre, correo, contrasena, idRol, imagen, preguntaSeleccionada, respuestaSeguridad]
+        'INSERT INTO usuario(nombre, correo, contrasena, id_Rol, imagen, preguntaSeleccionada, respuestaSeguridad, token) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [nombre, correo, contrasena, idRol, imagen, preguntaSeleccionada, respuestaSeguridad, token]
       );
       await this.seleccionarUsuario();
       ///this.presentAlert('Registro', 'Usuario Registrado');
@@ -455,14 +456,36 @@ export class ServiceBDService {
   async validarCredenciales(correo: string, contrasena: string): Promise<boolean> {
     try {
       const res = await this.database.executeSql(
-        'SELECT * FROM usuario WHERE correo = ? AND contrasena = ?',
+        'SELECT * FROM usuario WHERE correo = ? AND contrasena = ? AND token = 1',
         [correo, contrasena]
       );
-      return res.rows.length > 0;
+  
+      if (res.rows.length > 0) {
+        return true;
+      } else {
+        // Check if the user exists with different conditions
+        const checkUserExists = await this.database.executeSql(
+          'SELECT * FROM usuario WHERE correo = ?',
+          [correo]
+        );
+  
+        if (checkUserExists.rows.length > 0) {
+          const userToken = checkUserExists.rows.item(0).token;
+          
+          if (userToken !== 1) {
+            this.presentAlert('error','usuario inabilitado temporalmente');
+          }
+          
+          this.presentAlert('error',' Email o contraseña incorrectos.');
+        } else {
+         this.presentAlert('error','usuario no existe ');
+        }
+      }
     } catch (e) {
       console.error('Error al validar credenciales:', e);
-      return false;
+      throw e; // Re-throw the specific error for proper error handling
     }
+    return false;
   }
 
   async verificarCorreoExistente(correo: string): Promise<boolean> {
@@ -494,6 +517,108 @@ export class ServiceBDService {
       return [];
     }
   }
+
+  async actualizarTokensUsuarios(): Promise<void> {
+    try {
+      // Iniciar una transacción
+      await this.database.executeSql('BEGIN TRANSACTION');
+  
+      // Actualizar tokens para todos los usuarios excepto el usuario con ID 1
+      const updateQuery = `
+        UPDATE usuario 
+        SET token = CASE 
+          WHEN token = 1 THEN 0 
+          WHEN token = 0 THEN 1 
+          ELSE token 
+        END 
+        WHERE idusuario != 1
+      `;
+      
+      await this.database.executeSql(updateQuery);
+  
+      // Confirmar la transacción
+      await this.database.executeSql('COMMIT');
+  
+      console.log('Tokens actualizados correctamente');
+    } catch (error) {
+      // Si hay un error, revertir la transacción
+      await this.database.executeSql('ROLLBACK');
+      console.error('Error al actualizar tokens:', error);
+      throw error;
+    }
+  }
+
+  async obtenerUsuariosTokenActivo(): Promise<any[]> {
+    try {
+      const res = await this.database.executeSql(
+        'SELECT idusuario, nombre, correo, id_Rol FROM usuario WHERE token = 1 AND idusuario != 1',
+        []
+      );
+      
+      let usuarios: any[] = [];
+      if (res.rows.length > 0) {
+        for (let i = 0; i < res.rows.length; i++) {
+          usuarios.push(res.rows.item(i));
+        }
+      }
+      
+      return usuarios;
+    } catch (error) {
+      console.error('Error al obtener usuarios con token activo:', error);
+      throw error;
+    }
+  }
+// Método para bloquear usuario (actualizar token a 0)
+async bloquearUsuario(idUsuario: number): Promise<void> {
+  try {
+    await this.database.executeSql(
+      'UPDATE usuario SET token = 2 WHERE idusuario = ?',
+      [idUsuario]
+    );
+  } catch (error) {
+    console.error('Error al bloquear usuario:', error);
+    throw error;
+  }
+}
+
+
+// Método para obtener usuarios bloqueados (con token 0)
+async obtenerUsuariosBloqueados(): Promise<any[]> {
+  try {
+    const res = await this.database.executeSql(
+      'SELECT idusuario, nombre, correo, id_Rol FROM usuario WHERE token = 2 AND idusuario != 1',
+      []
+    );
+    
+    let usuarios: any[] = [];
+    if (res.rows.length > 0) {
+      for (let i = 0; i < res.rows.length; i++) {
+        usuarios.push(res.rows.item(i));
+      }
+    }
+    
+    return usuarios;
+  } catch (error) {
+    console.error('Error al obtener usuarios bloqueados:', error);
+    throw error;
+  }
+}
+
+// Método para desbloquear usuario (establecer token a 1)
+async desbloquearUsuario(idUsuario: number): Promise<void> {
+  try {
+    await this.database.executeSql(
+      'UPDATE usuario SET token = 1 WHERE idusuario = ?',
+      [idUsuario]
+    );
+  } catch (error) {
+    console.error('Error al desbloquear usuario:', error);
+    throw error;
+  }
+}
+
+
+  ////////////////////////////////////////////////////////////////////////////
 
   // Métodos adicionales para las demás tablas
   async seleccionarRol() {

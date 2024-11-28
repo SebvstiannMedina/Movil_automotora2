@@ -18,6 +18,7 @@ export class RegistroPage implements OnInit {
   confirmaContrasena: string = '';
   id_rol: string = '2';
   imagen: any;
+  token: string = '1';
 
   // Nuevas propiedades para preguntas de seguridad
   preguntaSeleccionada: string = '';
@@ -82,7 +83,8 @@ export class RegistroPage implements OnInit {
           Number(this.id_rol), 
           this.imagen,
           this.preguntaSeleccionada,
-          this.respuestaSeguridad
+          this.respuestaSeguridad,
+          Number(this.token)
         );
         
         // Only navigate and show success alert if registration was successful
