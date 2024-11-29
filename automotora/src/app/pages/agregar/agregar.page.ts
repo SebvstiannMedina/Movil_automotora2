@@ -84,7 +84,7 @@ export class AgregarPage implements OnInit {
     if (!/^\d*\.?\d+$/.test(cant)) {
       this.mensajeErrorStock = 'Solo se permiten números';
     } else if (parseFloat(cant) < 1) {
-      this.mensajeErrorStock = 'El stock no puede ser menor a 1000';
+      this.mensajeErrorStock = 'El stock no puede ser menor a 1';
     } else if(!/^\d+(\.\d{0})?$/.test(cant)) {
       this.mensajeErrorStock = 'Nose permiten  decimales';
     } else {
