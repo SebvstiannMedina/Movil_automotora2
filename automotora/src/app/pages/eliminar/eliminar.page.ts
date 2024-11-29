@@ -17,6 +17,7 @@ export class EliminarPage implements OnInit {
       descripcion: '',
       imagen:'',
       precio:'',
+      stock:'',
       idCategoria:''
     }
   ]

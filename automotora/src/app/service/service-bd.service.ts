@@ -21,7 +21,7 @@ export class ServiceBDService {
   // Creación de tablas
   tablaCategoria: string = "CREATE TABLE IF NOT EXISTS categoria(idCategoria INTEGER PRIMARY KEY AUTOINCREMENT, nomCateg VARCHAR(100) NOT NULL);";
 
-  tablaCrud: string = "CREATE TABLE IF NOT EXISTS crud(idcrud INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL, descripcion VARCHAR(250) NOT NULL, imagen BLOB, precio INTEGER NOT NULL, idCategoria INTEGER NOT NULL, FOREIGN KEY(idCategoria) REFERENCES categoria(idCategoria));";
+  tablaCrud: string = "CREATE TABLE IF NOT EXISTS crud(idcrud INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100) NOT NULL, descripcion VARCHAR(250) NOT NULL, imagen BLOB, precio INTEGER NOT NULL, stock INTEGER NOT NULL, idCategoria INTEGER NOT NULL, FOREIGN KEY(idCategoria) REFERENCES categoria(idCategoria));";
 
   tablaDetalles: string = "CREATE TABLE IF NOT EXISTS detalles(idDetalle INTEGER PRIMARY KEY AUTOINCREMENT, idVenta INTEGER NOT NULL, idProducto INTEGER NOT NULL, cantidad INTEGER NOT NULL, subtotal INTEGER NOT NULL, FOREIGN KEY(idVenta) REFERENCES venta(idVenta), FOREIGN KEY(idProducto) REFERENCES crud(idcrud));";
   
@@ -201,18 +201,19 @@ export class ServiceBDService {
           descripcion: res.rows.item(i).descripcion,
           imagen: res.rows.item(i).imagen,
           precio: res.rows.item(i).precio,
-          idCategoria: res.rows.item(i).idCategoria
+          idCategoria: res.rows.item(i).idCategoria,
+          stock: res.rows.item(i).stock
         });
       }
     }
     this.listadoCrud.next(items);
   }
 
-  async insertarCrud(nombre: string, descripcion: string, imagen: any, precio: number, idCategoria: number) {
+  async insertarCrud(nombre: string, descripcion: string, imagen: any, precio: number, idCategoria: number, stock: number) {
     try {
       await this.database.executeSql(
-        'INSERT INTO crud(nombre, descripcion, imagen, precio, idCategoria) VALUES (?, ?, ?, ?, ?)',
-        [nombre, descripcion, imagen, precio, idCategoria]
+        'INSERT INTO crud(nombre, descripcion, imagen, precio, idCategoria, stock) VALUES (?, ?, ?, ?, ?, ?)',
+        [nombre, descripcion, imagen, precio, idCategoria, stock]
       );
       await this.seleccionarCrud();
       ///this.presentAlert("Insertar", "Producto Registrado");
@@ -221,7 +222,7 @@ export class ServiceBDService {
     }
   }
 
-  async modificarCrud(id: string, nombre: string, descripcion: string, imagen: any, precio: string, idCategoria: string) {
+  async modificarCrud(id: string, nombre: string, descripcion: string, imagen: any, precio: string, idCategoria: string, stock: number) {
     try {
       //this.presentAlert("1",idCategoria);
       //this.presentAlert("2",id);
@@ -232,8 +233,8 @@ export class ServiceBDService {
 
 
       await this.database.executeSql(
-        'UPDATE crud SET nombre = ?, descripcion = ?, imagen = ?, precio = ?, idCategoria = ? WHERE idcrud = ?',
-        [nombre, descripcion, imagen, precio, idCategoria, id]
+        'UPDATE crud SET nombre = ?, descripcion = ?, imagen = ?, precio = ?, idCategoria = ?, stock = ? WHERE idcrud = ?',
+        [nombre, descripcion, imagen, precio, idCategoria, stock, id]
       ).then(a=>{
         this.seleccionarCrud();
         //this.presentAlert("Modificar", "Producto Modificado");

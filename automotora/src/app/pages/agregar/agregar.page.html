@@ -43,6 +43,19 @@
           {{ mensajeError }}
         </ion-text>
       </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Cantidad</ion-label>
+        <ion-input 
+          type="number" 
+          [(ngModel)]="stock"  
+          (ionChange)="validarStock($event)">
+        </ion-input>
+        <ion-text color="danger" *ngIf="mensajeErrorStock">
+          {{ mensajeErrorStock }}
+        </ion-text>
+      </ion-item>
+      
     
       <ion-item>
         <ion-label>Categoría</ion-label>

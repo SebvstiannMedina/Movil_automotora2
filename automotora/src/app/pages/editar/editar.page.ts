@@ -84,9 +84,25 @@ export class EditarPage implements OnInit {
     }
   }
 
+  mensajeErrorStock: string = '';
+  validarStock(event: any) {
+    const cant = event.target.value;
+
+    if (!/^\d*\.?\d+$/.test(cant)) {
+      this.mensajeErrorStock = 'Solo se permiten números';
+    } else if (parseFloat(cant) < 1) {
+      this.mensajeErrorStock = 'El stock no puede ser menor a 1000';
+    } else if(!/^\d+(\.\d{0})?$/.test(cant)) {
+      this.mensajeErrorStock = 'Nose permiten  decimales';
+    } else {
+      this.mensajeErrorStock = '';
+      this.crud.stock = parseFloat(cant);
+    }
+  }
+
   async presentAlert() {
     if (!this.crud.nombre || !this.crud.descripcion || !this.crud.precio || 
-        !this.crud.idCategoria || this.mensajeError ) {
+        !this.crud.idCategoria || this.mensajeError || this.mensajeErrorStock || !this.crud.stock) {
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'Todos los campos son obligatorios',
@@ -114,6 +130,7 @@ export class EditarPage implements OnInit {
     this.crud.precio = 0;
     this.crud.imagen = null;
     this.crud.idCategoria = 0;
+    this.crud.stock = 0;
   }
 
   modificar() {
@@ -123,7 +140,8 @@ export class EditarPage implements OnInit {
       this.crud.descripcion,
       this.crud.imagen,
       this.crud.precio,
-      this.crud.idCategoria
+      this.crud.idCategoria,
+      this.crud.stock,
     );
   }
   

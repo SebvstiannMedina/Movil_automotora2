@@ -16,7 +16,8 @@ export class AgregarPage implements OnInit {
   imagen: any;
   mensajeError: string = '';
   categoriaSeleccionada: number = 0; // Nueva propiedad para almacenar la categoría seleccionada
-
+  stock!: number ;
+  mensajeErrorStock: string = '';
   categorias: any;  // Inicializamos como array vacío
   
   constructor(
@@ -77,8 +78,23 @@ export class AgregarPage implements OnInit {
     }
   }
 
+  validarStock(event: any) {
+    const cant = event.target.value;
+
+    if (!/^\d*\.?\d+$/.test(cant)) {
+      this.mensajeErrorStock = 'Solo se permiten números';
+    } else if (parseFloat(cant) < 1) {
+      this.mensajeErrorStock = 'El stock no puede ser menor a 1000';
+    } else if(!/^\d+(\.\d{0})?$/.test(cant)) {
+      this.mensajeErrorStock = 'Nose permiten  decimales';
+    } else {
+      this.mensajeErrorStock = '';
+      this.stock = parseFloat(cant);
+    }
+  }
+
   async presentAlert() {
-    if (!this.nombre || !this.descripcion || !this.precio || !this.categoriaSeleccionada || this.mensajeError) {
+    if (!this.nombre || !this.descripcion || !this.precio || !this.categoriaSeleccionada || this.mensajeError || this.mensajeErrorStock || !this.stock) {
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'Todos los campos son obligatorios',
@@ -107,7 +123,8 @@ export class AgregarPage implements OnInit {
         this.descripcion,
         this.imagen,
         this.precio,
-        this.categoriaSeleccionada
+        this.categoriaSeleccionada,
+        this.stock
       );
       this.limpiarFormulario();
       this.router.navigate(['/eliminar']); 

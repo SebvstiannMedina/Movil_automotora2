@@ -5,5 +5,5 @@ export class Crud {
     descripcion!:string;
     idCategoria!:number;  
     precio!:number;
-    
+    stock!:number;
 }
