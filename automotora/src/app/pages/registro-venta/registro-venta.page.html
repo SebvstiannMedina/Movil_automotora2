@@ -6,7 +6,7 @@
     <ion-title>
       <img src="assets/icon/Logo.png" alt="logo">
       <ion-icon name="logo-ionitron" slot="start"></ion-icon>
-      MotorSphere
+      Ventas
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -15,14 +15,20 @@
 <ion-content>
   <!-- Lista de Ventas -->
   <ion-list>
-    <ion-item *ngFor="let venta of ventas">
-      <ion-label>
-        <h2>ID: {{ venta.idVenta }}</h2>
-        <p>Total: {{ venta.total }}</p>
-        <p>Subtotal: {{ venta.subtotal }}</p>
-      </ion-label>
-      <ion-button (click)="verDetalles(venta.idVenta)">Ver Detalles</ion-button>
-    </ion-item>
+    <ion-card *ngFor="let venta of ventas">
+      <ion-card-header>
+        <ion-card-title> Nº de venta: {{ venta.idVenta }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label>
+            <p>ID Usuario: {{ venta.idusuario }}</p>
+            <p>Total: {{ venta.total }}</p>
+          </ion-label>
+          <ion-button (click)="verDetalles(venta.idVenta)">Ver Detalles</ion-button>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
   </ion-list>
 </ion-content>
 
