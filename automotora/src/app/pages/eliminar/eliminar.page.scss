@@ -1,109 +1,42 @@
-/* Estilos Globales para la Página Principal */
-body, .ion-page, ion-content {
-  --background: #979696 ; /* Fondo gris oscuro forzado */
-  color: #ffffff !important; /* Texto blanco forzado */
-  height: 100%; /* Asegura que el fondo cubra toda la altura de la página */
-  margin: 0;
-  padding: 0;
-}
-/*
-ion-content {
-  --background: none;
-}
-*/
-.intro-section {
-  text-align: center;
-  margin: 1rem 0;
-}
-
-.intro-section h1 {
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 0.5rem;
-}
-
-.intro-section p {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 2rem;
-}
-
-.highlight-card {
-  margin: 1rem 0;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.highlight-card img {
+.crud-imagen {
+  height: 200px;
+  object-fit: cover;
   width: 100%;
-  border-bottom: 1px solid #ddd;
 }
 
-.models-section {
-  text-align: center;
-  margin: 2rem 0;
-}
-
-.models-section h2 {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 0.5rem;
-}
-
-.models-section p {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 1.5rem;
-}
-
-.models-section img {
-  width: 100%;
-  height: auto;
+ion-card {
+  margin: 10px;
   border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+  ion-card-header {
+    padding-bottom: 8px;
+
+    ion-card-title {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    ion-card-subtitle {
+      font-size: 1.1em;
+      color: var(--ion-color-success);
+    }
+  }
 }
 
-.buttons-container {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
+ion-fab-button {
+  margin-bottom: 20px;
+  margin-right: 20px;
 }
 
-ion-button {
-  --background: #007bff;
-  --color: #fff;
-  --border-radius: 25px;
-  --padding-start: 1rem;
-  --padding-end: 1rem;
-}
-
-ion-button.tertiary {
-  --background: #f8f9fa;
-  --color: #007bff;
-  --border: 2px solid #007bff;
-}
-
-ion-button:hover,
-ion-button:focus {
-  --background: #0056b3;
-  --color: #fff;
-}
-
-ion-button.tertiary:hover,
-ion-button.tertiary:focus {
-  --background: #e9ecef;
-  --color: #0056b3;
-}
-
-/* Estilos para el encabezado */
-ion-header {
-  --background: rgba(255, 255, 255, 0.9); /* Fondo blanco translúcido */
-}
-
-ion-toolbar {
-  --background: #003366; /* Azul oscuro */
-  color: #ffffff; /* Texto blanco */
+ion-list ion-item {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  
+  h2 {
+    font-weight: 500;
+    font-size: 1.1em;
+  }
 }
 
 ion-title {
@@ -121,103 +54,236 @@ ion-title {
     margin-left: 8px; /* Añade un margen a la izquierda del ícono */
   }
 }
-
-
-ion-title ion-icon {
-  font-size: 24px;
-  margin-right: 8px;
-}
-
-/* Estilos para el contenido */
-ion-content {
-  --background: #f5f5f5; /* Fondo gris claro */
-}
-
-.intro-section {
-  text-align: center;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-}
-
-.intro-section h1 {
-  font-size: 28px;
-  color: #003366; /* Azul oscuro */
-}
-
-.intro-section p {
-  font-size: 16px;
-  color: #666666; /* Gris oscuro */
-}
-
-.highlight-card {
-  margin: 0 16px;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.highlight-card img {
-  width: 100%;
-  height: auto;
-}
-
-.highlight-card ion-card-header {
-  background: #003366; /* Azul oscuro */
-  color: #ffffff; /* Texto blanco */
-}
-
-.highlight-card ion-card-title {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.highlight-card ion-card-subtitle {
-  font-size: 16px;
-  color: #dddddd; /* Gris claro */
-}
-
-.models-section {
-  text-align: center;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 20px 16px;
-}
-
-.models-section h2 {
-  font-size: 24px;
-  color: #003366; /* Azul oscuro */
-}
-
-.models-section p {
-  font-size: 16px;
-  color: #666666; /* Gris oscuro */
-  margin-bottom: 20px;
-}
-
-.models-section img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
-
-.buttons-container {
-  margin-top: 20px;
-}
-
 ion-button {
   --background: #003366; /* Azul oscuro */
   --color: #ffffff; /* Texto blanco */
   --border-radius: 8px;
 }
 
+ion-footer ion-title {
+  color: #ffffff; /* Texto blanco */
+}
+
+/* Estilos Globales para la Página Principal */
+body, .ion-page, ion-content {
+--background: #979696 ; /* Fondo gris oscuro forzado */
+color: #ffffff !important; /* Texto blanco forzado */
+height: 100%; /* Asegura que el fondo cubra toda la altura de la página */
+margin: 0;
+padding: 0;
+}
+/*
+ion-content {
+--background: none;
+}
+*/
+.intro-section {
+text-align: center;
+margin: 1rem 0;
+}
+
+.intro-section h1 {
+font-size: 2.5rem;
+color: #333;
+margin-bottom: 0.5rem;
+}
+
+.intro-section p {
+font-size: 1.2rem;
+color: #666;
+margin-bottom: 2rem;
+}
+
+.highlight-card {
+margin: 1rem 0;
+border-radius: 15px;
+overflow: hidden;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.highlight-card img {
+width: 100%;
+border-bottom: 1px solid #ddd;
+}
+
+.models-section {
+text-align: center;
+margin: 2rem 0;
+}
+
+.models-section h2 {
+font-size: 2rem;
+color: #333;
+margin-bottom: 0.5rem;
+}
+
+.models-section p {
+font-size: 1.2rem;
+color: #666;
+margin-bottom: 1.5rem;
+}
+
+.models-section img {
+width: 100%;
+height: auto;
+border-radius: 10px;
+}
+
+.buttons-container {
+display: flex;
+justify-content: center;
+gap: 1rem;
+margin-top: 1rem;
+}
+
+ion-button {
+--background: #007bff;
+--color: #fff;
+--border-radius: 25px;
+--padding-start: 1rem;
+--padding-end: 1rem;
+}
+
+ion-button.tertiary {
+--background: #f8f9fa;
+--color: #007bff;
+--border: 2px solid #007bff;
+}
+
+ion-button:hover,
+ion-button:focus {
+--background: #0056b3;
+--color: #fff;
+}
+
+ion-button.tertiary:hover,
+ion-button.tertiary:focus {
+--background: #e9ecef;
+--color: #0056b3;
+}
+
+/* Estilos para el encabezado */
+ion-header {
+--background: rgba(255, 255, 255, 0.9); /* Fondo blanco translúcido */
+}
+
+ion-toolbar {
+--background: #003366; /* Azul oscuro */
+color: #ffffff; /* Texto blanco */
+}
+
+ion-title {
+display: flex;
+align-items: center;
+font-size: 20px;
+font-weight: bold;
+
+img {
+  height: 24px; /* Ajusta la altura de la imagen */
+  margin-right: 8px; /* Añade un pequeño margen a la derecha de la imagen */
+}
+
+ion-icon {
+  margin-left: 8px; /* Añade un margen a la izquierda del ícono */
+}
+}
+
+
+ion-title ion-icon {
+font-size: 24px;
+margin-right: 8px;
+}
+
+/* Estilos para el contenido */
+ion-content {
+--background: #f5f5f5; /* Fondo gris claro */
+}
+
+.intro-section {
+text-align: center;
+padding: 20px;
+background: #ffffff;
+border-radius: 8px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+margin-bottom: 20px;
+}
+
+.intro-section h1 {
+font-size: 28px;
+color: #003366; /* Azul oscuro */
+}
+
+.intro-section p {
+font-size: 16px;
+color: #666666; /* Gris oscuro */
+}
+
+.highlight-card {
+margin: 0 16px;
+border-radius: 8px;
+overflow: hidden;
+}
+
+.highlight-card img {
+width: 100%;
+height: auto;
+}
+
+.highlight-card ion-card-header {
+background: #003366; /* Azul oscuro */
+color: #ffffff; /* Texto blanco */
+}
+
+.highlight-card ion-card-title {
+font-size: 20px;
+font-weight: bold;
+}
+
+.highlight-card ion-card-subtitle {
+font-size: 16px;
+color: #dddddd; /* Gris claro */
+}
+
+.models-section {
+text-align: center;
+padding: 20px;
+background: #ffffff;
+border-radius: 8px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+margin: 20px 16px;
+}
+
+.models-section h2 {
+font-size: 24px;
+color: #003366; /* Azul oscuro */
+}
+
+.models-section p {
+font-size: 16px;
+color: #666666; /* Gris oscuro */
+margin-bottom: 20px;
+}
+
+.models-section img {
+width: 100%;
+height: auto;
+border-radius: 8px;
+}
+
+.buttons-container {
+margin-top: 20px;
+}
+
+ion-button {
+--background: #003366; /* Azul oscuro */
+--color: #ffffff; /* Texto blanco */
+--border-radius: 8px;
+}
+
 ion-footer {
-  --background: #003366; /* Azul oscuro */
+--background: #003366; /* Azul oscuro */
 }
 
 ion-footer ion-title {
-  color: #ffffff; /* Texto blanco */
+color: #ffffff; /* Texto blanco */
 }
