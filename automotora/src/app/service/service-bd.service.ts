@@ -44,7 +44,7 @@ export class ServiceBDService {
   registroRol: string = "INSERT or IGNORE INTO rol(idRol, nombre) VALUES (1, 'admin'), (2, 'usuario')";
   registroEstados: string = "INSERT or IGNORE INTO estados(idEstado, nombre) VALUES (1, 'Pendiente'), (2, 'En Proceso'), (3, 'Completado')";
 
-  admin: string ="INSERT or IGNORE INTO usuario(nombre,correo, contrasena, id_Rol, imagen, preguntaSeleccionada, respuestaSeguridad,token ) VALUES('MotorSphere', 'admin@gmail.com', 'Admin123.', 1,null, '¿Cuál fue tu primer auto?', 'MotorSphere',1)"
+  admin: string ="INSERT or IGNORE INTO usuario(idusuario,nombre,correo, contrasena, id_Rol, imagen, preguntaSeleccionada, respuestaSeguridad,token ) VALUES(1,'MotorSphere', 'admin@gmail.com', 'Admin123.', 1,null, '¿Cuál fue tu primer auto?', 'MotorSphere',1)"
   // Listado de Observables
   listadoUsuario = new BehaviorSubject<Usuario[]>([]);
   listadoVenta = new BehaviorSubject<Venta[]>([]);

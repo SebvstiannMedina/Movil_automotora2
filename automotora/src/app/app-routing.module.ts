@@ -88,6 +88,14 @@ const routes: Routes = [
     path: 'histdetalle',
     loadChildren: () => import('./pages/histdetalle/histdetalle.module').then( m => m.HistdetallePageModule)
   },
+  {
+    path: 'usuario-compra',
+    loadChildren: () => import('./pages/usuario-compra/usuario-compra.module').then( m => m.UsuarioCompraPageModule)
+  },
+  {
+    path: 'usuariodetalle',
+    loadChildren: () => import('./pages/usuariodetalle/usuariodetalle.module').then( m => m.UsuariodetallePageModule)
+  },
 
 
 
