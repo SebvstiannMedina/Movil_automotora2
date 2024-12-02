@@ -17,13 +17,20 @@
 
   <!-- Mostrar compras si existen -->
   <ion-list *ngIf="!cargando && compras.length > 0">
-    <ion-item *ngFor="let compra of compras">
-      <ion-label>
-        <h2>ID de Compra: {{ compra.idVenta }}</h2>
-        <p>Subtotal: {{ compra.subtotal | currency }}</p>
-        <p>Total: {{ compra.total | currency }}</p>
-      </ion-label>
-    </ion-item>
+    <ion-card *ngFor="let compra of compras">
+      <ion-card-header>
+        <ion-card-title> ID de Compra: {{ compra.idVenta }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label>
+            <p>Subtotal: {{ compra.subtotal | currency }}</p>
+            <p>Total: {{ compra.total | currency }}</p>
+          </ion-label>
+          <ion-button (click)="verDetalles(compra.idVenta)">Ver Detalles</ion-button>
+        </ion-item>
+    </ion-card-content>
+  </ion-card>
   </ion-list>
 
   <!-- Mensaje si no hay compras -->
