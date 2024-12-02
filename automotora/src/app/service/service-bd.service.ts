@@ -479,15 +479,19 @@ export class ServiceBDService {
           
           if (userToken !== 1) {
             this.presentAlert('error','usuario inabilitado temporalmente');
+          }else{
+            this.presentAlert('error',' Email o contraseña incorrectos.');
+
           }
           
-          this.presentAlert('error',' Email o contraseña incorrectos.');
+         
         } else {
          this.presentAlert('error','usuario no existe ');
         }
       }
     } catch (e) {
       console.error('Error al validar credenciales:', e);
+
       throw e; // Re-throw the specific error for proper error handling
     }
     return false;

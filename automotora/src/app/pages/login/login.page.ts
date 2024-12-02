@@ -65,7 +65,7 @@ export class LoginPage implements OnInit {
           this.storage.setItem('Rol', id_Rol); // Asegúrate de que sean strings si es necesario
           this.storage.setItem('Nombre', nombre); // Asegúrate de que sean strings si es necesario
           //aqui deben rellenar el observable de usuario
-          
+          this.limpiarFormulario();
           this.router.navigate(['/home']);
           ///this.presentAlert("ver datos " + idusuario + id_Rol + nombre); // id = 1 || rol = 1 + nombre = user
           console.log('Login exitoso:', this.objetoLogin);
@@ -78,5 +78,9 @@ export class LoginPage implements OnInit {
           //console.log('Login fallido');   
         }
     });
+  }
+  private limpiarFormulario() {
+    this.objetoLogin.correo = '';
+    this.objetoLogin.contrasena = '';
   }
 }
