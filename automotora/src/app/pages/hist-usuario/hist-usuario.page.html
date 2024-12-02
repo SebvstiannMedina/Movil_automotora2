@@ -6,13 +6,10 @@
     <ion-title>
       <img src="assets/icon/Logo.png" alt="logo">
       <ion-icon name="logo-ionitron" slot="start"></ion-icon>
-      Gestion de usuarios
+      Gestión de usuarios
     </ion-title>
-
-
   </ion-toolbar>
 </ion-header>
-
 
 <ion-content [fullscreen]="true">
   <!-- Segmento para alternar entre usuarios activos y bloqueados -->
@@ -30,9 +27,11 @@
     <ion-refresher slot="fixed" (ionRefresh)="cargarUsuarios($event)">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
+      <!-- Campo de búsqueda para filtrar usuarios -->
+  <ion-searchbar [(ngModel)]="terminoBusqueda" (ionInput)="filtrarUsuarios()" placeholder="Buscar usuario con su nombre o id "></ion-searchbar>
 
-    <ion-list *ngIf="usuariosConTokenActivo.length > 0">
-      <ion-item-sliding *ngFor="let usuario of usuariosConTokenActivo">
+    <ion-list *ngIf="usuariosFiltradosActivos.length > 0">
+      <ion-item-sliding *ngFor="let usuario of usuariosFiltradosActivos">
         <ion-item>
           <ion-avatar slot="start">
             <ion-icon name="person-circle-outline"></ion-icon>
@@ -54,7 +53,7 @@
       </ion-item-sliding>
     </ion-list>
 
-    <ion-list *ngIf="usuariosConTokenActivo.length === 0">
+    <ion-list *ngIf="usuariosFiltradosActivos.length === 0">
       <ion-item>
         <ion-label>No hay usuarios activos</ion-label>
       </ion-item>
@@ -66,9 +65,11 @@
     <ion-refresher slot="fixed" (ionRefresh)="cargarUsuariosBloqueados($event)">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
+      <!-- Campo de búsqueda para filtrar usuarios -->
+  <ion-searchbar [(ngModel)]="terminoBusqueda" (ionInput)="filtrarUsuarios()" placeholder="Buscar usuario..."></ion-searchbar>
 
-    <ion-list *ngIf="usuariosBloqueados.length > 0">
-      <ion-item-sliding *ngFor="let usuario of usuariosBloqueados">
+    <ion-list *ngIf="usuariosFiltradosBloqueados.length > 0">
+      <ion-item-sliding *ngFor="let usuario of usuariosFiltradosBloqueados">
         <ion-item>
           <ion-avatar slot="start">
             <ion-icon name="person-circle-outline"></ion-icon>
@@ -90,7 +91,7 @@
       </ion-item-sliding>
     </ion-list>
 
-    <ion-list *ngIf="usuariosBloqueados.length === 0">
+    <ion-list *ngIf="usuariosFiltradosBloqueados.length === 0">
       <ion-item>
         <ion-label>No hay usuarios bloqueados</ion-label>
       </ion-item>
@@ -103,6 +104,7 @@
     </ion-fab-button>
   </ion-fab>
 </ion-content>
+
 <ion-footer collapse="fade">
   <ion-toolbar>
     <ion-title></ion-title>

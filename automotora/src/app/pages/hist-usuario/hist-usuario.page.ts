@@ -11,8 +11,11 @@ import { ServiceBDService } from 'src/app/service/service-bd.service';
 export class HistUsuarioPage implements OnInit {
   usuariosConTokenActivo: any[] = [];
   usuariosBloqueados: any[] = [];
+  usuariosFiltradosActivos: any[] = [];
+  usuariosFiltradosBloqueados: any[] = [];
   seccionActual: string = 'activos';
-  
+  terminoBusqueda: string = '';  // Término de búsqueda
+
   // Mapeo de roles (asegúrate de tener esta información de tu base de datos)
   idRol: { [key: number]: string } = {
     1: 'Administrador',
@@ -40,7 +43,7 @@ export class HistUsuarioPage implements OnInit {
 
     try {
       this.usuariosConTokenActivo = await this.bd.obtenerUsuariosTokenActivo();
-      
+      this.usuariosFiltradosActivos = [...this.usuariosConTokenActivo];  // Inicializamos la lista filtrada
       if (event) {
         event.target.complete();
       }
@@ -50,7 +53,40 @@ export class HistUsuarioPage implements OnInit {
       await loading.dismiss();
     }
   }
-  
+
+  async cargarUsuariosBloqueados(event?: RefresherCustomEvent) {
+    const loading = await this.loadingController.create({
+      message: 'Cargando usuarios bloqueados...'
+    });
+    await loading.present();
+
+    try {
+      this.usuariosBloqueados = await this.bd.obtenerUsuariosBloqueados();
+      this.usuariosFiltradosBloqueados = [...this.usuariosBloqueados];  // Inicializamos la lista filtrada
+      if (event) {
+        event.target.complete();
+      }
+    } catch (error) {
+      this.mostrarAlerta('Error', 'No se pudieron cargar los usuarios bloqueados');
+    } finally {
+      await loading.dismiss();
+    }
+  }
+
+  // Filtrar usuarios según el término de búsqueda
+  filtrarUsuarios() {
+    if (this.seccionActual === 'activos') {
+      this.usuariosFiltradosActivos = this.usuariosConTokenActivo.filter(usuario =>
+        usuario.nombre.toLowerCase().includes(this.terminoBusqueda.toLowerCase()) ||
+        usuario.idusuario.toString().includes(this.terminoBusqueda)
+      );
+    } else {
+      this.usuariosFiltradosBloqueados = this.usuariosBloqueados.filter(usuario =>
+        usuario.nombre.toLowerCase().includes(this.terminoBusqueda.toLowerCase()) ||
+        usuario.idusuario.toString().includes(this.terminoBusqueda)
+      );
+    }
+  }
 
   async actualizarTokens() {
     const alert = await this.alertController.create({
@@ -125,7 +161,6 @@ export class HistUsuarioPage implements OnInit {
     return this.idRol[idRol] || 'Rol Desconocido';
   }
 
-
   async mostrarAlerta(header: string, message: string) {
     const alert = await this.alertController.create({
       header: header,
@@ -136,9 +171,6 @@ export class HistUsuarioPage implements OnInit {
     await alert.present();
   }
 
-
-
-
   cambiarSeccion() {
     if (this.seccionActual === 'bloqueados') {
       this.cargarUsuariosBloqueados();
@@ -146,29 +178,6 @@ export class HistUsuarioPage implements OnInit {
       this.cargarUsuarios();
     }
   }
-
-  
-
-  async cargarUsuariosBloqueados(event?: RefresherCustomEvent) {
-    const loading = await this.loadingController.create({
-      message: 'Cargando usuarios bloqueados...'
-    });
-    await loading.present();
-
-    try {
-      this.usuariosBloqueados = await this.bd.obtenerUsuariosBloqueados();
-      
-      if (event) {
-        event.target.complete();
-      }
-    } catch (error) {
-      this.mostrarAlerta('Error', 'No se pudieron cargar los usuarios bloqueados');
-    } finally {
-      await loading.dismiss();
-    }
-  }
-
-  // Métodos anteriores (actualizarTokens, bloquearUsuario, etc.) se mantienen igual
 
   async desbloquearUsuario(idUsuario: number) {
     const alert = await this.alertController.create({
@@ -204,5 +213,4 @@ export class HistUsuarioPage implements OnInit {
 
     await alert.present();
   }
-
 }
