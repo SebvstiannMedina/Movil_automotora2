@@ -51,34 +51,41 @@
               [src]="crud.imagen || 'assets/placeholder.png'"
               class="crud-imagen">
             </ion-img>
-
+      
             <ion-card-header>
               <ion-card-title>{{ crud.nombre }}</ion-card-title>
               <ion-card-subtitle>
-              Precio: {{ crud.precio | currency:'CLP':'symbol-narrow':'1.0-0' }}
+                Precio: {{ crud.precio | currency:'CLP':'symbol-narrow':'1.0-0' }}
               </ion-card-subtitle>
             </ion-card-header>
-
+      
             <ion-card-content>
               <p>Descripción:</p>
               <p>{{ crud.descripcion }}</p>
             </ion-card-content>
-
+      
             <ion-card-content>
               <p>Unidades disponible: {{ crud.stock }}</p>
+              <!-- Mostrar mensaje de agotado si stock es 0 -->
+              <p *ngIf="crud.stock === 0" class="ion-text-danger"><strong>Producto agotado</strong></p>
             </ion-card-content>
-
+      
             <ion-row class="ion-justify-content-center ion-padding">
               <ion-col size="auto">
+                <!-- Botón deshabilitado si el stock es 0 -->
                 <ion-button 
                   fill="clear" 
-                   (click)="anadirAlCarrito(crud)">
+                  [disabled]="crud.stock === 0"
+                  (click)="anadirAlCarrito(crud)">
                   <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
-                  agregar
+                  {{ crud.stock === 0 ? 'No disponible' : 'Agregar' }}
                 </ion-button>
-              </ion-col> <!-- 
-                [routerLink]="['/editar-crud', crud.id]"   [routerLink]="'/aeromatizantes'"-->
+              </ion-col>
             </ion-row>
           </ion-card>
         </ion-col>
       </ion-row>
+      
+    </ion-grid>
+  </div>
+</ion-content>

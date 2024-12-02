@@ -20,6 +20,7 @@ export class ProductosPage implements OnInit {
       if (ready) {
         this.cargarCategorias();
         this.cargarCrud();
+        this.cdr.detectChanges();
       }
     });
   }
@@ -33,6 +34,7 @@ export class ProductosPage implements OnInit {
   cargarCrud() {
     this.bd.fetchCrud().subscribe(crud => {
       this.Crud = crud;
+      this.cdr.detectChanges();
     });
   }
 
@@ -44,6 +46,7 @@ export class ProductosPage implements OnInit {
     
     this.bd.fetchCrud().subscribe(Crud => {
       this.Crud = Crud.filter(crud => crud.idCategoria === idCategoria);
+      this.cdr.detectChanges();
     });
   }
 
@@ -55,13 +58,4 @@ export class ProductosPage implements OnInit {
   anadirAlCarrito(producto: any) {
     this.cartService.addToCart(producto, 1); // Añadir una unidad del producto al carrito
   }
-/*
-  ionViewWillEnter() {
-    this.cargarCrud();
-    this.cargarCategorias();
-    this.cargarCrudPorCategoria;
-    this.anadirAlCarrito;
-    this.cdr.detectChanges();
-  }
-    */
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ServiceBDService } from './service-bd.service';
 import { Crud } from './crud';
@@ -16,7 +16,7 @@ export class CartService {
   private cartItems: BehaviorSubject<CartItem[]> = new BehaviorSubject<CartItem[]>([]);
   private currentUserId: number | null = null;
 
-  constructor(private dbService: ServiceBDService) {
+  constructor(private dbService: ServiceBDService, cdr: ChangeDetectorRef) {
     // Sincronizar el carrito con el localStorage
     this.cartItems.subscribe(items => {
       if (this.currentUserId !== null) {
@@ -37,10 +37,20 @@ export class CartService {
     return this.cartItems.asObservable();
   }
 
-  // Añadir un producto al carrito
-  addToCart(product: Crud, quantity: number = 1) {
+  // Añadir un producto al carrito con validación de stock
+  async addToCart(product: Crud, quantity: number = 1) {
     const currentItems = this.cartItems.value;
     const existingItem = currentItems.find(item => item.product.idCrud === product.idCrud);
+
+    // Calcular la cantidad total del producto en el carrito
+    const totalQuantityInCart = existingItem 
+      ? existingItem.quantity + quantity 
+      : quantity;
+
+    // Verificar si hay suficiente stock
+    if (totalQuantityInCart > product.stock) {
+      throw new Error(`No hay suficiente stock. Stock disponible: ${product.stock}`);
+    }
 
     if (existingItem) {
       existingItem.quantity += quantity;
@@ -63,12 +73,17 @@ export class CartService {
     this.cartItems.next(updatedItems);
   }
 
-  // Actualizar la cantidad de un producto
-  updateQuantity(productId: number, quantity: number) {
+  // Actualizar la cantidad de un producto con validación de stock
+  async updateQuantity(productId: number, quantity: number) {
     const currentItems = this.cartItems.value;
     const item = currentItems.find(item => item.product.idCrud === productId);
 
     if (item) {
+      // Verificar si hay suficiente stock
+      if (quantity > item.product.stock) {
+        throw new Error(`No hay suficiente stock. Stock disponible: ${item.product.stock}`);
+      }
+
       item.quantity = quantity;
       item.subtotal = quantity * item.product.precio;
       this.cartItems.next(currentItems);
@@ -88,7 +103,7 @@ export class CartService {
     }
   }
 
-  // Procesar la compra
+  // Procesar la compra con actualización de stock
   async checkout() {
     if (!this.currentUserId) {
       throw new Error('No hay usuario activo');
@@ -97,8 +112,15 @@ export class CartService {
     try {
       const total = this.getTotal();
 
+      // Verificar stock antes de procesar la compra
+      for (const item of this.cartItems.value) {
+        if (item.quantity > item.product.stock) {
+          throw new Error(`El producto ${item.product.idCrud} no tiene suficiente stock`);
+        }
+      }
+
       // Crear la venta principal
-      await this.dbService.insertarVenta(
+      const ventaResult = await this.dbService.insertarVenta(
         total,
         this.currentUserId,
         total, // subtotal igual al total si no hay descuentos
@@ -112,13 +134,20 @@ export class CartService {
       );
       const ventaId = ventas.rows.item(0).lastId;
 
-      // Crear los detalles de la venta
+      // Crear los detalles de la venta y actualizar stock
       for (const item of this.cartItems.value) {
+        // Insertar detalle de venta
         await this.dbService.insertarDetalle(
           ventaId,
           item.product.idCrud,
           item.quantity,
           item.subtotal
+        );
+
+        // Actualizar stock del producto
+        await this.dbService.database.executeSql(
+          'UPDATE crud SET stock = stock - ? WHERE idCrud = ?',
+          [item.quantity, item.product.idCrud]
         );
       }
 

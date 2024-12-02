@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
-import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx'; // Importa SQLite y SQLiteObject
 import { CartService, CartItem  } from 'src/app/service/cart.service';
 import { Router } from '@angular/router';
 import { ServiceBDService } from 'src/app/service/service-bd.service';
@@ -66,10 +65,15 @@ export class CarritoCompraPage implements OnInit {
     }
   }
 
-  updateQuantity(item: CartItem, change: number) {
+  async updateQuantity(item: CartItem, change: number) {
     const newQuantity = item.quantity + change;
     if (newQuantity > 0) {
-      this.cartService.updateQuantity(item.product.idCrud, newQuantity);
+      try {
+        await this.cartService.updateQuantity(item.product.idCrud, newQuantity);
+      } catch (error) {
+        // Mostrar alerta si no hay suficiente stock
+        await this.presentStockErrorAlert(item.product.stock);
+      }
     }
   }
 
@@ -114,7 +118,15 @@ export class CarritoCompraPage implements OnInit {
     try {
       await this.cartService.checkout();
       this.presentSuccessAlert();
-    } catch (error) {
+    } catch (error: unknown) {
+      // Verificación más genérica
+      if (typeof error === 'object' && error !== null && 'message' in error) {
+        const errorMessage = (error as Error).message;
+        if (errorMessage.includes('no tiene suficiente stock')) {
+          await this.presentStockCheckoutErrorAlert();
+          return;
+        }
+      }
       this.presentErrorAlert();
     }
   }
@@ -142,12 +154,23 @@ export class CarritoCompraPage implements OnInit {
     await alert.present();
   }
 
- // hola() {
-    //this.bd.presentAlert('Hola1', this.email);
-    
-    //this.bd.presentAlert('Hola1', this.username);
-    
-  //  //this.bd.presentAlert('Hola2', this.id_user);
- // }
-}
+  // Nueva alerta para manejar errores de stock al modificar cantidad
+  async presentStockErrorAlert(availableStock: number) {
+    const alert = await this.alertController.create({
+      header: 'Stock Insuficiente',
+      message: `Lo sentimos, solo hay ${availableStock} unidades disponibles.`,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
 
+  // Nueva alerta para manejar errores de stock al hacer checkout
+  async presentStockCheckoutErrorAlert() {
+    const alert = await this.alertController.create({
+      header: 'Error de Stock',
+      message: 'Algunos productos en tu carrito no tienen suficiente stock. Por favor, revisa las cantidades.',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+}

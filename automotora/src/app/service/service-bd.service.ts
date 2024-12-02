@@ -345,7 +345,7 @@ export class ServiceBDService {
       
       // También podrías querer limpiar variables de estado en el servicio
       this.listadoUsuario.next(null as any);
-      
+      this.presentAlert('Cerrando Sesión', 'Has cerrado la sesión.');
     } catch (e) {
       console.error('Error al cerrar sesión:', e);
       throw e;
