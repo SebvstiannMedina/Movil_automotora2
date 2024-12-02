@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ServiceBDService } from './service-bd.service';
 import { Crud } from './crud';
@@ -16,7 +16,7 @@ export class CartService {
   private cartItems: BehaviorSubject<CartItem[]> = new BehaviorSubject<CartItem[]>([]);
   private currentUserId: number | null = null;
 
-  constructor(private dbService: ServiceBDService, cdr: ChangeDetectorRef) {
+  constructor(private dbService: ServiceBDService) {
     // Sincronizar el carrito con el localStorage
     this.cartItems.subscribe(items => {
       if (this.currentUserId !== null) {

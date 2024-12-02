@@ -20,7 +20,6 @@ export class ProductosPage implements OnInit {
       if (ready) {
         this.cargarCategorias();
         this.cargarCrud();
-        this.cdr.detectChanges();
       }
     });
   }
@@ -34,7 +33,6 @@ export class ProductosPage implements OnInit {
   cargarCrud() {
     this.bd.fetchCrud().subscribe(crud => {
       this.Crud = crud;
-      this.cdr.detectChanges();
     });
   }
 
@@ -46,7 +44,6 @@ export class ProductosPage implements OnInit {
     
     this.bd.fetchCrud().subscribe(Crud => {
       this.Crud = Crud.filter(crud => crud.idCategoria === idCategoria);
-      this.cdr.detectChanges();
     });
   }
 
