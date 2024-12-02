@@ -1,13 +1,27 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>usuariodetalle</ion-title>
+    <ion-title>Detalle de compra</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cerrar</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">usuariodetalle</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-list>
+    <ion-card *ngFor="let detalle of detalles">
+      <ion-card-header>
+        <ion-card-title>Id de compra: {{ detalle.idVenta }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label>
+            <p>ID Producto: {{ detalle.idProducto }}</p>	
+            <p>Cantidad: {{ detalle.cantidad }}</p>
+            <p>Subtotal: {{ detalle.subtotal }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
 </ion-content>

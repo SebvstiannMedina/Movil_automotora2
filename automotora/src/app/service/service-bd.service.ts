@@ -339,7 +339,7 @@ export class ServiceBDService {
   async cerrarSesion() {
     try {
       // Eliminar datos de sesión almacenados localmente
-      await this.storage.remove('Id');
+       this.storage.remove('Id');
       // O
       localStorage.removeItem('Id');
       
@@ -831,6 +831,34 @@ async desbloquearUsuario(idUsuario: number): Promise<void> {
       });
   }
   
+  async getComprasUsuario(): Promise<Venta[]> {
+    try {
+      // Obtener el ID del usuario del NativeStorage
+      const usuarioId = await this.storage.getItem('Id');
+      
+      // Verificar que el ID existe
+      if (!usuarioId) {
+        throw new Error('El usuario no está autenticado.');
+      }
+  
+      // Ejecutar la consulta para obtener las compras del usuario
+      const res = await this.database.executeSql(
+        'SELECT * FROM venta WHERE idusuario = ?',
+        [usuarioId]
+      );
+  
+      // Procesar resultados
+      let compras: Venta[] = [];
+      for (let i = 0; i < res.rows.length; i++) {
+        compras.push(res.rows.item(i));
+      }
+  
+      return compras;
+    } catch (error) {
+      console.error('Error al obtener compras del usuario:', error);
+      throw error;
+    }
+  }
   
 
 

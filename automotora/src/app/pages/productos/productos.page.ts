@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ServiceBDService } from 'src/app/service/service-bd.service';
 import { CartService } from 'src/app/service/cart.service';
 
@@ -13,7 +13,7 @@ export class ProductosPage implements OnInit {
   categoriaSeleccionada: number | null = null;
   nombreCategoriaSeleccionada: string = '';
 
-  constructor(private bd: ServiceBDService, private cartService: CartService, ) {}
+  constructor(private bd: ServiceBDService, private cartService: CartService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.bd.dbState().subscribe(ready => {
@@ -55,4 +55,13 @@ export class ProductosPage implements OnInit {
   anadirAlCarrito(producto: any) {
     this.cartService.addToCart(producto, 1); // Añadir una unidad del producto al carrito
   }
+/*
+  ionViewWillEnter() {
+    this.cargarCrud();
+    this.cargarCategorias();
+    this.cargarCrudPorCategoria;
+    this.anadirAlCarrito;
+    this.cdr.detectChanges();
+  }
+    */
 }

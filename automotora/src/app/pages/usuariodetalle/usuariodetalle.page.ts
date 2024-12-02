@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,Input  } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-usuariodetalle',
   templateUrl: './usuariodetalle.page.html',
   styleUrls: ['./usuariodetalle.page.scss'],
 })
-export class UsuariodetallePage implements OnInit {
+export class UsuariodetallePage  {
+  @Input() detalles: any[] = [];
 
-  constructor() { }
+  constructor(private modalController: ModalController) {}
 
-  ngOnInit() {
+  // Cerrar el modal
+  dismiss() {
+    this.modalController.dismiss();
   }
 
 }

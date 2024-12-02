@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { NativeStorage } from '@awesome-cordova-plugins/native-storage/ngx';  
 import { AlertController } from '@ionic/angular';
@@ -16,12 +16,19 @@ export class AppComponent implements OnInit, OnDestroy {
   verMenu = true;
   nombreUsuario: string = '';
   
-  
+  username: string = "";
+  email: string = "";
+  password: string = "";
+  id_user!: number;
+  imagen!: any;
+
+
   constructor(
     private router: Router,
     private storage: NativeStorage,
     private alertController: AlertController,
-    private bd: ServiceBDService
+    private bd: ServiceBDService,
+    private cdr: ChangeDetectorRef
   ) {
     // Mejora en el manejo de eventos de navegación
     this.router.events.pipe(
@@ -64,6 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
           if (userData) {
             // Actualiza los datos necesarios
             this.nombreUsuario =  this.nombreUsuario;
+            this.ionViewWillEnter();
           }
         },
         (error) => {
@@ -83,43 +91,41 @@ export class AppComponent implements OnInit, OnDestroy {
     this.verMenu = !noveras.includes(url);
   }
 
-  async logout() {
-    try {
-      await this.storage.remove('Id');
-      await this.cerrarSesion();
-      
-      const alert = await this.alertController.create({
-        header: 'Sesión Cerrada',
-        message: 'Has cerrado sesión exitosamente',
-        buttons: [{
-          text: 'OK',
-          handler: () => {
-            this.router.navigate(['/login']);
-          }
-        }]
-      });
-      await alert.present();
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-      const errorAlert = await this.alertController.create({
-        header: 'Error',
-        message: 'Hubo un problema al cerrar la sesión. Por favor, intenta nuevamente.',
-        buttons: ['OK']
-      });
-      await errorAlert.present();
-    }
-  }
 
-  async presentAlert(mensaje: string) {
-    const alert = await this.alertController.create({
-      header: 'LOGIN',
-      message: mensaje,
-      buttons: ['OK'],
-    });
-    await alert.present();
-  }
 
   cerrarSesion() {
     this.bd.cerrarSesion();
+    this.router.navigate(['/login']);
+    //await this.storage.remove('Id');
+    this.cdr.detectChanges();
   }
+
+
+  ionViewWillEnter() {
+    this.storage.getItem('Id').then((data: any) => {
+      this.id_user = data;
+
+      // Llamar a la consulta solo cuando se haya obtenido el ID
+      this.bd.searchUserById(this.id_user).then((data: any) => {
+        if (data) {
+          this.username = data.nombre;
+          this.email = data.correo;
+          this.password = data.contrasena;
+          this.imagen = data.imagen;
+          //this.preguntaSeleccionada = data.preguntaSeleccionada;
+          //this.respuestaSeguridad = data.respuestaSeguridad;
+          //this.token = data.token;
+
+         // if (data.imagen) {
+          //  this.imagen = `data:image/jpeg;base64,${data.imagen}`;
+         // }
+          // Detectar cambios para actualizar la vista
+          this.cdr.detectChanges();
+        }
+      });
+    }).catch((error: any) => {
+      console.error("Error retrieving user data", error);
+    });
+  }
+
 }
