@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AlertController, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { ServiceBDService } from 'src/app/service/service-bd.service';
 import { HistdetallePage } from '../histdetalle/histdetalle.page';
 
@@ -11,6 +10,8 @@ import { HistdetallePage } from '../histdetalle/histdetalle.page';
 })
 export class RegistroVentaPage implements OnInit {
   ventas: any[] = [];
+  ventasFiltradas: any[] = [];
+  terminoBusqueda: string = '';  // Término de búsqueda
 
   constructor(private serviceBD: ServiceBDService, private modalController: ModalController) {}
 
@@ -22,7 +23,15 @@ export class RegistroVentaPage implements OnInit {
   cargarVentas() {
     this.serviceBD.getVentas().then((ventas) => {
       this.ventas = ventas;
+      this.ventasFiltradas = [...this.ventas];  // Inicializa las ventas filtradas
     });
+  }
+
+  // Filtrar ventas según el término de búsqueda
+  filtrarVentas() {
+    this.ventasFiltradas = this.ventas.filter(venta =>
+      venta.idVenta.toString().includes(this.terminoBusqueda)
+    );
   }
 
   // Mostrar detalles de la venta seleccionada

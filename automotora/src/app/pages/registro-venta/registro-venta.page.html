@@ -11,11 +11,13 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content>
+  <!-- Filtro de búsqueda -->
+  <ion-searchbar [(ngModel)]="terminoBusqueda" (ionInput)="filtrarVentas()" debounce="300" placeholder="Buscar por ID "></ion-searchbar>
+
   <!-- Lista de Ventas -->
   <ion-list>
-    <ion-card *ngFor="let venta of ventas">
+    <ion-card *ngFor="let venta of ventasFiltradas">
       <ion-card-header>
         <ion-card-title> Nº de venta: {{ venta.idVenta }}</ion-card-title>
       </ion-card-header>
@@ -31,7 +33,6 @@
     </ion-card>
   </ion-list>
 </ion-content>
-
 
 <ion-footer collapse="fade">
   <ion-toolbar>
