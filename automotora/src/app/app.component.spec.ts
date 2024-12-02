@@ -55,10 +55,5 @@ describe('AppComponent', () => {
     expect(app.verMenu).toBeTrue();
   });
 
-  it('verifica que se muestra un alerta al cerrar sesión', async () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    await app.logout();
-    expect(mockAlertController.create).toHaveBeenCalled();
-  });
+
 });

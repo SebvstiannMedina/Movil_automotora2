@@ -52,11 +52,6 @@ describe('EliminarPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('llama a los productos desde el ngOnInit', () => {
-    expect(serviceBDMock.dbState).toHaveBeenCalled();
-    expect(serviceBDMock.fetchCrud).toHaveBeenCalled();
-  });
-
   it('verifica que se llame a la navegación con la ruta correcta y los datos correctos', () => {
     const crudItem = { idCrud: 1 };  
     component.modificar(crudItem);

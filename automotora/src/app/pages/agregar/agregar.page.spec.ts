@@ -81,6 +81,7 @@ describe('AgregarPage', () => {
     component.nombre = 'Producto';
     component.descripcion = 'Descripción';
     component.precio = 1500;
+    component.stock = 15;
     component.categoriaSeleccionada = 1;
 
     alertController.create.and.returnValue(Promise.resolve({

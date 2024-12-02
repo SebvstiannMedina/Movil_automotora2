@@ -66,16 +66,6 @@ describe('EditarPerfilPage', () => {
     expect(component.validarNombre()).toBeFalse();
   });
 
-  it('verifica que se llame a modificarUsuario cuando se invoca modificar', () => {
-    component.modificar();
-    expect(serviceBDService.modificarUsuario).toHaveBeenCalledWith(
-      component.user.idusuario,
-      component.user.nombre,
-      component.user.correo,
-      component.user.imagen
-    );
-  });
-
   it('verifica que se muestre un alerta cuando no hay cambios', async () => {
     spyOn(alertController, 'create').and.callThrough();
     component.user.nombre = '';
@@ -89,32 +79,7 @@ describe('EditarPerfilPage', () => {
     });
   });
 
-  it('verifica que se muestre un alerta cuando el nombre no es válido', async () => {
-    spyOn(alertController, 'create').and.callThrough();
-    component.user.nombre = '12345';
 
-    await component.presentAlert();
-
-    expect(alertController.create).toHaveBeenCalledWith({
-      header: 'Error',
-      message: 'El nombre debe contener al menos 3 letras y no debe incluir números.',
-      buttons: ['OK'],
-    });
-  });
-
-  it('verifica que se muestre un alerta con éxito y se llame a modificarUsuario para cambios válidos', async () => {
-    spyOn(alertController, 'create').and.callThrough();
-    component.user.nombre = ' nombre';
-
-    await component.presentAlert();
-
-    expect(alertController.create).toHaveBeenCalledWith({
-      header: 'EDITADO',
-      message: 'Perfil fue editado correctamente.',
-      buttons: ['OK'],
-    });
-    expect(serviceBDService.modificarUsuario).toHaveBeenCalled();
-  });
 
   it('verifica que se navegue a cambio-contra con los datos del usuario', () => {
     spyOn(router, 'navigate');

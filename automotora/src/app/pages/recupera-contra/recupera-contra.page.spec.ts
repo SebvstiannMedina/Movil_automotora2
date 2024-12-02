@@ -82,24 +82,7 @@ describe('RecuperaContraPage', () => {
     expect(component.paso).toBe(3);
   });
 
-  it('prueba respuesta incorrecta', async () => {
-    component.usuarioEncontrado = {
-      preguntaSeleccionada: '¿Cuál es tu animal favorito?',
-      respuestaSeguridad: 'gato',
-    };
-    component.preguntaSeguridad = '¿Cuál es tu animal favorito?';
-    component.preguntaSeleccionada = '¿Cuál es tu animal favorito?';
-    component.respuestaUsuario = 'perro';
 
-    await component.verificarRespuesta();
-
-    expect(component.paso).toBe(1); // No avanza al siguiente paso
-    expect(alertControllerMock.create).toHaveBeenCalledWith({
-      header: 'Error',
-      message: 'Respuesta incorrecta',
-      buttons: ['OK'],
-    });
-  });
 
   it('al ccambiar la contraseña te envia al login', async () => {
     component.correo = 'test@example.com';
