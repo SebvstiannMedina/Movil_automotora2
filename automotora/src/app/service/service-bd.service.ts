@@ -40,7 +40,9 @@ export class ServiceBDService {
   aeromatizantes: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (2, 'Aeromatizantes')";
   otros: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (3, 'Otros')";
  
-  //registroCrud: string = "INSERT or IGNORE INTO crud(nombre, descripcion, imagen, precio, idCategoria) VALUES ( 'nombre', 'descripcion', 'imagen', 10, 1)";
+  registroCrud: string = "INSERT or IGNORE INTO crud( idcrud, nombre, descripcion, imagen, precio, stock, idCategoria) VALUES ( 9, 'Llavero', 'LLavero de naruto', null,6000, 10, 3)";
+  registroCrud2: string = "INSERT or IGNORE INTO crud( idcrud, nombre, descripcion, imagen, precio, stock, idCategoria) VALUES ( 8, 'aeromatizante', 'Aeromatizante de rosa', null,9000, 10, 2)";
+  registroCrud3: string = "INSERT or IGNORE INTO crud( idcrud, nombre, descripcion, imagen, precio, stock, idCategoria) VALUES ( 10, 'Llanta A3', 'LLanta Aro', null,40000, 10, 1)";
   registroRol: string = "INSERT or IGNORE INTO rol(idRol, nombre) VALUES (1, 'admin'), (2, 'usuario')";
   registroEstados: string = "INSERT or IGNORE INTO estados(idEstado, nombre) VALUES (1, 'Pendiente'), (2, 'En Proceso'), (3, 'Completado')";
 
@@ -140,7 +142,9 @@ export class ServiceBDService {
       // Insertar datos predeterminados
       await this.database.executeSql(this.registroRol, []);
       await this.database.executeSql(this.registroEstados, []);
-      //await this.database.executeSql(this.registroCrud, []);
+      await this.database.executeSql(this.registroCrud, []);
+      await this.database.executeSql(this.registroCrud2, []);
+      await this.database.executeSql(this.registroCrud3, []);
 
       // Insertar usuarios por defecto
       const adminExiste = await this.verificarAdminExiste();
