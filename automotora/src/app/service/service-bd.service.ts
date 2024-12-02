@@ -821,7 +821,26 @@ async desbloquearUsuario(idUsuario: number): Promise<void> {
   }
 
   getDetallesVenta(idVenta: number): Promise<any[]> {
-    return this.database.executeSql('SELECT * FROM detalles WHERE idVenta = ?', [idVenta])
+    const query = `
+      SELECT 
+        d.idDetalle, 
+        d.idVenta, 
+        d.idProducto, 
+        d.cantidad, 
+        d.subtotal, 
+        c.nombre, 
+        c.imagen
+      FROM 
+        detalles d
+      INNER JOIN 
+        crud c 
+      ON 
+        d.idProducto = c.idcrud
+      WHERE 
+        d.idVenta = ?;
+    `;
+    
+    return this.database.executeSql(query, [idVenta])
       .then((res) => {
         let detalles = [];
         for (let i = 0; i < res.rows.length; i++) {
@@ -830,6 +849,7 @@ async desbloquearUsuario(idUsuario: number): Promise<void> {
         return detalles;
       });
   }
+  
   
   async getComprasUsuario(): Promise<Venta[]> {
     try {

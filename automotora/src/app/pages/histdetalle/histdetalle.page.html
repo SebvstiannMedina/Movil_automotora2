@@ -11,12 +11,16 @@
   <ion-list>
     <ion-card *ngFor="let detalle of detalles">
       <ion-card-header>
-        <ion-card-title>Id de compra: {{ detalle.idVenta }}</ion-card-title>
+        <ion-card-title>Producto: {{ detalle.nombre }}</ion-card-title>
       </ion-card-header>
       <ion-card-content>
         <ion-item>
+          <!-- Mostrar imagen del producto -->
+          <ion-thumbnail slot="start">
+            <img *ngIf="detalle.imagen" [src]="detalle.imagen" alt="Producto" />
+          </ion-thumbnail>
           <ion-label>
-            <p>ID Producto: {{ detalle.idProducto }}</p>	
+            <p>ID Producto: {{ detalle.idProducto }}</p>
             <p>Cantidad: {{ detalle.cantidad }}</p>
             <p>Subtotal: {{ detalle.subtotal }}</p>
           </ion-label>
