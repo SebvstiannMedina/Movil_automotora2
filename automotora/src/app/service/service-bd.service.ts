@@ -810,16 +810,20 @@ async desbloquearUsuario(idUsuario: number): Promise<void> {
   }
 
   getVentas(): Promise<any[]> {
-    return this.database.executeSql('SELECT * FROM venta', [])
-      .then((res) => {
-        let ventas = [];
-        for (let i = 0; i < res.rows.length; i++) {
-          ventas.push(res.rows.item(i));
-        }
-        return ventas;
-      });
+    return this.database.executeSql(
+      `SELECT v.idVenta, v.total, v.subtotal, u.nombre, u.correo, u.imagen
+       FROM venta v
+       INNER JOIN usuario u ON v.idusuario = u.idusuario`,
+      []
+    ).then((res) => {
+      let ventas = [];
+      for (let i = 0; i < res.rows.length; i++) {
+        ventas.push(res.rows.item(i));
+      }
+      return ventas;
+    });
   }
-
+  
   getDetallesVenta(idVenta: number): Promise<any[]> {
     const query = `
       SELECT 

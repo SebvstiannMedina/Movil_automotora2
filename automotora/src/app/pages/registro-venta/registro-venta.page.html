@@ -13,7 +13,7 @@
 
 <ion-content>
   <!-- Filtro de búsqueda -->
-  <ion-searchbar [(ngModel)]="terminoBusqueda" (ionInput)="filtrarVentas()" debounce="300" placeholder="Buscar por ID "></ion-searchbar>
+  <ion-searchbar [(ngModel)]="terminoBusqueda" (ionInput)="filtrarVentas()" debounce="300" placeholder="Buscar por ID venta o usuario"></ion-searchbar>
 
   <!-- Lista de Ventas -->
   <ion-list>
@@ -23,8 +23,14 @@
       </ion-card-header>
       <ion-card-content>
         <ion-item>
+          <!-- Mostrar detalles del usuario asociado a la venta -->
+          <ion-avatar slot="start">
+            <!-- Asegúrate de que la imagen esté en formato correcto -->
+            <img *ngIf="venta.imagen" [src]="venta.imagen" alt="Usuario">
+          </ion-avatar>
           <ion-label>
-            <p>ID Usuario: {{ venta.idusuario }}</p>
+            <p>Nombre: {{ venta.nombre }}</p>
+            <p>Correo: {{ venta.correo }}</p>
             <p>Total: {{ venta.total }}</p>
           </ion-label>
           <ion-button (click)="verDetalles(venta.idVenta)">Ver Detalles</ion-button>

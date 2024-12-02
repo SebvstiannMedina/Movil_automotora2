@@ -30,7 +30,8 @@ export class RegistroVentaPage implements OnInit {
   // Filtrar ventas según el término de búsqueda
   filtrarVentas() {
     this.ventasFiltradas = this.ventas.filter(venta =>
-      venta.idVenta.toString().includes(this.terminoBusqueda)
+      venta.idVenta.toString().includes(this.terminoBusqueda)||
+      venta.nombre.toLowerCase().includes(this.terminoBusqueda.toLowerCase())
     );
   }
 
