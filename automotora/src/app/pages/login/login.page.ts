@@ -69,7 +69,9 @@ export class LoginPage implements OnInit {
           this.router.navigate(['/home']);
           ///this.presentAlert("ver datos " + idusuario + id_Rol + nombre); // id = 1 || rol = 1 + nombre = user
           console.log('Login exitoso:', this.objetoLogin);
-          this.presentAlert(`Bienvenido  ${await this.storage.getItem("Nombre")}`);
+          this.cdr.detectChanges();
+          //this.bd.presentAlert("Bienvenido",`  ${await this.storage.getItem("Nombre")}`);
+          this.bd.presentAlert("Bienvenido", `  ${nombre}`);
         }else {
          // console.log('Login fallido');
          // this.presentAlert('Email o contraseña incorrectos');
