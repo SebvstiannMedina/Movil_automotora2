@@ -257,6 +257,22 @@ export class ServiceBDService {
     }
   }
 
+  async actualizarStock(id: number, stock: number) {
+    try {
+      // Actualizar el stock en la base de datos
+      await this.database.executeSql(
+        'UPDATE crud SET stock = stock - ? WHERE idcrud = ?',
+        [stock, id]
+      );
+      
+      // Recargar los productos después de actualizar el stock
+      this.seleccionarCrud();
+  
+    } catch (e) {
+      //this.presentAlert('Actualizar Stock', 'Error: ' + JSON.stringify(e));
+    }
+  }
+
   async eliminarCrud(id: string) {
     try {
       await this.database.executeSql('DELETE FROM crud WHERE idcrud = ?', [id]);

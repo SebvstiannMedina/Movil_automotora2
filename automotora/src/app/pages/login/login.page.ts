@@ -69,7 +69,7 @@ export class LoginPage implements OnInit {
           this.router.navigate(['/home']);
           ///this.presentAlert("ver datos " + idusuario + id_Rol + nombre); // id = 1 || rol = 1 + nombre = user
           console.log('Login exitoso:', this.objetoLogin);
-          this.cdr.detectChanges();
+          ///this.cdr.detectChanges();
           //this.bd.presentAlert("Bienvenido",`  ${await this.storage.getItem("Nombre")}`);
           this.bd.presentAlert("Bienvenido", `  ${nombre}`);
         }else {

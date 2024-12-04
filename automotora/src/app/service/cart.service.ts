@@ -145,10 +145,8 @@ export class CartService {
         );
 
         // Actualizar stock del producto
-        await this.dbService.database.executeSql(
-          'UPDATE crud SET stock = stock - ? WHERE idCrud = ?',
-          [item.quantity, item.product.idCrud]
-        );
+        await this.dbService.actualizarStock(  item.product.idCrud, item.quantity);
+        
       }
 
       // Limpiar el carrito después de la compra exitosa
