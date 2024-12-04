@@ -14,7 +14,7 @@ export interface CartItem {
 })
 export class CartService {
   private cartItems: BehaviorSubject<CartItem[]> = new BehaviorSubject<CartItem[]>([]);
-  private currentUserId: number | null = null;
+  private currentUserId!: number ;
 
   constructor(private dbService: ServiceBDService) {
     // Sincronizar el carrito con el localStorage

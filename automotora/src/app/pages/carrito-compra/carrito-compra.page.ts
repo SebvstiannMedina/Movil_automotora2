@@ -29,42 +29,49 @@ export class CarritoCompraPage implements OnInit {
   ngOnInit() {
     this.cartService.getCartItems().subscribe(items => {
       this.cartItems = items;
+    });    
+  }
+
+
+  ionViewWillEnter() {
+    this.storage.getItem('Id').then((data: any) => {
+      this.id_user = data;
+      const userId = this.id_user;
+
+      // Llamar a la consulta solo cuando se haya obtenido el ID
+      this.bd.searchUserById(this.id_user).then((data: any) => {
+        if (data) {
+          this.id_user = data.idusuario;
+          this.username = data.nombre;
+          this.email = data.correo;
+          //this.preguntaSeleccionada = data.preguntaSeleccionada;
+          //this.respuestaSeguridad = data.respuestaSeguridad;
+          //this.token = data.token;
+
+         // if (data.imagen) {
+          //  this.imagen = `data:image/jpeg;base64,${data.imagen}`;
+         // }
+          // Detectar cambios para actualizar la vista
+          this.bd.presentAlert("id", String(this.id_user));
+          this.bd.presentAlert("nombre", this.username);
+          this.bd.presentAlert("email", this.email);
+          this.bd.presentAlert("total", String(this.total));
+          this.bd.presentAlert("cartItems", String(this.cartItems));
+          this.cdr.detectChanges();
+          this.cartService.setCurrentUser(userId);
+          this.cartService.getCartItems().subscribe((items) => {
+            this.cartItems = items;
+            this.total = items.reduce((sum, item) => sum + item.subtotal, 0);
+            this.cdr.detectChanges(); // Actualizar la vista
+          });
+        } else {
+          console.error("El ID del usuario no es válido o no está almacenado.");
+        }
+      });
+    }).catch((error: any) => {
+      console.error("Error retrieving user data", error);
     });
   }
-
-  async ionViewWillEnter() {
-    try {
-      // Obtener el ID del usuario desde el almacenamiento y convertirlo a número
-      const userIdString = await this.storage.getItem('Id'); // Recupera el ID como string
-      const userId = userIdString ? parseInt(userIdString, 10) : null; // Convierte a número si existe
-  
-      if (userId && !isNaN(userId)) {
-        this.id_user = userId;
-  
-        // Buscar datos del usuario
-        const userData = await this.bd.searchUserById(userId);
-        if (userData) {
-          this.username = userData.nombre;
-          this.email = userData.correo;
-        }
-  
-        // Inicializar el carrito para el usuario logueado
-        await this.cartService.setCurrentUser(userId);
-  
-        // Obtener el contenido actual del carrito
-        this.cartService.getCartItems().subscribe((items) => {
-          this.cartItems = items;
-          this.total = items.reduce((sum, item) => sum + item.subtotal, 0);
-          this.cdr.detectChanges(); // Actualizar la vista
-        });
-      } else {
-        console.error("El ID del usuario no es válido o no está almacenado.");
-      }
-    } catch (error) {
-      console.error("Error al cargar los datos del usuario o el carrito:", error);
-    }
-  }
-
   async updateQuantity(item: CartItem, change: number) {
     const newQuantity = item.quantity + change;
     if (newQuantity > 0) {
