@@ -38,7 +38,7 @@ export class ServiceBDService {
   // Inserts predeterminados
   llantas: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (1, 'Llantas')";
   aeromatizantes: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (2, 'Aeromatizantes')";
-  otros: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (3, 'Otros')";
+  repuestos: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (3, 'Repuestos')";
  
   registroCrud: string = "INSERT or IGNORE INTO crud( idcrud, nombre, descripcion, imagen, precio, stock, idCategoria) VALUES ( 9, 'Llavero', 'LLavero de naruto', null,6000, 10, 3)";
   registroCrud2: string = "INSERT or IGNORE INTO crud( idcrud, nombre, descripcion, imagen, precio, stock, idCategoria) VALUES ( 8, 'aeromatizante', 'Aeromatizante de rosa', null,9000, 10, 2)";
@@ -47,6 +47,9 @@ export class ServiceBDService {
   registroEstados: string = "INSERT or IGNORE INTO estados(idEstado, nombre) VALUES (1, 'Pendiente'), (2, 'En Proceso'), (3, 'Completado')";
 
   admin: string ="INSERT or IGNORE INTO usuario(idusuario,nombre,correo, contrasena, id_Rol, imagen, preguntaSeleccionada, respuestaSeguridad,token ) VALUES(1,'MotorSphere', 'admin@gmail.com', 'Admin123.', 1,null, '¿Cuál fue tu primer auto?', 'MotorSphere',1)"
+  cliente: string ="INSERT or IGNORE INTO usuario(idusuario,nombre,correo, contrasena, id_Rol, imagen, preguntaSeleccionada, respuestaSeguridad,token ) VALUES(2,'Catalina', 'cliente@gmail.com', 'Cliente123.', 2,null, '¿Cuál fue tu primer auto?', 'MotorSphere',1)"
+
+  
   // Listado de Observables
   listadoUsuario = new BehaviorSubject<Usuario[]>([]);
   listadoVenta = new BehaviorSubject<Venta[]>([]);
@@ -151,12 +154,14 @@ export class ServiceBDService {
         if (!adminExiste) {
           await this.database.executeSql(this.admin, []); 
         }
+      
+      await this.database.executeSql(this.cliente, []);
 
     // Insertar categorias por defecto
       await this.database.executeSql(this.llantas, []);
       await this.database.executeSql(this.aeromatizantes, []);
-      await this.database.executeSql(this.otros, []);
-
+      await this.database.executeSql(this.repuestos, []);
+      
 
       // Cargar datos iniciales
       await this.cargarDatosIniciales();
@@ -892,7 +897,19 @@ async desbloquearUsuario(idUsuario: number): Promise<void> {
     }
   }
   
-
+  fetchProductosPorCategoria(categoriaId: number) {
+    return this.database.executeSql(
+      `SELECT * FROM productos WHERE id_categoria = ?`, 
+      [categoriaId]
+    ).then((res: any) => {
+      const items: any[] = [];
+      for (let i = 0; i < res.rows.length; i++) {
+        items.push(res.rows.item(i));
+      }
+      return items;
+    });
+  }
+  
 
 
 } 

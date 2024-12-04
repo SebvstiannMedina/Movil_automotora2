@@ -22,6 +22,8 @@ export class AppComponent implements OnInit, OnDestroy {
   id_user!: number;
   imagen!: any;
 
+  // Nuevas propiedades para categorías
+  categorias: any[] = [];
 
   constructor(
     private router: Router,
@@ -30,7 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private bd: ServiceBDService,
     private cdr: ChangeDetectorRef
   ) {
-    // Mejora en el manejo de eventos de navegación
+    // Manejo de eventos de navegación
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       takeUntil(this.destroy$)
@@ -47,6 +49,7 @@ export class AppComponent implements OnInit, OnDestroy {
     ).subscribe(async (isReady) => {
       if (isReady) {
         await this.updateUserData();
+        this.cargarCategorias(); // Carga las categorías cuando la DB está lista
       }
     });
   }
@@ -56,21 +59,34 @@ export class AppComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  // Método para cargar las categorías desde el servicio
+  private cargarCategorias() {
+    this.bd.fetchCategoria().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(categorias => {
+      this.categorias = categorias;
+    }, error => {
+      console.error('Error al cargar categorías:', error);
+    });
+  }
+
+  // Método para cargar productos filtrados por categoría
+  cargarCrudPorCategoria(idCategoria: number) {
+    this.router.navigate(['/productos'], { queryParams: { categoriaId: idCategoria } });
+  }
+  
   // Método para actualizar datos del usuario
   private async updateUserData() {
     try {
       const nombre = await this.storage.getItem('Nombre');
       this.nombreUsuario = nombre || 'Invitado';
       
-      // Aquí puedes agregar más actualizaciones de datos si es necesario
       this.bd.fetchUsuario().pipe(
         takeUntil(this.destroy$)
       ).subscribe(
         (userData) => {
-          // Actualiza los datos del usuario según sea necesario
           if (userData) {
-            // Actualiza los datos necesarios
-            this.nombreUsuario =  this.nombreUsuario;
+            this.nombreUsuario = this.nombreUsuario;
             this.ionViewWillEnter();
           }
         },
@@ -91,35 +107,22 @@ export class AppComponent implements OnInit, OnDestroy {
     this.verMenu = !noveras.includes(url);
   }
 
-
-
   cerrarSesion() {
     this.bd.cerrarSesion();
     this.router.navigate(['/login']);
-    //await this.storage.remove('Id');
     this.cdr.detectChanges();
   }
-
 
   ionViewWillEnter() {
     this.storage.getItem('Id').then((data: any) => {
       this.id_user = data;
 
-      // Llamar a la consulta solo cuando se haya obtenido el ID
       this.bd.searchUserById(this.id_user).then((data: any) => {
         if (data) {
           this.username = data.nombre;
           this.email = data.correo;
           this.password = data.contrasena;
           this.imagen = data.imagen;
-          //this.preguntaSeleccionada = data.preguntaSeleccionada;
-          //this.respuestaSeguridad = data.respuestaSeguridad;
-          //this.token = data.token;
-
-         // if (data.imagen) {
-          //  this.imagen = `data:image/jpeg;base64,${data.imagen}`;
-         // }
-          // Detectar cambios para actualizar la vista
           this.cdr.detectChanges();
         }
       });
@@ -127,5 +130,4 @@ export class AppComponent implements OnInit, OnDestroy {
       console.error("Error retrieving user data", error);
     });
   }
-
 }

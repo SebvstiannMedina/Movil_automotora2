@@ -33,53 +33,76 @@
             <ion-label>Inicio</ion-label>
             <ion-icon name="business-outline" slot="start"></ion-icon>
           </ion-item> 
-
-          <ion-item [routerDirection]="'root'" [routerLink]="'/nosotros'" *ngIf="id_user !== 1">
-            <ion-label> Nosotros </ion-label>
-            <ion-icon name="accessibility-outline" slot="start"></ion-icon>
-          </ion-item> 
-
-          <ion-item [routerDirection]="'root'" [routerLink]="'/ubicacion'" *ngIf="id_user !== 1">
-            <ion-label> Ubicación</ion-label>
-            <ion-icon name="map-outline" slot="start"></ion-icon>
-          </ion-item> 
-
+          <!--
           <ion-item [routerDirection]="'root'" [routerLink]="'/productos'"  *ngIf="id_user !== 1">
             <ion-label> Productos </ion-label>
             <ion-icon name="storefront-outline" slot="start"></ion-icon>
           </ion-item> 
-          
-          <ion-item [routerDirection]="'root'" [routerLink]="'/usuario-compra'"  *ngIf="id_user !== 1">
-            <ion-label> Mis compras </ion-label>
+        -->
+<!--*ngIf="usuaari.rol==1"-->
+          <ion-list    *ngIf="id_user === 1" >
+          <ion-item [routerDirection]="'root'" [routerLink]="'/eliminar'"  >
+            <ion-label>Listado de productos</ion-label>
             <ion-icon name="storefront-outline" slot="start"></ion-icon>
-          </ion-item> 
-
+          </ion-item>
+          <ion-item [routerDirection]="'root'" [routerLink]="'/hist-usuario'"  >
+            <ion-label>Gestion de usuarios </ion-label>
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+          </ion-item>
+          <ion-item [routerDirection]="'root'" [routerLink]="'/registro-venta'"  >
+            <ion-label>Ventas</ion-label>
+            <ion-icon name="pricetag-outline" slot="start"></ion-icon>
+          </ion-item>
           <ion-item [routerDirection]="'root'" [routerLink]="'/apivalores'" >
             <ion-label> Valores $$ </ion-label>
             <ion-icon name="cash-outline" slot="start"></ion-icon>
           </ion-item>
-<!--*ngIf="usuaari.rol==1"-->
-          <ion-item [routerDirection]="'root'" [routerLink]="'/eliminar'" *ngIf="id_user === 1" >
-            <ion-label>Listado de productos</ion-label>
-            <ion-icon name="person-outline" slot="start"></ion-icon>
-          </ion-item>
-          <ion-item [routerDirection]="'root'" [routerLink]="'/hist-usuario'" *ngIf="id_user === 1" >
-            <ion-label>Gestion de usuarios </ion-label>
-            <ion-icon name="person-outline" slot="start"></ion-icon>
-          </ion-item>
-
-          <ion-item [routerDirection]="'root'" [routerLink]="'/registro-venta'" *ngIf="id_user === 1" >
-            <ion-label>Ventas</ion-label>
-            <ion-icon name="person-outline" slot="start"></ion-icon>
-          </ion-item>
-          <br>
-
-          <ion-item (click)="cerrarSesion()" button color="danger">
-            <ion-label>Cerrar Sesión</ion-label>
-            <ion-icon name="log-out-outline" slot="start"></ion-icon>
-          </ion-item>
-
         </ion-list>
+
+          <!-- Divider para categorías -->
+        <ion-list    *ngIf="id_user !== 1" >
+
+          <!-- Categorías dinámicas -->
+          <ion-item 
+            *ngFor="let categoria of categorias" 
+            [routerLink]="'/productos'" 
+            [queryParams]="{ idCategoria: categoria.idCategoria }"
+            >
+            <ion-label>
+              {{ categoria.nomCateg }}
+            </ion-label>
+            <ion-icon name="storefront-outline" slot="start"></ion-icon>
+          </ion-item>
+        </ion-list>
+
+        <ion-list    *ngIf="id_user !== 1" >
+
+          <ion-item [routerDirection]="'root'" [routerLink]="'/usuario-compra'"  >
+            <ion-label> Mis compras </ion-label>
+            <ion-icon name="pricetag-outline" slot="start"></ion-icon>
+          </ion-item> 
+
+          <ion-item [routerDirection]="'root'" [routerLink]="'/nosotros'" >
+            <ion-label> Nosotros </ion-label>
+            <ion-icon name="accessibility-outline" slot="start"></ion-icon>
+          </ion-item> 
+
+          <ion-item [routerDirection]="'root'" [routerLink]="'/ubicacion'" >
+            <ion-label> Ubicación</ion-label>
+            <ion-icon name="map-outline" slot="start"></ion-icon>
+          </ion-item> 
+
+        </ion-list>  
+
+        <ion-item (click)="cerrarSesion()" button color="danger">
+          <ion-label>Cerrar Sesión</ion-label>
+          <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        </ion-item>
+      
+      
+      
+      </ion-list> 
+
       </ion-content>
 
     </ion-menu>

@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ServiceBDService } from 'src/app/service/service-bd.service';
 import { CartService } from 'src/app/service/cart.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-productos',
@@ -13,13 +14,26 @@ export class ProductosPage implements OnInit {
   categoriaSeleccionada: number | null = null;
   nombreCategoriaSeleccionada: string = '';
 
-  constructor(private bd: ServiceBDService, private cartService: CartService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private bd: ServiceBDService,
+    private cartService: CartService,
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.bd.dbState().subscribe(ready => {
       if (ready) {
         this.cargarCategorias();
-        this.cargarCrud();
+        // Escuchar los parámetros de la URL
+        this.route.queryParams.subscribe(params => {
+          if (params['idCategoria']) {
+            const idCategoria = +params['idCategoria']; // Convertir a número
+            this.cargarCrudPorCategoria(idCategoria);
+          } else {
+            this.cargarCrud(); // Si no hay parámetros, cargar todos los productos
+          }
+        });
       }
     });
   }
@@ -41,15 +55,18 @@ export class ProductosPage implements OnInit {
     this.nombreCategoriaSeleccionada = this.categorias.find(
       cat => cat.idCategoria === idCategoria
     )?.nomCateg || '';
-    
-    this.bd.fetchCrud().subscribe(Crud => {
-      this.Crud = Crud.filter(crud => crud.idCategoria === idCategoria);
+  
+    this.bd.fetchCrud().subscribe(crud => {
+      this.Crud = crud.filter(item => item.idCategoria === idCategoria);
+      console.log('Productos filtrados:', this.Crud); // Verificar en la consola
+      this.cdr.detectChanges();
     });
   }
+  
 
   volverACategorias() {
     this.categoriaSeleccionada = null;
-    this.Crud = [];
+    this.cargarCrud(); // Volvemos a cargar todos los productos
   }
 
   anadirAlCarrito(producto: any) {

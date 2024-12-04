@@ -1,21 +1,16 @@
 <ion-header>
-  <ion-toolbar >
-    <ion-buttons slot="start" >
-      <ion-buttons *ngIf="categoriaSeleccionada === null">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-buttons>
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
-    </ion-buttons>
-    <ion-buttons slot="start" *ngIf="categoriaSeleccionada">
-      <ion-button (click)="volverACategorias()">
-        <ion-icon slot="icon-only" name="arrow-back">  volver</ion-icon>
-      </ion-button>
     </ion-buttons>
     <ion-title>
       <img src="assets/icon/Logo.png" alt="logo">
       {{ categoriaSeleccionada ? nombreCategoriaSeleccionada : 'MotorSphere' }}
     </ion-title>
-    <ion-button  [routerLink]="'/carrito-compra'" slot="end"  >
-      <ion-icon name="cart" ></ion-icon>
+    <ion-button [routerLink]="'/carrito-compra'" slot="end">
+      <ion-icon name="cart"></ion-icon>
     </ion-button>
   </ion-toolbar>
 </ion-header>
@@ -26,7 +21,8 @@
     <ion-item *ngFor="let categoria of categorias" 
               button 
               detail 
-              (click)="cargarCrudPorCategoria(categoria.idCategoria)">
+              [routerLink]="['/productos']"
+              [queryParams]="{ idCategoria: categoria.idCategoria }">
       <ion-label>
         <h2>{{ categoria.nomCateg }}</h2>
       </ion-label>
