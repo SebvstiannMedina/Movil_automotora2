@@ -38,6 +38,7 @@
 
   <!-- Lista de Crud por Categoría -->
   <div *ngIf="categoriaSeleccionada">
+    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="filtrarProductos()" debounce="0" placeholder="Buscar por nombre"></ion-searchbar>
     <!-- Grid de Crud -->
     <ion-grid>
       <ion-row>

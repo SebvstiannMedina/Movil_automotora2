@@ -13,6 +13,7 @@ export class ProductosPage implements OnInit {
   Crud: any[] = [];
   categoriaSeleccionada: number | null = null;
   nombreCategoriaSeleccionada: string = '';
+  searchQuery: string = ''; // Nueva propiedad para el buscador
 
   constructor(
     private bd: ServiceBDService,
@@ -57,12 +58,31 @@ export class ProductosPage implements OnInit {
     )?.nomCateg || '';
   
     this.bd.fetchCrud().subscribe(crud => {
-      this.Crud = crud.filter(item => item.idCategoria === idCategoria);
+      // Filtrar por categoría
+      let productosFiltrados = crud.filter(item => item.idCategoria === idCategoria);
+      
+      // Filtrar por nombre de producto si hay un valor en el buscador
+      if (this.searchQuery.trim() !== '') {
+        productosFiltrados = productosFiltrados.filter(producto =>
+          producto.nombre.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      }
+      
+      this.Crud = productosFiltrados;
       console.log('Productos filtrados:', this.Crud); // Verificar en la consola
       this.cdr.detectChanges();
     });
   }
-  
+
+  filtrarProductos() {
+    if (this.categoriaSeleccionada !== null) {
+      // Si hay una categoría seleccionada, recargar los productos filtrados
+      this.cargarCrudPorCategoria(this.categoriaSeleccionada);
+    } else {
+      // Si no hay categoría seleccionada, cargar todos los productos
+      this.cargarCrud();
+    }
+  }
 
   volverACategorias() {
     this.categoriaSeleccionada = null;
