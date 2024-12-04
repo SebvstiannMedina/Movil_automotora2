@@ -52,11 +52,11 @@ export class CarritoCompraPage implements OnInit {
           //  this.imagen = `data:image/jpeg;base64,${data.imagen}`;
          // }
           // Detectar cambios para actualizar la vista
-          this.bd.presentAlert("id", String(this.id_user));
-          this.bd.presentAlert("nombre", this.username);
-          this.bd.presentAlert("email", this.email);
-          this.bd.presentAlert("total", String(this.total));
-          this.bd.presentAlert("cartItems", String(this.cartItems));
+         // this.bd.presentAlert("id", String(this.id_user));
+          //this.bd.presentAlert("nombre", this.username);
+          //this.bd.presentAlert("email", this.email);
+          //this.bd.presentAlert("total", String(this.total));
+         // this.bd.presentAlert("cartItems", String(this.cartItems));
           this.cdr.detectChanges();
           this.cartService.setCurrentUser(userId);
           this.cartService.getCartItems().subscribe((items) => {
