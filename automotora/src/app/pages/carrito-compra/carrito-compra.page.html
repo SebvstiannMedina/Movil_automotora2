@@ -6,26 +6,29 @@
     <ion-title>
       <img src="assets/icon/Logo.png" alt="logo">
       <ion-icon name="logo-ionitron" slot="start"></ion-icon>
-      MotorSphere
+      Carrito de compras
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <!-- Header del carrito -->
-  <div class="flex justify-between items-center mb-6">
-    <h5 class="text-2xl font-bold">Carrito de Compras</h5>
-    <ion-button fill="clear" (click)="clearCart()" *ngIf="cartItems.length > 0">
-      <ion-icon name="trash-outline" slot="start"></ion-icon>
-      Vaciar Carrito
-    </ion-button>
-  </div>  
 
   <!-- Carrito vacío -->
   <div *ngIf="cartItems.length === 0" class="text-center py-8">
     <ion-icon name="cart-outline" class="text-6xl text-gray-400"></ion-icon>
     <p class="text-xl text-gray-500 mt-4">Tu carrito está vacío</p>
   </div>
+  
+    <!-- Botón de vaciar carrito -->
+    <ion-card>
+      <div class="p-4">
+        <ion-button fill="clear" (click)="clearCart()" *ngIf="cartItems.length > 0"  expand="block" color="danger">
+          <ion-icon name="trash-outline" slot="start"></ion-icon>
+          Vaciar Carrito
+        </ion-button>
+      </div>
+     </ion-card>
+  
 
   <!-- Lista de productos -->
   <ion-list *ngIf="cartItems.length > 0">
@@ -35,21 +38,33 @@
           <img [src]="item.product.imagen || 'assets/placeholder.png'" alt="Producto">
         </ion-thumbnail>
         <ion-label>
-          <p class="font-semibold">{{ item.product.nombre }}</p>
-          <p class="text-gray-600">{{ item.product.descripcion }}</p>
-          <p class="text-primary">$ {{ item.product.precio }}</p>
-        </ion-label>
 
-        <!-- Control de cantidad -->
-        <div slot="end" class="flex items-center space-x-2">
+                 
+          <ion-card-content>
+            <ion-card-header><ion-card-title>{{ item.product.nombre }}</ion-card-title></ion-card-header>
+            <ion-card-content>
+          <span class="text-primary">Precio $ {{ item.product.precio | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+          <p class="text-gray-600">Unidades: {{ item.quantity }}</p>
+          <ion-card-subtitle> <span class="text-lg">Sub total: $ {{ item.subtotal | currency:'CLP':'symbol-narrow':'1.0-0' }}</span></ion-card-subtitle>
+            </ion-card-content>
+          
+          
+        </ion-card-content>
+        <div  class="flex items-center space-x-2">
+          <ion-button fill="clear" size="small" (click)="removerAlCarrito(item.product)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
           <ion-button fill="clear" size="small" (click)="updateQuantity(item, -1)" [disabled]="item.quantity <= 1">
             <ion-icon name="remove-circle-outline"></ion-icon>
           </ion-button>
-          <span class="mx-2">{{ item.quantity }}</span>
+          <span class="mx-2"></span>
           <ion-button fill="clear" size="small" (click)="updateQuantity(item, 1)">
             <ion-icon name="add-circle-outline"></ion-icon>
           </ion-button>
         </div>
+        </ion-label>
+
+
       </ion-item>
 
       <!-- Opción de deslizar para eliminar -->
@@ -60,26 +75,33 @@
       </ion-item-options>
     </ion-item-sliding>
 
-    <!-- Resumen del carrito -->
-    <ion-item lines="none" class="mt-4">
-      <ion-label>
-        <div class="flex justify-between items-center">
-          <span class="text-lg font-semibold">Subtotal:</span>
-          <span class="text-lg">$ {{ getSubtotal() }}</span>
-        </div>
-        <div class="flex justify-between items-center mt-2">
-          <span class="text-xl font-bold">Total:</span>
-          <span class="text-xl font-bold text-primary">$ {{ getTotal() }}</span>
-        </div>
-      </ion-label>
-    </ion-item>
-
-    <!-- Botón de checkout -->
-    <div class="p-4">
-      <ion-button expand="block" (click)="checkout()">
-        Proceder al Pago
-        <ion-icon name="cart-outline" slot="end"></ion-icon>
-      </ion-button>
-    </div>
   </ion-list>
 </ion-content>
+
+  
+  <ion-footer>
+        <!-- Resumen del carrito -->
+        <ion-card>
+          <ion-item lines="none" class="mt-4">
+            <ion-label>
+              <div class="flex justify-between items-center mt-2">
+                <span class="text-xl font-bold">Total:</span>
+                <span class="text-xl font-bold text-primary">$ {{ getTotal()| currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+            </ion-label>
+          </ion-item>
+          </ion-card>
+      
+          <!-- Botón de checkout -->
+           <ion-card>
+          <div class="p-4">
+            <ion-button expand="block" (click)="checkout()">
+              Proceder al Pago
+              <ion-icon name="cart-outline" slot="end"></ion-icon>
+            </ion-button>
+          </div>
+          </ion-card>
+          <!-- vaciar carrito -->
+  
+  </ion-footer>
+  

@@ -16,6 +16,7 @@ export class CarritoCompraPage implements OnInit {
   username: string = '';
   email: string = '';
   total: number = 0;
+  Crud: any[] = [];
 
   constructor(
     private cartService: CartService,
@@ -30,6 +31,9 @@ export class CarritoCompraPage implements OnInit {
     this.cartService.getCartItems().subscribe(items => {
       this.cartItems = items;
     });    
+    this.bd.fetchCrud().subscribe(items => {
+      this.Crud = items;
+    });
   }
 
 
@@ -179,5 +183,8 @@ export class CarritoCompraPage implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
+  }
+  removerAlCarrito(producto: any) {
+    this.cartService.removeFromCart(producto.idCrud); // Eliminar el producto del carrito
   }
 }
