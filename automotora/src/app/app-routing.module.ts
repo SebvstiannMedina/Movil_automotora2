@@ -65,10 +65,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   },
   {
-    path: 'aeromatizantes',
-    loadChildren: () => import('./pages/aeromatizantes/aeromatizantes.module').then( m => m.AeromatizantesPageModule)
-  },
-  {
     path: 'ubicacion',
     loadChildren: () => import('./pages/ubicacion/ubicacion.module').then( m => m.UbicacionPageModule)
   },
