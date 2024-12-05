@@ -41,8 +41,8 @@ export class ServiceBDService {
   repuestos: string = "INSERT or IGNORE INTO categoria(idCategoria, nomCateg) VALUES (3, 'Repuestos')";
  
   registroCrud: string = "INSERT or IGNORE INTO crud( idcrud, nombre, descripcion, imagen, precio, stock, idCategoria) VALUES ( 9, 'Llanta A3', 'LLanta Aro A3', null, 6000, 10, 1)";
-  registroCrud2: string = "INSERT or IGNORE INTO crud( idcrud, nombre, descripcion, imagen, precio, stock, idCategoria) VALUES ( 8, 'aeromatizante', 'Aeromatizante de rosa', null, 9000, 10, 2)";
-  registroCrud3: string = "INSERT or IGNORE INTO crud( idcrud, nombre, descripcion, imagen, precio, stock, idCategoria) VALUES ( 10, 'intermitente', 'luces intermitentes ', null, 40000, 10, 3)";
+  registroCrud2: string = "INSERT or IGNORE INTO crud( idcrud, nombre, descripcion, imagen, precio, stock, idCategoria) VALUES ( 8, 'Aeromatizante', 'Aeromatizante de rosa', null, 9000, 10, 2)";
+  registroCrud3: string = "INSERT or IGNORE INTO crud( idcrud, nombre, descripcion, imagen, precio, stock, idCategoria) VALUES ( 10, 'Intermitente', 'luces intermitentes ', null, 40000, 10, 3)";
   registroRol: string = "INSERT or IGNORE INTO rol(idRol, nombre) VALUES (1, 'admin'), (2, 'usuario')";
   registroEstados: string = "INSERT or IGNORE INTO estados(idEstado, nombre) VALUES (1, 'Pendiente'), (2, 'En Proceso'), (3, 'Completado')";
 
